@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/LaiHuiProduction.iml" filepath="$PROJECT_DIR$/LaiHuiProduction.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cyparty.iml" filepath="$PROJECT_DIR$/cyparty.iml" />
+    </modules>
+  </component>
+</project>

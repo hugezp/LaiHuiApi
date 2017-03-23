@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/libs/alipay-sdk-java20161129201425.jar" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/libs/commons-logging-1.1.1.jar" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/pom.xml" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/Adviertisement.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/AlipayNotify.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/ApkUpdate.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/Carousel.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/DriverBookingPassenger.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/DriverPayAccount.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/PayOrder.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/UserHistory.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/UserRoleAction.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/UserSuggestion.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/UserToken.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/Base64.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/SignUtils.java" charset="GBK" />
+  </component>
+</project>
