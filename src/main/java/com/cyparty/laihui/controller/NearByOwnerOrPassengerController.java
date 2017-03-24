@@ -291,8 +291,10 @@ public class NearByOwnerOrPassengerController {
 //                        }
                         String address_board4DB = owenrList.get(i).getBoarding_point();
                         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
-                        double o_longitude = Double.parseDouble(jsonObject.get("longitude").toString());
-                        double o_latitude = Double.parseDouble(jsonObject.get("latitude").toString());
+
+                        double o_longitude = Double.parseDouble("".equals(jsonObject.get("longitude").toString())?"-256.18":jsonObject.get("longitude").toString());
+                        double o_latitude = Double.parseDouble("".equals(jsonObject.get("latitude").toString())?"-256.18":jsonObject.get("latitude").toString());
+
                         //通过经纬度获取距离
                         distance = RangeUtils.getDistance(p_latitude, p_longitude, o_latitude, o_longitude);
                         if (distance <= query_distance) {
@@ -327,8 +329,8 @@ public class NearByOwnerOrPassengerController {
                         String address_board4DB = passengerList.get(i).getBoarding_point();
                         net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
                         //乘客位置经纬度
-                        double p_lon = Double.parseDouble(jsonObject.get("longitude").toString());
-                        double p_lat = Double.parseDouble(jsonObject.get("latitude").toString());
+                        double p_lon = Double.parseDouble("".equals(jsonObject.get("longitude").toString())?"-256.18":jsonObject.get("longitude").toString());
+                        double p_lat = Double.parseDouble("".equals(jsonObject.get("latitude").toString())?"-256.18":jsonObject.get("latitude").toString());
 
                         //通过经纬度获取距离
                         distance = RangeUtils.getDistance(o_lat, o_lon, p_lat, p_lon);
