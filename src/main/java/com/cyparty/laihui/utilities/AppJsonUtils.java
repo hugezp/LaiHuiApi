@@ -536,9 +536,10 @@ public class AppJsonUtils {
 
     /**
      * 乘客订单列表获取模块
+     *
      * @param appDB
-     * @param page 第几页
-     * @param size 每页记录条数
+     * @param page    第几页
+     * @param size    每页记录条数
      * @param user_id 乘客user_id
      * @return
      */
@@ -649,6 +650,7 @@ public class AppJsonUtils {
 
     /**
      * 推送信息获取
+     *
      * @param appDB
      * @param order
      * @param role  角色 1：乘客 2：车主
@@ -860,9 +862,10 @@ public class AppJsonUtils {
 
     /**
      * 获取车单状态
+     *
      * @param appDB
-     * @param page 第几页
-     * @param size 每页记录条数
+     * @param page    第几页
+     * @param size    每页记录条数
      * @param user_id 用户id
      * @return
      */
@@ -1344,6 +1347,7 @@ public class AppJsonUtils {
 
     /**
      * 待处理账单
+     *
      * @param appDB
      * @param user_id  该用户id
      * @param flag
@@ -1430,6 +1434,7 @@ public class AppJsonUtils {
 
     /**
      * 首页活动
+     *
      * @param appDB
      * @return 封装的活动信息
      */
@@ -1444,9 +1449,10 @@ public class AppJsonUtils {
 
     /**
      * 获取常用路线
+     *
      * @param appDB
      * @param user_id 用户i的
-     * @param where 查询条件
+     * @param where   查询条件
      * @return 用户的常用路线信息
      */
 
