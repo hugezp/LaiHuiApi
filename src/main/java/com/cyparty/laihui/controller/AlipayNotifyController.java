@@ -271,7 +271,7 @@ public class AlipayNotifyController {
             doc = DocumentHelper.parseText(return_xml); // 将字符串转为XML
             Element rootElt = doc.getRootElement(); // 获取根节点
             Iterator return_code = rootElt.elementIterator("return_code"); // 获取根节点下的子节点return_code
-
+        //dfdfsudugs
             while (return_code.hasNext()) {
                 Element recordEle = (Element) return_code.next();
                 String code = recordEle.getText(); // 拿到return_code返回值
