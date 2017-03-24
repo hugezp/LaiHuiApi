@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  * Created by zhu on 2016/5/11.
- * 你好？
  */
 @Controller
 @ResponseBody

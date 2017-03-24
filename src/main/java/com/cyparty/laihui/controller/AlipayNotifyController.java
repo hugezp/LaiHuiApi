@@ -30,7 +30,7 @@ import java.util.*;
 
 
 /**
- * Created by zhu on 2016/5/11.fdsgdsgdfgdsgfgdf
+ * Created by zhu on 2016/5/11.
  */
 @Controller
 public class AlipayNotifyController {
