@@ -8,8 +8,8 @@ public class PassengerOrder {
     private int _id;
     private int is_enable;//是否可用
     private int order_type;//订单类型
-    private int driver_order_id;//车主订单id
-    private int passenger_order_id;//乘客订单id
+    private int driver_order_id;
+    private int passenger_order_id;
     private int user_id;//用户id
     private int p_id;//乘客id
     private int seats;//座位数

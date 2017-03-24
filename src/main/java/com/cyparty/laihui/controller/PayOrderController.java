@@ -49,7 +49,7 @@ public class PayOrderController {
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
         String json = "";
-
+        //订单ID
         String order_id=request.getParameter("order_id");
         String pay_type=request.getParameter("pay_type");
 
