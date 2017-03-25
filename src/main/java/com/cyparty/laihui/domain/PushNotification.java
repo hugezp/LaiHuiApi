@@ -18,6 +18,7 @@ public class PushNotification {
    private int status;//状态 0 未读 1 已读
    private int is_enable;//状态 0 未读 1 已读
    private String user_name;
+   private String link_url;//广告链接或者活动链接
 
    public int get_id() {
       return _id;
@@ -78,4 +79,8 @@ public class PushNotification {
    public String getUser_name(){return user_name;}
 
    public void setUser_name(String user_name){this.user_name=user_name;}
+
+   public String getLink_url(){return link_url;}
+
+   public void setLink_url(String link_url){this.link_url=link_url;}
 }

@@ -3,9 +3,13 @@ package com.cyparty.laihui.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
+import com.cyparty.laihui.domain.Carousel;
 import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.domain.PushNotification;
+import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
+import com.cyparty.laihui.utilities.NotifyPush;
+import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,7 +31,8 @@ import java.util.List;
 public class PushListController {
     @Autowired
     AppDB appDB;
-
+    @Autowired
+    NotifyPush notifyPush;
     /**
      * 获取消息列表
      *
@@ -61,9 +66,9 @@ public class PushListController {
                     e.printStackTrace();
                 }
             }
+            JSONArray jsonArray = new JSONArray();
             switch (action) {
                 case "show":
-                    JSONArray jsonArray = new JSONArray();
                     String token = request.getParameter("token");
                     if (null != token && token.length() == 32) {
                         int user_id = appDB.getIDByToken(token);
@@ -96,6 +101,29 @@ public class PushListController {
                         result.put("error_code", ErrorCode.getToken_expired());
                         json = AppJsonUtils.returnFailJsonString(result, "无效的token");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+                    }
+                case"show_all_users":
+                    List<PushNotification> pushList = appDB.getPushList("where type =100 and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc limit 1");
+                    if (pushList.size() > 0) {
+                        for (PushNotification push : pushList) {
+                            JSONObject pushJson = new JSONObject();
+                            pushJson.put("message_id", push.get_id());
+                            pushJson.put("order_id", push.getOrder_id());
+                            pushJson.put("push_id", push.getPush_id());
+                            pushJson.put("receive_id", push.getReceive_id());
+                            pushJson.put("push_type", push.getPush_type());
+                            pushJson.put("alert", push.getAlert());
+                            pushJson.put("type", push.getType());
+                            pushJson.put("sound", push.getSound());
+                            pushJson.put("data", push.getData());
+                            pushJson.put("time", push.getTime());
+                            pushJson.put("status", push.getStatus());
+                            pushJson.put("user_name",push.getUser_name());
+                            pushJson.put("link_url",push.getLink_url());
+                        }
+                        result.put("push", jsonArray);
+                        json = AppJsonUtils.returnSuccessJsonString(result, "推送消息列表获取成功！");
+                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
             }
             result.put("error_code", ErrorCode.getParameter_wrong());
@@ -209,5 +237,52 @@ public class PushListController {
             json = AppJsonUtils.returnFailJsonString(result, "无效的token");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * 判断是否可读
+     *
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/advert/push", method = RequestMethod.POST)
+    public ResponseEntity<String> Advert(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        JSONObject result = new JSONObject();
+        String json = "";
+        try {
+            String where = " where pc_type=1 order by pc_image_create_time DESC limit 1 ";
+            Carousel carousel = appDB.getCarousel(where).get(0);
+            String link_url = carousel.getImage_link();
+            String content = carousel.getImage_title();
+            String startTime = Utils.getCurrentTime();
+            JSONObject  advert = new JSONObject();
+            advert.put("link_url",link_url);
+            advert.put("image",carousel.getImage_url());
+            List<User> users = appDB.getUserList(" where is_validated=1 and  _id=2");
+            if(users.size()>0){
+                for(User user :users){
+                    notifyPush.pinCheNotifies("100",user.getUser_mobile(),content,user.getUser_id(),advert,startTime);
+                }
+            }
+            List <PushNotification> pushs = appDB.getPushList("where type=100 and is_enable=1 ");
+            boolean is_success;
+            for(PushNotification push :pushs){
+                if(push.getLink_url() .equals(link_url) ){
+                    is_success = appDB.createPush(0,0,0,2,content,100,"100.adf",advert.toJSONString(),0,"",link_url);
+                }
+            }
+            json = AppJsonUtils.returnSuccessJsonString(result, "广告消息推送成功！");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("error_code", ErrorCode.getParameter_wrong());
+            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 }

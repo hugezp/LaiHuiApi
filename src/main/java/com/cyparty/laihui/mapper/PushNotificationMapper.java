@@ -23,6 +23,7 @@ public class PushNotificationMapper implements RowMapper<PushNotification>  {
         push.setStatus(resultSet.getInt("status"));
         push.setIs_enable(resultSet.getInt("is_enable"));
         push.setUser_name(resultSet.getString("user_name"));
+        push.setLink_url(resultSet.getString("link_url"));
         return push;
     }
 }
