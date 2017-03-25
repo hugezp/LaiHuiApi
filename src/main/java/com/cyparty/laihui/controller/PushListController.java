@@ -238,4 +238,53 @@ public class PushListController {
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
     }
+
+    /**
+     * 推送广告
+     *
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/advert/push", method = RequestMethod.POST)
+    public ResponseEntity<String> Advert(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        JSONObject result = new JSONObject();
+        String json = "";
+        try {
+            String where = " where pc_type=1 order by pc_image_create_time DESC limit 1 ";
+            Carousel carousel = appDB.getCarousel(where).get(0);
+            String link_url = carousel.getImage_link();
+            String content = carousel.getImage_title();
+            String startTime = Utils.getCurrentTime();
+            JSONObject  advert = new JSONObject();
+            advert.put("link_url",link_url);
+            advert.put("image",carousel.getImage_url());
+            List<User> users = appDB.getUserList(" where is_validated=1 and _id=5 ");
+            if(users.size()>0){
+                for(User user :users){
+                    notifyPush.pinCheNotifies("100",user.getUser_mobile(),content,user.getUser_id(),advert,startTime);
+                }
+                List<PushNotification> pushs = appDB.getPushList("where type=100 and is_enable=1 and link_url='"+link_url+"' order by time DESC limit 1");
+                boolean is_success;
+                if(pushs.size()==0) {
+                    is_success = appDB.createPush(0, 0, 0, 2, content, 100, "100.adf", advert.toJSONString(), 0, "", link_url);
+                }
+                result.put("data",advert);
+                json = AppJsonUtils.returnSuccessJsonString(result, "广告消息推送成功！");
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+            }else{
+                json = AppJsonUtils.returnSuccessJsonString(result, "广告消息推送失败！");
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("error_code", ErrorCode.getParameter_wrong());
+            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+
+
+    }
 }
