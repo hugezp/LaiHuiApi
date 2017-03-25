@@ -484,7 +484,7 @@ public class PassengerDepartureController {
                     result.put("error_code", ErrorCode.getToken_expired());
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                //乘客订单状态
+                //乘客订单状态.
                 case "show_my_orders":
                     if (user_id > 0) {
                         result = AppJsonUtils.getMyBookingOrderList(appDB, page, size, user_id);
