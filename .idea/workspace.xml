@@ -7,168 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2b14faa4-309c-4f56-aa38-b28b77ed4d06" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/META-INF/MANIFEST.MF" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/DispatcherServlet-context.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/APIController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/AlipayNotifyController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/CommonRouteController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/DriverDepartureController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/LoginController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/NearByOwnerOrPassengerController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/OrderController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/PassengerDepartureController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/PayOrderController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/PushListController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/TestController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/TrafficViolationController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/controller/ValidateController.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/db/AppDB$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/db/AppDB.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/Adviertisement.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/AlipayNotify.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/AlipaySetting.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/ApkUpdate.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/Campaign.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/CarOwnerInfo.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/CarTypeData.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/Carousel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/Code.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/CommonRoute.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/DepartureInfo.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/DriverAndCar.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/DriverBookingPassenger.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/DriverGrabInfo.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/DriverPayAccount.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/ErrorCode.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/InviteIimit.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/Manager.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/Order.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/PCCount.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/PassengerOrder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/PassengerPublishInfo.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/PayBack.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/PayLog.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/PayOrder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/PushNotification.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/RouteInfo.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/RoutePoint.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/Tag.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/User.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/UserHistory.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/UserRoleAction.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/UserSuggestion.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/UserToken.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/WXUser.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/WXUserCount.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/domain/WinXinCumulate.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/APPDriverAndCarMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/APPDriverDepartureInfoMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/AdCumulateMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/AdInfoMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/ApkUpdatedMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/CampaignMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/CarOwnerMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/CarOwnerTokenMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/CarTypeMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/CarouselMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/CodeMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/CommonRouteMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/DriverGrabOrderMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/DriverPayAccountMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/DrvierBookingPassengerMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/InviteIimitMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/ManagerMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/OrderMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/OrderUserMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/PCHRouteInfoMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/PassengerDepartureMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/PassengerOrdersMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/PassengerPublishInfoMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/PayLogMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/PayOrderMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/PushNotificationMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/RouteInfoMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/RoutePointMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/TagMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/TotalPayOrderMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/UserHistoryMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/UserIDMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/UserMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/UserSuggestionMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/WXUserCountMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/mapper/WXUserMapper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/AppJsonUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/Base64.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/ConfigUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/DateUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/DrawImage.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/GetIPLocation.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/HttpUtils$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/HttpUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/IDSNValidated.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/IDTransform.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/LeanCloudUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/MapTransUtil.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/NotifyPush.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/OssConfigure.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/OssUtil.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/PayConfigUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/RangeUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/RedisUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/SendSMSUtil.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/SignUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/TaskUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/TestUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/Utils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/classes/com/cyparty/laihui/utilities/XmlParse.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/jsp/pic.jsp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/alipay-sdk-java20161129201425.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/aliyun-sdk-oss-2.3.0.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/android-stub-0.1.1.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/commons-beanutils-1.8.0.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/commons-codec-1.9.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/commons-collections-3.2.1.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/commons-fileupload-1.3.1.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/commons-io-2.2.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/commons-lang-2.5.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/commons-logging-1.1.1.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/commons-logging-1.2.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/commons-pool2-2.4.2.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/dom4j-1.6.1.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/druid-1.0.25.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/ezmorph-1.0.6.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/fastjson-leancloud-1.1.39.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/httpclient-4.4.1.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/httpcore-4.4.4.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/java-sdk-0.1.6.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/javax.servlet-api-3.1.0.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/jconsole.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/jdom-1.1.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/jedis-2.9.0.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/json-20160212.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/json-lib-2.4-jdk15.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/jsoup-1.8.3.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/jstl-1.2.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/leancloud-common-0.1.8.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/log4j-1.2.12.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/log4j-api-2.5.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/log4j-core-2.5.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/mysql-connector-java-6.0.3.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/okhttp-leancloud-2.6.0.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/okio-leancloud-1.6.0.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/spring-aop-4.3.2.RELEASE.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/spring-beans-4.3.2.RELEASE.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/spring-context-4.3.2.RELEASE.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/spring-core-4.3.2.RELEASE.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/spring-expression-4.3.2.RELEASE.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/spring-jdbc-4.3.2.RELEASE.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/spring-tx-4.3.2.RELEASE.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/spring-web-4.3.2.RELEASE.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/spring-webmvc-4.3.2.RELEASE.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/tools.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/lib/xml-apis-1.0.b2.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/cyparty_war_exploded/WEB-INF/web.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/AppJsonUtils.java" afterPath="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/AppJsonUtils.java" />
     </list>
     <ignored path="LaiHuiApi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -199,26 +39,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="LeanCloudUtils.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/LeanCloudUtils.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
-              <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MapTransUtil.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/MapTransUtil.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="18" column="7" lean-forward="false" selection-start-line="18" selection-start-column="7" selection-end-line="18" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="OssConfigure.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/OssConfigure.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -289,11 +109,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TaskUtils.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TaskUtils.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/TaskUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="28" column="7" lean-forward="false" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
+            <state relative-caret-position="276">
+              <caret line="25" column="20" lean-forward="false" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NearByOwnerOrPassengerController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/NearByOwnerOrPassengerController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="251">
+              <caret line="200" column="60" lean-forward="false" selection-start-line="200" selection-start-column="60" selection-end-line="200" selection-end-column="60" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AppJsonUtils.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/AppJsonUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="336">
+              <caret line="1444" column="33" lean-forward="false" selection-start-line="1444" selection-start-column="33" selection-end-line="1444" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -321,6 +161,7 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
@@ -375,13 +216,13 @@
         <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/PassengerDepartureController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/DriverDepartureController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/AlipayNotifyController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/AppJsonUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/NearByOwnerOrPassengerController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/LoginController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/PassengerOrder.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/PayOrderController.java" />
         <option value="$PROJECT_DIR$/web/WEB-INF/DispatcherServlet-context.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/APIController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/AppJsonUtils.java" />
       </list>
     </option>
   </component>
@@ -476,46 +317,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="LaiHuiApi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LaiHuiApi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LaiHuiApi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WEB-INF" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LaiHuiApi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LaiHuiApi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WEB-INF" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jsp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -630,7 +431,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.5735632" />
     <property name="recentsLimit" value="5" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="dynamic.classpath" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="OverrideImplement.combined" value="true" />
@@ -1433,7 +1234,7 @@
       <workItem from="1490326156859" duration="498000" />
       <workItem from="1490327123396" duration="15828000" />
       <workItem from="1490350238244" duration="251000" />
-      <workItem from="1490405313809" duration="60000" />
+      <workItem from="1490405313809" duration="1446000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1481352963358</created>
@@ -1498,11 +1299,25 @@
       <option name="project" value="LOCAL" />
       <updated>1490350266821</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="庞振朋">
+      <created>1490405394529</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1490405394529</updated>
+    </task>
+    <task id="LOCAL-00011" summary="庞振朋">
+      <created>1490406625843</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1490406625843</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1029745000" />
+    <option name="totallyTimeSpent" value="1031131000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1519,7 +1334,7 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23118865" sideWeight="0.25694445" order="7" side_tool="true" content_ui="combo" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23118865" sideWeight="0.26014957" order="7" side_tool="true" content_ui="combo" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15485278" sideWeight="0.4871795" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32959402" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1531,15 +1346,16 @@
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19847329" sideWeight="0.64850426" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13559322" sideWeight="0.4957265" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24100327" sideWeight="0.48929337" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32824427" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17884405" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23118865" sideWeight="0.7430556" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23118865" sideWeight="0.7398504" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3293348" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934782" sideWeight="0.49786323" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22222222" sideWeight="0.47881356" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22222222" sideWeight="0.47881356" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22008547" sideWeight="0.5211864" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19325481" sideWeight="0.5169492" order="5" side_tool="true" content_ui="tabs" />
@@ -1547,7 +1363,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24100327" sideWeight="0.48929337" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.11886587" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1705,6 +1520,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
           <caret line="8" column="24" lean-forward="false" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1749,14 +1565,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="377">
           <caret line="515" column="53" lean-forward="true" selection-start-line="515" selection-start-column="53" selection-end-line="515" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/NearByOwnerOrPassengerController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1775">
-          <caret line="231" column="22" lean-forward="true" selection-start-line="231" selection-start-column="22" selection-end-line="231" selection-end-column="22" />
           <folding />
         </state>
       </provider>
@@ -1817,14 +1625,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="161">
           <caret line="35" column="112" lean-forward="true" selection-start-line="35" selection-start-column="112" selection-end-line="35" selection-end-column="112" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/AppJsonUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="1247" column="0" lean-forward="false" selection-start-line="1247" selection-start-column="0" selection-end-line="1247" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1997,8 +1797,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/TaskUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="28" column="7" lean-forward="false" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
+        <state relative-caret-position="276">
+          <caret line="25" column="20" lean-forward="false" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/controller/NearByOwnerOrPassengerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="200" column="60" lean-forward="false" selection-start-line="200" selection-start-column="60" selection-end-line="200" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/AppJsonUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="1444" column="33" lean-forward="false" selection-start-line="1444" selection-start-column="33" selection-end-line="1444" selection-end-column="33" />
           <folding />
         </state>
       </provider>
