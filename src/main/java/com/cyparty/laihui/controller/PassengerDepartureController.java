@@ -89,7 +89,14 @@ public class PassengerDepartureController {
             JSONObject nowObject = dataArray.getJSONObject(0);
             int distance = nowObject.getIntValue("distance");
             int duration = nowObject.getIntValue("duration");
-            double price = distance * 4 / 10000f;
+            double price = 0.0;
+            if (distance<=200000){
+                 price = 10.0 + distance * 3.3 / 10000f;
+            }else{
+                price = distance * 3.3 / 10000f;
+            }
+
+
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
             resultObject.put("price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
