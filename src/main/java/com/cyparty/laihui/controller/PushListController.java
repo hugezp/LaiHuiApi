@@ -253,7 +253,7 @@ public class PushListController {
         JSONObject result = new JSONObject();
         String json = "";
         try {
-            String where = " where pc_type=2 order by pc_image_create_time DESC limit 1 ";
+            String where = " where pc_type=1 order by pc_image_create_time DESC limit 1 ";
             Carousel carousel = appDB.getCarousel(where).get(0);
             String link_url = carousel.getImage_link();
             String content = carousel.getImage_title();
@@ -261,17 +261,15 @@ public class PushListController {
             JSONObject  advert = new JSONObject();
             advert.put("link_url",link_url);
             advert.put("image",carousel.getImage_url());
-            List<User> users = appDB.getUserList(" where is_validated=1 ");
+            List<User> users = appDB.getUserList(" where is_validated=1 and _id=5 ");
             if(users.size()>0){
                 for(User user :users){
                     notifyPush.pinCheNotifies("100",user.getUser_mobile(),content,user.getUser_id(),advert,startTime);
                 }
-                List <PushNotification> pushs = appDB.getPushList("where type=100 and is_enable=1 ");
+                List<PushNotification> pushs = appDB.getPushList("where type=100 and is_enable=1 and link_url='"+link_url+"' order by time DESC limit 1");
                 boolean is_success;
-                for(PushNotification push :pushs){
-                    if(push.getLink_url() .equals(link_url) ){
-                        is_success = appDB.createPush(0,0,0,2,content,100,"100.adf",advert.toJSONString(),0,"",link_url);
-                    }
+                if(pushs.size()==0) {
+                    is_success = appDB.createPush(0, 0, 0, 2, content, 100, "100.adf", advert.toJSONString(), 0, "", link_url);
                 }
                 result.put("data",advert);
                 json = AppJsonUtils.returnSuccessJsonString(result, "广告消息推送成功！");
