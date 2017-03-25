@@ -1442,7 +1442,7 @@ public class AppJsonUtils {
         String where = " where _id = 1";
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("active", "致用户的一封信");
-        jsonObject.put("url", "http://h5test.laihuipinche.com/laihui/illegal/letter");
+        jsonObject.put("url", "http://h5.laihuipinche.com/laihui/illegal/letter");
         return jsonObject;
     }
 
