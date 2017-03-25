@@ -453,7 +453,7 @@ public class AppDB {
     //将推送消息存入数据库
     public boolean createPush(int order_id,int push_id,int receive_id,int push_type,String alert,int type,String sound ,String data,int status,String user_name,String link_url){
         boolean is_success = true;
-        String SQL = "insert into pc_push_notification (order_id,push_id,receive_id,push_type,alert,type,sound,data,time,status,is_enable,user_name,link_url) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String SQL = "insert into pc_push_notification (order_id,push_id,receive_id,push_type,alert,type,sound,data,time,status,is_enable,user_name,link_url) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         int count=jdbcTemplateObject.update(SQL, new Object[]{order_id,push_id,receive_id,push_type,alert,type,sound,data,Utils.getCurrentTime(),status,1,user_name,link_url});
         if (count<1){
             is_success = false;
