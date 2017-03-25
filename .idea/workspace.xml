@@ -6,8 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2b14faa4-309c-4f56-aa38-b28b77ed4d06" name="Default" comment="庞振朋">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+    <list default="true" id="2b14faa4-309c-4f56-aa38-b28b77ed4d06" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="LaiHuiApi.iws" />
@@ -1122,7 +1121,7 @@
       <workItem from="1490327123396" duration="15828000" />
       <workItem from="1490350238244" duration="251000" />
       <workItem from="1490405313809" duration="5791000" />
-      <workItem from="1490423553105" duration="292000" />
+      <workItem from="1490423553105" duration="344000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1481352963358</created>
@@ -1208,11 +1207,18 @@
       <option name="project" value="LOCAL" />
       <updated>1490406816406</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="庞振朋">
+      <created>1490423850168</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1490423850168</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1035768000" />
+    <option name="totallyTimeSpent" value="1035820000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
