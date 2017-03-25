@@ -465,7 +465,7 @@ public class PassengerDepartureController {
                                         int push_id = user_id;
                                         int receive_id = driverList.get(0).getUser_id();
                                         int push_type = 23;
-                                        appDB.createPush(order_id, push_id, receive_id, push_type, content, 11, "11.caf", passengerData.toJSONString(), 1, user.getUser_nick_name());
+                                        appDB.createPush(order_id, push_id, receive_id, push_type, content, 11, "11.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
                                         notifyPush.pinCheNotify("23", d_mobile, content, order_id, passengerData, confirm_time);
                                     }
                                     json = AppJsonUtils.returnSuccessJsonString(result, "订单取消成功！");
@@ -600,7 +600,7 @@ public class PassengerDepartureController {
                             int push_id = user_id;
                             int receive_id = driver_user_id;
                             int push_type = 28;
-                            appDB.createPush(grab_id, push_id, receive_id, push_type, content, 11, "11.caf", passengerData.toJSONString(), 1, user.getUser_nick_name());
+                            appDB.createPush(grab_id, push_id, receive_id, push_type, content, 11, "11.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
                             //将邀请消息推送给车主
                             notifyPush.pinCheNotify("28", driver_mobile, content, grab_id, passengerData, confirm_time);
 

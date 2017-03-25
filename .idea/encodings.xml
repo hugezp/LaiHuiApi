@@ -18,5 +18,6 @@
     <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/domain/UserToken.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/Base64.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/cyparty/laihui/utilities/SignUtils.java" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

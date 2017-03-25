@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by Administrator on 2017/3/8.大发大啊
+ * Created by Administrator on 2017/3/8.
  */
 @Controller
 @ResponseBody
