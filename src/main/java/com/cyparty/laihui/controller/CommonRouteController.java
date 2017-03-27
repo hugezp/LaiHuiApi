@@ -62,14 +62,6 @@ public class CommonRouteController {
                     String destinat_address = request.getParameter("destinat_address");
                     String destinat_lon = request.getParameter("destinat_lon");
                     String destinat_lat = request.getParameter("destinat_lat");
-//                    String departure_city = "1";
-//                    String departure_address = "1";
-//                    String departure_lon = "1";
-//                    String departure_lat = "1";
-//                    String destinat_city = "1";
-//                    String destinat_address = "1";
-//                    String destinat_lon = "1";
-//                    String destinat_lat = "1";
 
                     boolean is_success = appDB.createCommonRoute(user_id, departure_city, departure_address, departure_lon, departure_lat, destinat_city, destinat_address, destinat_lon, destinat_lat, is_enable);
                     if (is_success) {

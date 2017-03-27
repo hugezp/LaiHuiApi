@@ -316,7 +316,22 @@ public class PassengerDepartureController {
                                     e.printStackTrace();
                                 }
                             }
-                            json = AppJsonUtils.returnFailJsonString(result, "推送发送成功！");
+                            notify_where = " where departure_address = '"+ boarding_address +"' and destinat_address='"+ breakout_address+ "' and is_enable=1";
+                            List<CommonRoute> commonRouteList = appDB.getCommonRoute(notify_where);
+                            if (commonRouteList.size()>0){
+                                for (CommonRoute commonRoute : commonRouteList){
+                                    notify_where = " where _id = "+ commonRoute.getUser_id();
+                                    User user1 = appDB.getUserList(notify_where).get(0);
+                                    String content = "顺路乘客" + user.getUser_nick_name() + "发布了 (" + order.getDeparture_time() + ") 从" + boarding_city + boarding_address + "到" + breakout_city + breakout_address + "的出行信息，与您经常驾驶的路线相符，快来抢单吧！";
+                                    JSONObject passengerData = AppJsonUtils.getPushObject(appDB, order1, 1);
+                                    try {
+                                        notifyPush.pinCheNotify("25", user1.getUser_mobile(), content, order.get_id(), passengerData, Utils.getCurrentTime());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            json = AppJsonUtils.returnSuccessJsonString(result, "推送发送成功！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
                             json = AppJsonUtils.returnFailJsonString(result, "推送发送失败！");
