@@ -33,6 +33,7 @@ public class PushListController {
     AppDB appDB;
     @Autowired
     NotifyPush notifyPush;
+
     /**
      * 获取消息列表
      *
@@ -72,7 +73,7 @@ public class PushListController {
                     String token = request.getParameter("token");
                     if (null != token && token.length() == 32) {
                         int user_id = appDB.getIDByToken(token);
-                        List<PushNotification> pushList = appDB.getPushList("where receive_id=" + user_id +" and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc");
+                        List<PushNotification> pushList = appDB.getPushList("where receive_id=" + user_id + " and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc");
                         if (pushList.size() > 0) {
                             for (PushNotification push : pushList) {
                                 JSONObject pushJson = new JSONObject();
@@ -87,7 +88,7 @@ public class PushListController {
                                 pushJson.put("data", push.getData());
                                 pushJson.put("time", push.getTime());
                                 pushJson.put("status", push.getStatus());
-                                pushJson.put("user_name",push.getUser_name());
+                                pushJson.put("user_name", push.getUser_name());
                                 jsonArray.add(pushJson);
                             }
                             result.put("push", jsonArray);
@@ -101,29 +102,6 @@ public class PushListController {
                         result.put("error_code", ErrorCode.getToken_expired());
                         json = AppJsonUtils.returnFailJsonString(result, "无效的token");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
-                    }
-                case"show_all_users":
-                    List<PushNotification> pushList = appDB.getPushList("where type =100 and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc limit 1");
-                    if (pushList.size() > 0) {
-                        for (PushNotification push : pushList) {
-                            JSONObject pushJson = new JSONObject();
-                            pushJson.put("message_id", push.get_id());
-                            pushJson.put("order_id", push.getOrder_id());
-                            pushJson.put("push_id", push.getPush_id());
-                            pushJson.put("receive_id", push.getReceive_id());
-                            pushJson.put("push_type", push.getPush_type());
-                            pushJson.put("alert", push.getAlert());
-                            pushJson.put("type", push.getType());
-                            pushJson.put("sound", push.getSound());
-                            pushJson.put("data", push.getData());
-                            pushJson.put("time", push.getTime());
-                            pushJson.put("status", push.getStatus());
-                            pushJson.put("user_name",push.getUser_name());
-                            pushJson.put("link_url",push.getLink_url());
-                        }
-                        result.put("push", jsonArray);
-                        json = AppJsonUtils.returnSuccessJsonString(result, "推送消息列表获取成功！");
-                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
             }
             result.put("error_code", ErrorCode.getParameter_wrong());
@@ -139,7 +117,7 @@ public class PushListController {
 
 
     /**
-     * 判断是否可读
+     * 判断消息是否已读
      *
      * @param request
      * @return
@@ -153,12 +131,12 @@ public class PushListController {
         String json = "";
         try {
             String message_id = request.getParameter("message_id");
-            String where = " set status=0 where _id="+message_id;
-            boolean is_success = appDB.update("pc_push_notification",where);
-            if (is_success){
+            String where = " set status=0 where _id=" + message_id;
+            boolean is_success = appDB.update("pc_push_notification", where);
+            if (is_success) {
                 json = AppJsonUtils.returnSuccessJsonString(result, "消息已读状态设置成功！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-            }else{
+            } else {
                 json = AppJsonUtils.returnSuccessJsonString(result, "消息已读状态设置失败！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -174,6 +152,7 @@ public class PushListController {
 
     /**
      * 消息列表清空
+     *
      * @param request
      * @return
      */
@@ -187,24 +166,25 @@ public class PushListController {
         int user_id = 0;
         String token = request.getParameter("token");
         if (token != null && token.length() == 32) {
-            user_id =appDB.getIDByToken(token);
+            user_id = appDB.getIDByToken(token);
 
         } else {
             result.put("error_code", ErrorCode.getToken_expired());
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
-        String where = " set is_enable=0 where receive_id="+user_id+" and is_enable=1";
-        boolean is_success = appDB.update("pc_push_notification",where);
-        if (is_success){
+        String where = " set is_enable=0 where receive_id=" + user_id + " and is_enable=1";
+        boolean is_success = appDB.update("pc_push_notification", where);
+        if (is_success) {
             json = AppJsonUtils.returnSuccessJsonString(result, "清空列表成功！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-        }else{
+        } else {
             json = AppJsonUtils.returnSuccessJsonString(result, "清空列表失败！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
 
     }
+
     /**
      * 判断是否有新消息
      *
@@ -253,30 +233,28 @@ public class PushListController {
         JSONObject result = new JSONObject();
         String json = "";
         try {
-            String where = " where pc_type=2 order by pc_image_create_time DESC limit 1 ";
+            String where = " where pc_type=1 order by pc_image_create_time DESC limit 1 ";
             Carousel carousel = appDB.getCarousel(where).get(0);
             String link_url = carousel.getImage_link();
             String content = carousel.getImage_title();
             String startTime = Utils.getCurrentTime();
-            JSONObject  advert = new JSONObject();
-            advert.put("link_url",link_url);
-            advert.put("image",carousel.getImage_url());
-            List<User> users = appDB.getUserList(" where is_validated=1 ");
-            if(users.size()>0){
-                for(User user :users){
-                    notifyPush.pinCheNotifies("100",user.getUser_mobile(),content,user.getUser_id(),advert,startTime);
+            JSONObject advert = new JSONObject();
+            advert.put("link_url", link_url);
+            advert.put("image", carousel.getImage_url());
+            List<User> users = appDB.getUserList(" where is_validated=1 and _id=5 ");
+            if (users.size() > 0) {
+                for (User user : users) {
+                    notifyPush.pinCheNotifies("100", user.getUser_mobile(), content, user.getUser_id(), advert, startTime);
                 }
-                List <PushNotification> pushs = appDB.getPushList("where type=100 and is_enable=1 ");
+                List<PushNotification> pushs = appDB.getPushList("where type=100 and is_enable=1 and link_url='" + link_url + "' order by time DESC limit 1");
                 boolean is_success;
-                for(PushNotification push :pushs){
-                    if(push.getLink_url() .equals(link_url) ){
-                        is_success = appDB.createPush(0,0,0,2,content,100,"100.adf",advert.toJSONString(),0,"",link_url);
-                    }
+                if (pushs.size() == 0) {
+                    is_success = appDB.createPush(0, 0, 0, 2, content, 100, "100.adf", advert.toJSONString(), 0, "", link_url);
                 }
-                result.put("data",advert);
+                result.put("data", advert);
                 json = AppJsonUtils.returnSuccessJsonString(result, "广告消息推送成功！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-            }else{
+            } else {
                 json = AppJsonUtils.returnSuccessJsonString(result, "广告消息推送失败！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }

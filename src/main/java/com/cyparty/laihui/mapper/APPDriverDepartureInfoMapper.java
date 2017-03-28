@@ -33,8 +33,21 @@ public class APPDriverDepartureInfoMapper implements RowMapper<DepartureInfo> {
 
         if(!name.isEmpty()) {
             String endName = "";
+            String sexNum ="";
             if (!idsn.isEmpty()) {
-                String sexNum = idsn.substring(16, 17);
+                int length = idsn.length();
+                switch (length){
+                    case 15:
+                        if (!idsn.substring(14,15).matches("[a-zA-Z]")){
+                            sexNum = idsn.substring(14,15);
+                        }
+                        break;
+                    case 18:
+                        sexNum = idsn.substring(16,17);
+                        break;
+                    default:
+                        sexNum = "1";
+                }
                 if (!sexNum.isEmpty()) {
                     if (Integer.parseInt(sexNum) % 2 == 1) {
                         endName = "先生";

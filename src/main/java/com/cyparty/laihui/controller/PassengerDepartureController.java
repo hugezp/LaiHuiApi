@@ -89,11 +89,18 @@ public class PassengerDepartureController {
             JSONObject nowObject = dataArray.getJSONObject(0);
             int distance = nowObject.getIntValue("distance");
             int duration = nowObject.getIntValue("duration");
-            double price = distance * 4 / 10000f;
+            double price = 0.0;
+            if (distance<=200000){
+                 price = 10.0 + distance * 3.3 / 10000f;
+            }else{
+                price = distance * 3.3 / 10000f;
+            }
+
+
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
             resultObject.put("price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-            resultObject.put("total_price", new BigDecimal(price * person).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+            resultObject.put("total_price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             resultObject.put("cost_time", duration / 60 + "分钟");
             resultObject.put("distance", distance / 1000);
             resultObject.put("average", new BigDecimal(df.format(average)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
@@ -309,7 +316,22 @@ public class PassengerDepartureController {
                                     e.printStackTrace();
                                 }
                             }
-                            json = AppJsonUtils.returnFailJsonString(result, "推送发送成功！");
+                            notify_where = " where departure_address = '"+ boarding_address +"' and destinat_address='"+ breakout_address+ "' and is_enable=1";
+                            List<CommonRoute> commonRouteList = appDB.getCommonRoute(notify_where);
+                            if (commonRouteList.size()>0){
+                                for (CommonRoute commonRoute : commonRouteList){
+                                    notify_where = " where _id = "+ commonRoute.getUser_id();
+                                    User user1 = appDB.getUserList(notify_where).get(0);
+                                    String content = "顺路乘客" + user.getUser_nick_name() + "发布了 (" + order.getDeparture_time() + ") 从" + boarding_city + boarding_address + "到" + breakout_city + breakout_address + "的出行信息，与您经常驾驶的路线相符，快来抢单吧！";
+                                    JSONObject passengerData = AppJsonUtils.getPushObject(appDB, order1, 1);
+                                    try {
+                                        notifyPush.pinCheNotify("25", user1.getUser_mobile(), content, order.get_id(), passengerData, Utils.getCurrentTime());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            json = AppJsonUtils.returnSuccessJsonString(result, "推送发送成功！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
                             json = AppJsonUtils.returnFailJsonString(result, "推送发送失败！");
@@ -477,7 +499,7 @@ public class PassengerDepartureController {
                     result.put("error_code", ErrorCode.getToken_expired());
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                //乘客订单状态
+                //乘客订单状态.
                 case "show_my_orders":
                     if (user_id > 0) {
                         result = AppJsonUtils.getMyBookingOrderList(appDB, page, size, user_id);

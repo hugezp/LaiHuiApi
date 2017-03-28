@@ -1223,6 +1223,7 @@ public class AppJsonUtils {
                 jsonObject.put("image_link", carousel.getImage_link());
                 jsonObject.put("image_title", carousel.getImage_title());
                 jsonObject.put("create_time", carousel.getCreate_time());
+                jsonObject.put("carousel_id", carousel.get_id());
 
                 dataArray.add(jsonObject);
             }
@@ -1240,6 +1241,7 @@ public class AppJsonUtils {
                 result_json.put("image_link", carousel.getImage_link());
                 result_json.put("image_title", carousel.getImage_title());
                 result_json.put("create_time", carousel.getCreate_time());
+                result_json.put("carousel_id", carousel.get_id());
                 break;
             }
             start = start + carousel.getSeq();
