@@ -31,16 +31,8 @@
     <bean id="appDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <!--<property name="driverClassName" value="com.mysql.jdbc.Driver"/>-->
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-
-       <!-- <property name="url" value="jdbc:mysql://rdska466r2fvvzh5vr7gb.mysql.rds.aliyuncs.com:3306/copy_cyparty_pc"/>-->
-        <!--<property name="url" value="jdbc:mysql://rm-m5e1a87u05v50r8vs.mysql.rds.aliyuncs.com:3306/laihui_version1"/>-->
-        <!--<property name="url" value="jdbc:mysql://rm-m5e1a87u05v50r8vs.mysql.rds.aliyuncs.com:3306/laihui_version1"/>-->
-       <!-- <property name="username" value="cyparty_pc"/>
-        <property name="password" value="Cyparty2016"/>-->
-
-       <!-- <property name="username" value="laihui"/>
-        <property name="password" value="Laihui2017"/>-->
-
+        <!--<property name="url" value="jdbc:mysql://rdska466r2fvvzh5vr7gb.mysql.rds.aliyuncs.com:3306/copy_cyparty_pc"/>-->
+        <!--<property name="url" value="jdbc:mysql://rdska466r2fvvzh5vr7gb.mysql.rds.aliyuncs.com:3306/laihui_version1"/>-->
         <property name="url" value="jdbc:mysql://rm-m5e1a87u05v50r8vs.mysql.rds.aliyuncs.com:3306/copy_laihui"/>
         <property name="username" value="laihuitest"/>
         <property name="password" value="lldd22EE"/>
