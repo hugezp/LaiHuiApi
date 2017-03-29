@@ -14,17 +14,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 
 /**
  * Created by dupei on 2017/3/27 0027.
  */
 //存储推广人推广的手机号码
-    @Controller
-    @ResponseBody
-    @RequestMapping( value ="/app/api",method = RequestMethod.POST)
+@Controller
+@ResponseBody
+@RequestMapping( value ="/app/api",method = RequestMethod.POST)
 public class PopularizingController {
     @Autowired
     AppDB appDB;
@@ -41,7 +41,8 @@ public class PopularizingController {
         JSONObject result = new JSONObject();
         String json="";
 //        String URL = request.getRequestURL().toString();
-        String popularize_code = request.getQueryString();
+//        String popularize_code = request.getQueryString();
+        String popularize_code = request.getParameter("code");
         String popularizing_mobile = request.getParameter("mobile");
         boolean is_true = false;
         if(null != popularize_code && null != popularizing_mobile){
@@ -90,16 +91,16 @@ public class PopularizingController {
                 List<Popularize> popularizeList = appDB.getPopular(user_id);
                 if(popularizeList.size()>0){
                     Popularize popularize = popularizeList.get(0);
-                        String code = popularize.getPopularize_code();
-                        int level =popularize.getLevel();
-                        if(level <= 5){
-                            result.put("code",code);
-                            json = AppJsonUtils.returnSuccessJsonString(result, "推广码获取成功！");
-                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                        }else{
-                            json = AppJsonUtils.returnFailJsonString(result, "推广码获取失败！");
-                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                        }
+                    String code = popularize.getPopularize_code();
+                    int level =popularize.getLevel();
+                    if(level <= 5){
+                        result.put("code",code);
+                        json = AppJsonUtils.returnSuccessJsonString(result, "推广码获取成功！");
+                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                    }else{
+                        json = AppJsonUtils.returnFailJsonString(result, "推广码获取失败！");
+                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                    }
                 }else{
                     json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
