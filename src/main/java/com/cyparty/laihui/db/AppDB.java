@@ -467,5 +467,20 @@ public class AppDB {
         return pushList;
     }
 
+    public boolean createPopularizing(String popularize_code,String popularizing_mobile){
+        boolean is_success = true;
+        String SQL = "insert into pc_popularizing (popularize_code,popularizing_mobile,time) VALUES(?,?,?)";
+        int count=jdbcTemplateObject.update(SQL, new Object[]{popularize_code,popularizing_mobile,Utils.getCurrentTime()});
+        if (count<1){
+            is_success = false;
+        }
+        return is_success;
+    }
+
+    public List<Popularizing> getPopularize(String mobile){
+        String SQL = "select _id from pc_popularizing where popularizing_mobile =  "+mobile;
+        List<Popularizing> popularizes = jdbcTemplateObject.query(SQL, new PopularizingMapper());
+        return  popularizes;
+    }
 }
 
