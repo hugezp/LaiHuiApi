@@ -305,11 +305,11 @@ public class AppDB {
     }
 
     //创建广告统计
-    public boolean createSuggestion(int id,String  advice,String email,int source) {
+    public boolean createSuggestion(int id,String  advice,String email,int source,String url) {
         boolean is_success = true;
 
-        String SQL = "insert into pc_user_suggestion(user_id,advice,create_time,contact,source) VALUES (?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{id, advice,Utils.getCurrentTime(),email,source});
+        String SQL = "insert into pc_user_suggestion(user_id,advice,create_time,contact,source,user_screenshots) VALUES (?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{id, advice,Utils.getCurrentTime(),email,source,url});
         if (count < 1) {
             is_success = false;
         }
@@ -466,7 +466,7 @@ public class AppDB {
         List<PushNotification> pushList = jdbcTemplateObject.query(SQL,new PushNotificationMapper());
         return pushList;
     }
-
+//保存推广信息
     public boolean createPopularizing(String popularize_code,String popularizing_mobile){
         boolean is_success = true;
         String SQL = "insert into pc_popularizing (popularize_code,popularizing_mobile,time) VALUES(?,?,?)";
@@ -476,11 +476,33 @@ public class AppDB {
         }
         return is_success;
     }
-
+//查询推广是否有重复手机号
     public List<Popularizing> getPopularize(String mobile){
         String SQL = "select _id from pc_popularizing where popularizing_mobile =  "+mobile;
         List<Popularizing> popularizes = jdbcTemplateObject.query(SQL, new PopularizingMapper());
         return  popularizes;
+    }
+//查询获取当前推广员的推广码
+    public List<Popularize> getPopular(int user_id){
+        String SQL = "select * from pc_popularize where popularize_id ="+user_id;
+        List<Popularize> popularizeList = jdbcTemplateObject.query(SQL,new PopularizeMapper());
+        return popularizeList;
+    }
+//根据推广码获取推广人表的数据
+    public List<Popularize> getPopularized(String code){
+        String SQL = "select * from pc_popularize where popularize_code ="+code;
+        List<Popularize> popularizeList = jdbcTemplateObject.query(SQL,new PopularizeMapper());
+        return popularizeList;
+    }
+    //生成推广系统推广码
+    public boolean createPopularize(int popularize_id,int popularize_parent_id,String popularize_parents_id,String popularize_code,int is_enable,int level){
+        boolean is_success = true;
+        String SQL = "insert into pc_popularize (popularize_id,popularize_parent_id,popularize_parents_id,popularize_code,create_time,update_time,is_enable,level) VALUES(?,?,?,?,?,?,?,?)";
+        int count=jdbcTemplateObject.update(SQL, new Object[]{popularize_code,popularize_parent_id,popularize_parents_id,popularize_code,Utils.getCurrentTime(),Utils.getCurrentTime(),is_enable,level});
+        if (count<1){
+            is_success = false;
+        }
+        return is_success;
     }
 }
 

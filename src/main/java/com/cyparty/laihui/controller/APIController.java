@@ -7,6 +7,7 @@ import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.OssUtil;
 import com.cyparty.laihui.utilities.TestUtils;
+import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -64,14 +65,30 @@ public class APIController {
                         String suggestion = request.getParameter("advice");
                         String contact = request.getParameter("email");
                         String source = request.getParameter("source");
-
+                        String image_oss="";
+                        String filePath = Utils.fileImgUpload("screenshot", request);
+                        if (filePath != null && !filePath.trim().equals("")) {
+                            String image_local = filePath.substring(filePath.indexOf("upload"));
+                            String arr[] = image_local.split("\\\\");
+                            image_oss = arr[arr.length - 1];
+                            try {
+                                if (ossUtil.uploadFileWithResult(request, image_oss, image_local)) {
+                                    image_oss = "http://laihuipincheoss.oss-cn-qingdao.aliyuncs.com/" + image_oss;
+                                }
+                            } catch (Exception e) {
+                                image_oss = null;
+                            }
+                        } else {
+                            image_oss = null;
+                        }
                         if (source != null && source.equals("iOS")) {
                             //iOS用户反馈
-                            appDB.createSuggestion(user_id, suggestion, contact, 1);
+                            appDB.createSuggestion(user_id, suggestion, contact, 1,image_oss);
                         } else {
                             //android用户反馈
-                            appDB.createSuggestion(user_id, suggestion, contact, 0);
+                            appDB.createSuggestion(user_id, suggestion, contact, 0,image_oss);
                         }
+                        result.put("url",image_oss);
                         json = AppJsonUtils.returnSuccessJsonString(result, "意见反馈成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {

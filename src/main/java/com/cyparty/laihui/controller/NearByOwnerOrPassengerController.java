@@ -5,6 +5,7 @@ import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.DriverAndCar;
 import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.domain.PassengerOrder;
+import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.RangeUtils;
 import com.cyparty.laihui.utilities.Utils;
@@ -50,10 +51,11 @@ public class NearByOwnerOrPassengerController {
         int user_id = 0;
         String json = "";
         String where = null;
+        User user = new User();
         //获取系统时间
         String current_time = Utils.getCurrentTime();
         //附近车主（乘客）搜索范围
-        double query_distance = 50000.0;
+        double query_distance = 200000.0;
         try {
             String action = request.getParameter("action");
             int page = 0;
@@ -78,7 +80,8 @@ public class NearByOwnerOrPassengerController {
             String token = request.getParameter("token");
             if (token != null && token.length() == 32) {
                 user_id = appDB.getIDByToken(token);
-
+                where = " where _id ="+user_id;
+                user = appDB.getUserList(where).get(0);
             } else {
                 result.put("error_code", ErrorCode.getToken_expired());
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
@@ -139,6 +142,8 @@ public class NearByOwnerOrPassengerController {
                         result.put("order", AppJsonUtils.order(appDB, user_id, 0, "passenger"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
                         result.put("route", AppJsonUtils.commonRoute(appDB, user_id, null));
+                        result.put("user_name", user.getUser_name());
+                        result.put("user_mobile", user.getUser_mobile());
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近车主获取成功");
                     } else {
                         result = AppJsonUtils.getNearByOwnerList(nearByOwenrList2, page, size, count);
@@ -146,6 +151,8 @@ public class NearByOwnerOrPassengerController {
                         result.put("order", AppJsonUtils.order(appDB, user_id, 0, "passenger"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
                         result.put("route", AppJsonUtils.commonRoute(appDB, user_id, null));
+                        result.put("user_name", user.getUser_name());
+                        result.put("user_mobile", user.getUser_mobile());
                         json = AppJsonUtils.returnSuccessJsonString(result, "您的附近暂时还没有车主出现哦");
                     }
                     break;
@@ -195,6 +202,8 @@ public class NearByOwnerOrPassengerController {
                         result.put("route", AppJsonUtils.commonRoute(appDB, user_id, null));
                         result.put("publish", AppJsonUtils.order(appDB, user_id, 0, "owner"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
+                        result.put("user_name", user.getUser_name());
+                        result.put("user_mobile", user.getUser_mobile());
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近乘客获取成功！");
                     } else {
                         result = AppJsonUtils.getNearByPassengerList(nearByPassengerList2, page, size, count);
@@ -203,6 +212,8 @@ public class NearByOwnerOrPassengerController {
                         result.put("route", AppJsonUtils.commonRoute(appDB, user_id, null));
                         result.put("publish", AppJsonUtils.order(appDB, user_id, 0, "owner"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
+                        result.put("user_name", user.getUser_name());
+                        result.put("user_mobile", user.getUser_mobile());
                         json = AppJsonUtils.returnSuccessJsonString(result, "您的附近暂时还没有乘客出现哦！");
                     }
             }
@@ -235,7 +246,7 @@ public class NearByOwnerOrPassengerController {
         double distance = 0.0;
         String current_time = Utils.getCurrentTime();
         //设定附近的定义范围
-        double query_distance = 500000.0;
+        double query_distance = 200000.0;
         try {
             String action = request.getParameter("action");
             int page = 0;

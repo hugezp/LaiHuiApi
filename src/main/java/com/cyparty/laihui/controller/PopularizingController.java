@@ -3,6 +3,7 @@ package com.cyparty.laihui.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.Popularizing;
+import com.cyparty.laihui.domain.Popularize;
 import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,53 @@ public class PopularizingController {
         }else{
             json = AppJsonUtils.returnSuccessJsonString(result, "请求参数错误！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /***
+     * 分享推广人推广码
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/share", method = RequestMethod.POST)
+    public ResponseEntity<String> share(HttpServletRequest request){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        JSONObject result = new JSONObject();
+        String json = "";
+        int user_id = 0;
+        String token = request.getParameter("token");
+        if (token != null && token.length() == 32) {
+            user_id = appDB.getIDByToken(token);
+            String now_where = " where _id=" + user_id + "  and is_validated =1";
+            List<User> userList = appDB.getUserList(now_where);
+            //判断该用户是不是实名认证的用户
+            if (userList.size() > 0) {
+                List<Popularize> popularizeList = appDB.getPopular(user_id);
+                if(popularizeList.size()>0){
+                    Popularize popularize = popularizeList.get(0);
+                        String code = popularize.getPopularize_code();
+                        int level =popularize.getLevel();
+                        if(level <= 5){
+                            result.put("code",code);
+                            json = AppJsonUtils.returnSuccessJsonString(result, "推广码获取成功！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        }else{
+                            json = AppJsonUtils.returnFailJsonString(result, "推广码获取失败！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        }
+                }else{
+                    json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+                }
+            }else{
+                json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+            }
+        }else{
+            json = AppJsonUtils.returnFailJsonString(result, "非法token！");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
     }
 

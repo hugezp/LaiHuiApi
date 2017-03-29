@@ -337,8 +337,9 @@ public class DriverDepartureController {
             //添加订单
             switch (action) {
                 case "add":
-                     where = " where user_id = "+user_id+" and order_type=2 and order_status<3 and is_enable=1";
-                    if (appDB.getOrderReview(where,0).size()==0){
+                    String confirm_time1 = Utils.getCurrentTime();
+                     where = " where user_id = "+user_id+" and departure_time>'"+confirm_time1+"' and is_enable=1";
+                    if (appDB.getAppDriverDpartureInfo(where).size()==0){
                         json = AppJsonUtils.returnFailJsonString(result, "请先创建车单！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }

@@ -1332,7 +1332,12 @@ public class AppJsonUtils {
                 jsonObject.put("o_province", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("province"));
                 jsonObject.put("o_city", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("city"));
                 jsonObject.put("o_name", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("name"));
-                jsonObject.put("name", passenger.getUser_name());
+                if (passenger.getUser_name()==null){
+                    jsonObject.put("name", "");
+                }else {
+                    jsonObject.put("name", passenger.getUser_name());
+                }
+
                 jsonObject.put("user_avatar", passenger.getUser_avatar());
                 jsonObject.put("booking_seats", passenger.getSeats());
                 jsonObject.put("remark", passenger.getRemark());

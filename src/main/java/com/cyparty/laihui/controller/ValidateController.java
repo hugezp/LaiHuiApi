@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.CarOwnerInfo;
 import com.cyparty.laihui.domain.ErrorCode;
+import com.cyparty.laihui.domain.Popularize;
+import com.cyparty.laihui.domain.Popularizing;
 import com.cyparty.laihui.utilities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by zhu on 2016/5/11.
@@ -108,6 +111,33 @@ public class ValidateController {
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                         }
                         appDB.procedureUpdateUser("create_user",mobile,2,name,idsn,id,token,"",0,"",0);
+                        //如果是推广来的就进行下面的操作
+                        List<Popularizing> popularizeList = appDB.getPopularize(mobile);
+                        if(popularizeList.size()>0){
+                            Popularizing popularizing = popularizeList.get(0);
+                            String code = popularizing.getPopularize_code();
+                            List<Popularize> popularizes = appDB.getPopularized(code);
+                            if(popularizes.size()>0){
+                                Popularize popular = popularizes.get(0);
+                                int user_id = popular.getPopularize_id();
+                                int level = popular.getLevel();
+                                String popularize_parents_id = popular.getPopularize_parents_id();
+                                //重复则不能添加
+                                List<Popularize> populars = appDB.getPopular(id);
+                                if(populars.size() == 0){
+                                    //判断上级等级大小，如果等于5则不再生成推广码
+                                    if(level < 5){
+                                        String opularize_code = SerialNumberUtil.toSerialNumber(id);
+                                        if(level == 0){
+                                            appDB.createPopularize(id,user_id,user_id+"",opularize_code,1,1);
+                                        }else{
+                                            appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,opularize_code,1,level+1);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                     }else {
                         result.put("error_code", ErrorCode.getToken_expired());
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
@@ -146,6 +176,31 @@ public class ValidateController {
                                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                             }
                             appDB.procedureValidateCarOwner(0,carOwnerInfo);
+                            //如果是推广来的就进行下面的操作
+                            List<Popularizing> popularizeList = appDB.getPopularize(mobile);
+                            if(popularizeList.size()>0){
+                                Popularizing popularizing = popularizeList.get(0);
+                                String code = popularizing.getPopularize_code();
+                                List<Popularize> popularizes = appDB.getPopularized(code);
+                                if(popularizes.size()>0){
+                                    Popularize popular = popularizes.get(0);
+                                    int user_id = popular.getPopularize_id();
+                                    int level = popular.getLevel();
+                                    String popularize_parents_id = popular.getPopularize_parents_id();
+                                    //重复则不能添加
+                                    List<Popularize> populars = appDB.getPopular(id);
+                                    if(populars.size() == 0){
+                                        if(level < 5){
+                                            String opularize_code = SerialNumberUtil.toSerialNumber(id);
+                                            if(level == 0){
+                                                appDB.createPopularize(id,user_id,user_id+"",opularize_code,1,1);
+                                            }else{
+                                                appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,opularize_code,1,level+1);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                             // 回写上传的数据
                             JSONObject driver_validate=new JSONObject();
                             driver_validate.put("name",carOwnerInfo.getCar_owner_name());

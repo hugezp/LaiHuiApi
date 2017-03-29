@@ -265,7 +265,7 @@ public class Utils {
     }
     public static String sendCodeMessage(String mobile){
         String rand= SendSMSUtil.randomNum();
-        if(mobile.equals("18338228688")){
+        if(mobile.equals("13298172885")){
             rand="0000";
         }
         if(mobile.equals("13838741275")){
