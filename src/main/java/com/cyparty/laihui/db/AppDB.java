@@ -305,11 +305,11 @@ public class AppDB {
     }
 
     //创建广告统计
-    public boolean createSuggestion(int id,String  advice,String email,int source) {
+    public boolean createSuggestion(int id,String  advice,String email,int source,String url) {
         boolean is_success = true;
 
-        String SQL = "insert into pc_user_suggestion(user_id,advice,create_time,contact,source) VALUES (?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{id, advice,Utils.getCurrentTime(),email,source});
+        String SQL = "insert into pc_user_suggestion(user_id,advice,create_time,contact,source,user_screenshots) VALUES (?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{id, advice,Utils.getCurrentTime(),email,source,url});
         if (count < 1) {
             is_success = false;
         }

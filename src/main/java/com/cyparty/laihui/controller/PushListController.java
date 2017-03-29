@@ -137,7 +137,7 @@ public class PushListController {
                 json = AppJsonUtils.returnSuccessJsonString(result, "消息已读状态设置成功！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             } else {
-                json = AppJsonUtils.returnSuccessJsonString(result, "消息已读状态设置失败！");
+                json = AppJsonUtils.returnFailJsonString(result, "消息已读状态设置失败！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
         } catch (Exception e) {
@@ -179,7 +179,7 @@ public class PushListController {
             json = AppJsonUtils.returnSuccessJsonString(result, "清空列表成功！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         } else {
-            json = AppJsonUtils.returnSuccessJsonString(result, "清空列表失败！");
+            json = AppJsonUtils.returnFailJsonString(result, "清空列表失败！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
 
@@ -209,7 +209,7 @@ public class PushListController {
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             } else {
                 result.put("status", 0);
-                json = AppJsonUtils.returnSuccessJsonString(result, "您没有新的消息！");
+                json = AppJsonUtils.returnFailJsonString(result, "您没有新的消息！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
         } else {
@@ -255,7 +255,7 @@ public class PushListController {
                 json = AppJsonUtils.returnSuccessJsonString(result, "广告消息推送成功！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             } else {
-                json = AppJsonUtils.returnSuccessJsonString(result, "广告消息推送失败！");
+                json = AppJsonUtils.returnFailJsonString(result, "广告消息推送失败！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
         } catch (Exception e) {
