@@ -127,11 +127,11 @@ public class ValidateController {
                                 if(populars.size() == 0){
                                     //判断上级等级大小，如果等于5则不再生成推广码
                                     if(level < 5){
-                                        String opularize_code = SerialNumberUtil.toSerialNumber(id);
+                                        String popularize_code = SerialNumberUtil.toSerialNumber(id);
                                         if(level == 0){
-                                            appDB.createPopularize(id,user_id,user_id+"",opularize_code,1,1);
+                                            appDB.createPopularize(id,user_id,user_id+"",popularize_code,1,1);
                                         }else{
-                                            appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,opularize_code,1,level+1);
+                                            appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,popularize_code,1,level+1);
                                         }
                                     }
                                 }
@@ -191,11 +191,11 @@ public class ValidateController {
                                     List<Popularize> populars = appDB.getPopular(id);
                                     if(populars.size() == 0){
                                         if(level < 5){
-                                            String opularize_code = SerialNumberUtil.toSerialNumber(id);
+                                            String popularize_code = SerialNumberUtil.toSerialNumber(id);
                                             if(level == 0){
-                                                appDB.createPopularize(id,user_id,user_id+"",opularize_code,1,1);
+                                                appDB.createPopularize(id,user_id,user_id+"",popularize_code,1,1);
                                             }else{
-                                                appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,opularize_code,1,level+1);
+                                                appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,popularize_code,1,level+1);
                                             }
                                         }
                                     }
