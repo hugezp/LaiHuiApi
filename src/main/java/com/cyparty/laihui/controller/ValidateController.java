@@ -129,9 +129,10 @@ public class ValidateController {
                                     if(level < 5){
                                         String popularize_code = SerialNumberUtil.toSerialNumber(id);
                                         if(level == 0){
-                                            appDB.createPopularize(id,user_id,user_id+"",popularize_code,1,1);
+                                            appDB.createPopularize(id,user_id,user_id+"",user_id,popularize_code,1,1);
                                         }else{
-                                            appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,popularize_code,1,level+1);
+                                            String[] strs = popularize_parents_id.split(",");
+                                            appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,Integer.parseInt(strs[0]),popularize_code,1,level+1);
                                         }
                                     }
                                 }
@@ -193,9 +194,10 @@ public class ValidateController {
                                         if(level < 5){
                                             String popularize_code = SerialNumberUtil.toSerialNumber(id);
                                             if(level == 0){
-                                                appDB.createPopularize(id,user_id,user_id+"",popularize_code,1,1);
+                                                appDB.createPopularize(id,user_id,user_id+"",user_id,popularize_code,1,1);
                                             }else{
-                                                appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,popularize_code,1,level+1);
+                                                String[] strs = popularize_parents_id.split(",");
+                                                appDB.createPopularize(id,user_id,popularize_parents_id+","+user_id,Integer.parseInt(strs[0]),popularize_code,1,level+1);
                                             }
                                         }
                                     }

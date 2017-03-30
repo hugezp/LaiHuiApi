@@ -469,7 +469,7 @@ public class AppDB {
 //保存推广信息
     public boolean createPopularizing(String popularize_code,String popularizing_mobile){
         boolean is_success = true;
-        String SQL = "insert into pc_popularizing (popularize_code,popularizing_mobile,time) VALUES(?,?,?)";
+        String SQL = "insert into pc_popularizing (popularize_code,popularizing_mobile,create_time) VALUES(?,?,?)";
         int count=jdbcTemplateObject.update(SQL, new Object[]{popularize_code,popularizing_mobile,Utils.getCurrentTime()});
         if (count<1){
             is_success = false;
@@ -478,7 +478,7 @@ public class AppDB {
     }
 //查询推广是否有重复手机号
     public List<Popularizing> getPopularize(String mobile){
-        String SQL = "select _id from pc_popularizing where popularizing_mobile =  "+mobile;
+        String SQL = "select * from pc_popularizing where popularizing_mobile ="+mobile;
         List<Popularizing> popularizes = jdbcTemplateObject.query(SQL, new PopularizingMapper());
         return  popularizes;
     }
@@ -495,10 +495,10 @@ public class AppDB {
         return popularizeList;
     }
     //生成推广系统推广码
-    public boolean createPopularize(int popularize_id,int popularize_parent_id,String popularize_parents_id,String popularize_code,int is_enable,int level){
+    public boolean createPopularize(int popularize_id,int popularize_parent_id,String popularize_parents_id,int p_id,String popularize_code,int is_enable,int level){
         boolean is_success = true;
-        String SQL = "insert into pc_popularize (popularize_id,popularize_parent_id,popularize_parents_id,popularize_code,create_time,update_time,is_enable,level) VALUES(?,?,?,?,?,?,?,?)";
-        int count=jdbcTemplateObject.update(SQL, new Object[]{popularize_code,popularize_parent_id,popularize_parents_id,popularize_code,Utils.getCurrentTime(),Utils.getCurrentTime(),is_enable,level});
+        String SQL = "insert into pc_popularize (popularize_id,popularize_parent_id,popularize_parents_id,p_id,popularize_code,create_time,update_time,is_enable,level) VALUES(?,?,?,?,?,?,?,?,?)";
+        int count=jdbcTemplateObject.update(SQL, new Object[]{popularize_id,popularize_parent_id,popularize_parents_id,p_id,popularize_code,Utils.getCurrentTime(),Utils.getCurrentTime(),is_enable,level});
         if (count<1){
             is_success = false;
         }
