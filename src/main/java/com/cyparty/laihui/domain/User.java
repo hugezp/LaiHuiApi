@@ -21,8 +21,8 @@ public class User {
     private String signature;//个性签名
     private String birthday;//生日
     private String live_city;//居住地
-    private String jobs;//职业
     private String home;//家乡
+    private String company;//公司
 
     public String getUser_nick_name() {
         return user_nick_name;
@@ -136,11 +136,12 @@ public class User {
 
     public void setLive_city(String live_city) {this.live_city = live_city;}
 
-    public String getJobs() {return jobs;}
-
-    public void setJobs(String jobs) {this.jobs = jobs;}
-
     public String getHome() {return home;}
 
     public void setHome(String home) {this.home = home;}
+
+    public String getCompany() {return company;}
+
+    public void setCompany(String company) {this.company = company;}
+
 }

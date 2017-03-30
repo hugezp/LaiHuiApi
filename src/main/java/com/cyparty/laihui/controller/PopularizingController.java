@@ -84,7 +84,7 @@ public class PopularizingController {
         String token = request.getParameter("token");
         if (token != null && token.length() == 32) {
             int user_id = appDB.getIDByToken(token);
-            String now_where = " where _id = '"+user_id +"' and is_validated =1";
+            String now_where = " where _id = "+user_id +" and is_validated =1";
             List<User> userList = appDB.getUserList(now_where);
             //判断该用户是不是实名认证的用户
             if (userList.size() > 0) {

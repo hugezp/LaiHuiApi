@@ -64,7 +64,7 @@ public class UserMapper implements RowMapper<User> {
         user.setSignature(resultSet.getString("signature"));
         user.setBirthday(Utils.checkNull(resultSet.getString("birthday")));
         user.setLive_city(resultSet.getString("live_city"));
-        user.setJobs(resultSet.getString("jobs"));
+        user.setCompany(resultSet.getString("company"));
         user.setHome(resultSet.getString("home"));
 
         return user;
