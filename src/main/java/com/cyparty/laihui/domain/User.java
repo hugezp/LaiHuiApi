@@ -17,6 +17,12 @@ public class User {
     private String user_idsn;//身份证
     private String reason;//原因
     private String avatar;//头像
+    private int sex;//性别
+    private String signature;//个性签名
+    private String birthday;//生日
+    private String live_city;//居住地
+    private String jobs;//职业
+    private String home;//家乡
 
     public String getUser_nick_name() {
         return user_nick_name;
@@ -113,4 +119,28 @@ public class User {
     public void setUser_idsn(String user_idsn) {
         this.user_idsn = user_idsn;
     }
+
+    public int getSex() {return sex;}
+
+    public void setSex(int sex) {this.sex = sex;}
+
+    public String getSignature() {return signature;}
+
+    public void setSignature(String signature) {this.signature = signature;}
+
+    public String getBirthday() {return birthday;}
+
+    public void setBirthday(String birthday) {this.birthday = birthday;}
+
+    public String getLive_city() {return live_city;}
+
+    public void setLive_city(String live_city) {this.live_city = live_city;}
+
+    public String getJobs() {return jobs;}
+
+    public void setJobs(String jobs) {this.jobs = jobs;}
+
+    public String getHome() {return home;}
+
+    public void setHome(String home) {this.home = home;}
 }

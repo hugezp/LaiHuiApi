@@ -57,11 +57,11 @@ public class PopularizingController {
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }else{
                     json = AppJsonUtils.returnFailJsonString(result, "推广添加失败！");
-                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }
             }else{
                 json = AppJsonUtils.returnFailJsonString(result, "手机号已存在不能重复添加！");
-                return new ResponseEntity<>(json, responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
         }else{
             json = AppJsonUtils.returnFailJsonString(result, "请求参数错误！");
