@@ -119,33 +119,4 @@ public class User {
     public void setUser_idsn(String user_idsn) {
         this.user_idsn = user_idsn;
     }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getSignature() {return signature;}
-
-    public void setSignature(String signature) {this.signature = signature;}
-
-    public String getBirthday() {return birthday;}
-
-    public void setBirthday(String birthday) {this.birthday = birthday;}
-
-    public String getLive_city() {return live_city;}
-
-    public void setLive_city(String live_city) {this.live_city = live_city;}
-
-    public String getHome() {return home;}
-
-    public void setHome(String home) {this.home = home;}
-
-    public String getCompany() {return company;}
-
-    public void setCompany(String company) {this.company = company;}
-
 }
