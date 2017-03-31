@@ -24,7 +24,7 @@ import java.util.List;
 //存储推广人推广的手机号码
 @Controller
 @ResponseBody
-@RequestMapping( value ="/app/api",method = RequestMethod.POST)
+@RequestMapping( value ="/api/app",method = RequestMethod.POST)
 public class PopularizingController {
     @Autowired
     AppDB appDB;
@@ -38,6 +38,7 @@ public class PopularizingController {
     public ResponseEntity<String> popularize(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json="";
 //        String URL = request.getRequestURL().toString();
@@ -51,19 +52,19 @@ public class PopularizingController {
             //将系统存在的手机号，和已经推广的手机号不再计入推广人的业绩
             if(popularizes.size() == 0 && users.size() == 0){
                 is_true = appDB.createPopularizing(popularize_code,popularizing_mobile);
+                if(is_true){
+                    json = AppJsonUtils.returnSuccessJsonString(result, "推广添加成功！");
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                }else{
+                    json = AppJsonUtils.returnFailJsonString(result, "推广添加失败！");
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                }
             }else{
-                json = AppJsonUtils.returnSuccessJsonString(result, "手机号已存在不能重复添加！");
-                return new ResponseEntity<>(json, responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            if(is_true){
-                json = AppJsonUtils.returnSuccessJsonString(result, "推广添加成功！");
+                json = AppJsonUtils.returnFailJsonString(result, "手机号已存在不能重复添加！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-            }else{
-                json = AppJsonUtils.returnSuccessJsonString(result, "推广添加失败！");
-                return new ResponseEntity<>(json, responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }else{
-            json = AppJsonUtils.returnSuccessJsonString(result, "请求参数错误！");
+            json = AppJsonUtils.returnFailJsonString(result, "请求参数错误！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
     }
@@ -80,11 +81,10 @@ public class PopularizingController {
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
         String json = "";
-        int user_id = 0;
         String token = request.getParameter("token");
         if (token != null && token.length() == 32) {
-            user_id = appDB.getIDByToken(token);
-            String now_where = " where _id=" + user_id + "  and is_validated =1";
+            int user_id = appDB.getIDByToken(token);
+            String now_where = " where _id = "+user_id +" and is_validated =1";
             List<User> userList = appDB.getUserList(now_where);
             //判断该用户是不是实名认证的用户
             if (userList.size() > 0) {
@@ -114,5 +114,4 @@ public class PopularizingController {
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
     }
-
 }

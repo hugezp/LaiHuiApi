@@ -2,10 +2,7 @@ package com.cyparty.laihui.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.Campaign;
-import com.cyparty.laihui.domain.Code;
-import com.cyparty.laihui.domain.ErrorCode;
-import com.cyparty.laihui.domain.User;
+import com.cyparty.laihui.domain.*;
 import com.cyparty.laihui.utilities.*;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,21 +112,30 @@ public class LoginController {
                                 if(now_source!=null&&!now_source.isEmpty()&&now_source.equals("iOS")){
                                     source= 1;
                                 }
-                                //查询是否是通过推广过来的用户
-                                String current_where=" where be_popularized_mobile='"+mobile+"'";
-                                List<Campaign> campaignList=appDB.getCampaign(current_where);
+//                                //查询是否是通过全民推广过来的用户
+//                                String current_where=" where be_popularized_mobile='"+mobile+"'";
+//                                List<Campaign> campaignList=appDB.getCampaign(current_where);
+//                                int p_id=0;
+//                                for (Campaign campaign:campaignList){
+//                                    p_id=campaign.getUser_id();
+//                                }
+                                //查询是否是通过专业推广过来的用户
                                 int p_id=0;
-                                for (Campaign campaign:campaignList){
-                                    p_id=campaign.getUser_id();
+
+                                List<Popularize> PopularizeList = appDB.getPopular(id);
+                                if (PopularizeList.size()>0){
+                                    if (PopularizeList.get(0).getLevel()>0){
+                                        p_id=Integer.parseInt(PopularizeList.get(0).getPopularize_parents_id().split(",")[0]);
+                                    }
                                 }
                                 appDB.procedureUpdateUser("create_user", mobile, 0, "", "", id, "", addr,source,ip_location,p_id);
                                 id = appDB.getUserList(where).get(0).getUser_id();
                                 token = IDTransform.transformID(id);
                                 appDB.createUserToken(token, id);
-                                //update推广表 pc_campaign
-                                String update_sql=" set is_reg=1 ,reg_time='"+Utils.getCurrentTime()+"' where be_popularized_mobile='"+mobile+"'";
-
-                                appDB.update("pc_campaign",update_sql);
+//                                //update推广表 pc_campaign
+//                                String update_sql=" set is_reg=1 ,reg_time='"+Utils.getCurrentTime()+"' where be_popularized_mobile='"+mobile+"'";
+//
+//                                appDB.update("pc_campaign",update_sql);
                             }
                             result.put("token", token);
                             json = AppJsonUtils.returnSuccessJsonString(result, "验证码正确！");

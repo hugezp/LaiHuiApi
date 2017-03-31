@@ -11,7 +11,7 @@ public class PassengerOrder {
     private int driver_order_id;
     private int passenger_order_id;
     private int user_id;//用户id
-    private int p_id;//乘客id
+    private int p_id;//id
     private int seats;//座位数
     private String boarding_point;//起点
     private String breakout_point;//终点

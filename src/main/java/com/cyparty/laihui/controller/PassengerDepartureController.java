@@ -89,13 +89,18 @@ public class PassengerDepartureController {
             JSONObject nowObject = dataArray.getJSONObject(0);
             int distance = nowObject.getIntValue("distance");
             int duration = nowObject.getIntValue("duration");
-            double start_price = 0;
-            double  price = distance * 3.3 / 10000f;;
-            if (distance<=200000){
-                start_price = 10.0;
+            //正式
+//            double start_price = 0;
+//            double  price = distance * 3.3 / 10000f;;
+//            if (distance<=200000){
+//                start_price = 10.0;
+//
+//            }
+//            double last_price = start_price + price*person;
+            //测试
+            double  price =0.01;
+            double last_price =0.01;
 
-            }
-            double last_price = start_price + price*person;
 
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
@@ -602,7 +607,7 @@ public class PassengerDepartureController {
 
                         PCCount driverPCCount = AppJsonUtils.getPCCount(appDB, passenger.getUser_id());
                         passengerData.put("pc_count", driverPCCount.getTotal());
-                        where = " where passenger_id=" + user_id + " and driver_id=" + driver_id;
+                        where = " where passenger_id=" + user_id + " and driver_id=" + driver_user_id;
                         //获取邀请记录
                         List<InviteIimit> inviteIimit = appDB.getinviteIimit(where);
                         if (inviteIimit.size() > 0) {

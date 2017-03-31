@@ -1,6 +1,7 @@
 package com.cyparty.laihui.mapper;
 
 import com.cyparty.laihui.domain.Popularize;
+import com.cyparty.laihui.utilities.Utils;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -14,11 +15,12 @@ public class PopularizeMapper implements RowMapper<Popularize> {
         Popularize popularize = new Popularize();
         popularize.setId(resultSet.getInt("_id"));
         popularize.setPopularize_id(resultSet.getInt("popularize_id"));
+        popularize.setP_id(resultSet.getInt("p_id"));
         popularize.setPopularize_parent_id(resultSet.getInt("popularize_parent_id"));
         popularize.setPopularize_parents_id(resultSet.getString("popularize_parents_id"));
         popularize.setPopularize_code(resultSet.getString("popularize_code"));
-        popularize.setCreate_time(resultSet.getString("create_time").split("\\.")[0]);
-        popularize.setUpdate_time(resultSet.getString("update_time").split("\\.")[0]);
+        popularize.setCreate_time(Utils.checkNull(resultSet.getString("create_time")));
+        popularize.setUpdate_time(Utils.checkNull(resultSet.getString("update_time")));
         popularize.setIs_enable(resultSet.getInt("is_enable"));
         popularize.setLevel(resultSet.getInt("level"));
 

@@ -7,6 +7,7 @@ public class Popularize {
      int id;
      int popularize_id;
      int popularize_parent_id;
+     int p_id;
      String popularize_parents_id;
      String popularize_code;
      String create_time;
@@ -83,4 +84,9 @@ public class Popularize {
     public void setLevel(int level) {
         this.level = level;
     }
+
+    public int getP_id() {return p_id;}
+
+    public void setP_id(int p_id) {this.p_id = p_id;}
+
 }

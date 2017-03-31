@@ -81,7 +81,14 @@ public class NearByOwnerOrPassengerController {
             if (token != null && token.length() == 32) {
                 user_id = appDB.getIDByToken(token);
                 where = " where _id ="+user_id;
-                user = appDB.getUserList(where).get(0);
+                if (user_id>0){
+                    user = appDB.getUserList(where).get(0);
+                }else {
+                    result.put("error_code", ErrorCode.getToken_expired());
+                    json = AppJsonUtils.returnFailJsonString(result, "非法token！");
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                }
+
             } else {
                 result.put("error_code", ErrorCode.getToken_expired());
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
@@ -142,7 +149,7 @@ public class NearByOwnerOrPassengerController {
                         result.put("order", AppJsonUtils.order(appDB, user_id, 0, "passenger"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
                         result.put("route", AppJsonUtils.commonRoute(appDB, user_id, null));
-                        result.put("user_name", user.getUser_name());
+                        result.put("user_name", user.getUser_nick_name());
                         result.put("user_mobile", user.getUser_mobile());
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近车主获取成功");
                     } else {
@@ -151,7 +158,7 @@ public class NearByOwnerOrPassengerController {
                         result.put("order", AppJsonUtils.order(appDB, user_id, 0, "passenger"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
                         result.put("route", AppJsonUtils.commonRoute(appDB, user_id, null));
-                        result.put("user_name", user.getUser_name());
+                        result.put("user_name", user.getUser_nick_name());
                         result.put("user_mobile", user.getUser_mobile());
                         json = AppJsonUtils.returnSuccessJsonString(result, "您的附近暂时还没有车主出现哦");
                     }
@@ -202,7 +209,7 @@ public class NearByOwnerOrPassengerController {
                         result.put("route", AppJsonUtils.commonRoute(appDB, user_id, null));
                         result.put("publish", AppJsonUtils.order(appDB, user_id, 0, "owner"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
-                        result.put("user_name", user.getUser_name());
+                        result.put("user_name", user.getUser_nick_name());
                         result.put("user_mobile", user.getUser_mobile());
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近乘客获取成功！");
                     } else {
@@ -212,7 +219,7 @@ public class NearByOwnerOrPassengerController {
                         result.put("route", AppJsonUtils.commonRoute(appDB, user_id, null));
                         result.put("publish", AppJsonUtils.order(appDB, user_id, 0, "owner"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
-                        result.put("user_name", user.getUser_name());
+                        result.put("user_name", user.getUser_nick_name());
                         result.put("user_mobile", user.getUser_mobile());
                         json = AppJsonUtils.returnSuccessJsonString(result, "您的附近暂时还没有乘客出现哦！");
                     }

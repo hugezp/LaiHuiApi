@@ -194,6 +194,7 @@ public class AppJsonUtils {
         JSONArray dataArray = new JSONArray();
         String where = " where is_enable=1 ";
         List<DepartureInfo> departureInfoList = new ArrayList<>();
+        int offset = page * size;
         int count = 0;
         //精确搜索不分页
 //        if (page != 0) {
@@ -201,18 +202,18 @@ public class AppJsonUtils {
 //        }
         if (departure_address_code != 0 && destination_address_code != 0) {
             //1.最精确
-            where = where + " and departure_address_code=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC ";
+            where = where + " and departure_address_code=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
             List<DepartureInfo> departureInfoList1 = appDB.getAppDriverDpartureInfo(where);
             //2.锁定目的地code
             String city_code = (departure_address_code + "").substring(0, 4) + "00";
-            where = " where is_enable=1 and departure_city_code =" + city_code + " and departure_address_code!=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC ";
+            where = " where is_enable=1 and departure_city_code =" + city_code + " and departure_address_code!=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
             List<DepartureInfo> departureInfoList2 = appDB.getAppDriverDpartureInfo(where);
             //3.锁定出发地code
             String des_city_code = (destination_address_code + "").substring(0, 4) + "00";
-            where = " where is_enable=1  and departure_address_code=" + departure_address_code + " and destination_address_code!=" + destination_address_code + " and destination_city_code = " + des_city_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC ";
+            where = " where is_enable=1  and departure_address_code=" + departure_address_code + " and destination_address_code!=" + destination_address_code + " and destination_city_code = " + des_city_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
             List<DepartureInfo> departureInfoList3 = appDB.getAppDriverDpartureInfo(where);
             //4.两边都使用citycode
-            where = " where is_enable=1 and departure_city_code =" + city_code + " and departure_address_code!=" + departure_address_code + " and destination_address_code !=" + destination_address_code + " and destination_city_code = " + des_city_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit 0,10 ";
+            where = " where is_enable=1 and departure_city_code =" + city_code + " and departure_address_code!=" + departure_address_code + " and destination_address_code !=" + destination_address_code + " and destination_city_code = " + des_city_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
             List<DepartureInfo> departureInfoList4 = appDB.getAppDriverDpartureInfo(where);
             departureInfoList.addAll(departureInfoList1);
             departureInfoList.addAll(departureInfoList2);
@@ -224,7 +225,7 @@ public class AppJsonUtils {
             } else {
                 where = where + " and departure_time>='" + Utils.getCurrentTime() + "'";
             }
-            int offset = page * size;
+
             count = appDB.getCount("pc_driver_publish_info", where);
             //按照创建时间倒序排列
             where = where + " order by create_time DESC limit " + offset + "," + size;
@@ -1505,5 +1506,59 @@ public class AppJsonUtils {
             jsonObject.put("is_message", 0);
         }
         return jsonObject;
+    }
+
+    /**
+     * 获得个人资料
+     * @param user
+     */
+    public static JSONObject getPersonalInfo(User user) {
+        JSONObject personal_data = new JSONObject();
+        String nullString = "";
+        if (user.getAvatar().length()>0){
+            personal_data.put("user_avater",user.getAvatar());
+        }else{
+            personal_data.put("user_avater",nullString);
+        }
+        if (user.getUser_name().length()>0){
+            personal_data.put("user_name",user.getUser_name());
+            personal_data.put("is_verified",1);
+
+        }else{
+            personal_data.put("user_name",nullString);
+            personal_data.put("is_verified",0);
+        }
+        if (user.getSex().length()>0){
+            personal_data.put("user_sex",user.getSex());
+        }else{
+            personal_data.put("user_sex",nullString);
+        }
+        if (user.getSignature().length()>0){
+            personal_data.put("user_signature",user.getSignature());
+        }else{
+            personal_data.put("user_signature",nullString);
+        }
+        if (user.getBirthday().length()>0){
+            personal_data.put("user_birthday",user.getBirthday());
+        }else{
+            personal_data.put("user_birthday",nullString);
+        }
+        if (user.getHome().length()>0){
+            personal_data.put("user_home",user.getHome());
+        }else{
+            personal_data.put("user_home",nullString);
+        }
+        if (user.getLive_city().length()>0){
+            personal_data.put("user_live_city",user.getLive_city());
+        }else{
+            personal_data.put("user_live_city",nullString);
+        }
+        if (user.getCompany().length()>0){
+            personal_data.put("user_company",user.getCompany());
+        }else{
+            personal_data.put("user_company",nullString);
+        }
+
+    return personal_data;
     }
 }

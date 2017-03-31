@@ -23,8 +23,21 @@ public class UserMapper implements RowMapper<User> {
         String name= Utils.checkNull(resultSet.getString("user_name"));
         if(!name.isEmpty()) {
             String endName = "";
+            String sexNum ="";
             if (!idsn.isEmpty()) {
-                String sexNum = idsn.substring(16, 17);
+                int length = idsn.length();
+                switch (length){
+                    case 15:
+                        if (!idsn.substring(14,15).matches("[a-zA-Z]")){
+                            sexNum = idsn.substring(14,15);
+                        }
+                        break;
+                    case 18:
+                        sexNum = idsn.substring(16,17);
+                        break;
+                    default:
+                        sexNum = "1";
+                }
                 if (!sexNum.isEmpty()) {
                     if (Integer.parseInt(sexNum) % 2 == 1) {
                         endName = "先生";
@@ -60,6 +73,12 @@ public class UserMapper implements RowMapper<User> {
         user.setReason(Utils.checkNull(resultSet.getString("checked_unpass_reason")));
         user.setUser_last_login_ip(Utils.checkNull(resultSet.getString("user_last_login_ip")));
         user.setAvatar(Utils.checkNull(resultSet.getString("user_avatar")));
+        user.setSex(resultSet.getString("sex"));
+        user.setSignature(resultSet.getString("signature"));
+        user.setBirthday(Utils.checkNull(resultSet.getString("birthday")));
+        user.setLive_city(resultSet.getString("live_city"));
+        user.setCompany(resultSet.getString("company"));
+        user.setHome(resultSet.getString("home"));
 
         return user;
     }
