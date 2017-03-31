@@ -73,7 +73,12 @@ public class UserMapper implements RowMapper<User> {
         user.setReason(Utils.checkNull(resultSet.getString("checked_unpass_reason")));
         user.setUser_last_login_ip(Utils.checkNull(resultSet.getString("user_last_login_ip")));
         user.setAvatar(Utils.checkNull(resultSet.getString("user_avatar")));
-
+        user.setSignature(resultSet.getString("signature"));
+        user.setBirthday(Utils.checkNull(resultSet.getString("birthday")));
+        user.setLive_city(resultSet.getString("live_city"));
+        user.setSex(resultSet.getString("sex"));
+        user.setCompany(resultSet.getString("company"));
+        user.setHome(resultSet.getString("home"));
         return user;
     }
 }

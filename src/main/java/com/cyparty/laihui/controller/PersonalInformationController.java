@@ -5,6 +5,8 @@ import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
+import com.cyparty.laihui.utilities.OssUtil;
+import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -69,7 +71,8 @@ public class PersonalInformationController {
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
-        result = AppJsonUtils.getPersonalInfo(user);
+        result = AppJsonUtils.getUserInfo(appDB, user_id);
+        result.put("personal_info", AppJsonUtils.getPersonalInfo(user));
         json = AppJsonUtils.returnSuccessJsonString(result, "个人信息获取成功");
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
@@ -88,7 +91,7 @@ public class PersonalInformationController {
         JSONObject result = new JSONObject();
         String token = null;
         String json = "";
-        String  user_avater = request.getParameter("user_avater");
+        String where ="";
         String  user_name = request.getParameter("user_name");
         String  user_sex = request.getParameter("user_sex");
         String  user_signature = request.getParameter("user_signature");
@@ -97,17 +100,18 @@ public class PersonalInformationController {
         String  user_live_city = request.getParameter("user_live_city");
         String  user_company = request.getParameter("user_company");
         Date date = new Date();
-        try {
-            date = new SimpleDateFormat("yyyy-MM-dd").parse(user_birthday);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (user_birthday!=null){
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(user_birthday);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         int user_id = 0;
         if (request.getParameter("token") != null) {
             token = request.getParameter("token");
             if (token != null && token.length() == 32) {
                 user_id = appDB.getIDByToken(token);
-
             } else {
                 result.put("error_code", ErrorCode.getToken_expired());
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
@@ -118,9 +122,38 @@ public class PersonalInformationController {
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
-        String where = " set user_name='"+user_name+"' , sex='"+user_sex+"' , signature='"+user_signature+"' , birthday='"+user_birthday+"' , home='"+user_home+"' , live_city='"+user_live_city+"' , company='"+user_company+"'";
-        appDB.update("pc_user",where);
-        json = AppJsonUtils.returnSuccessJsonString(result,"个人资料修改成功！");
-        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+        if (user_id>0){
+            if (user_name!=null){
+                where = " set user_name='"+user_name+"'";
+            }else if (user_sex!=null){
+                where = " set sex='"+user_sex+"'";
+            }else if (user_signature!=null){
+                where = " set signature='"+user_signature+"'";
+            }else if (user_birthday!=null){
+                where = " set birthday='"+user_birthday+"'";
+            }else if (user_home!=null){
+                where = " set home='"+user_home+"'";
+            }else if (user_live_city!=null){
+                where = " set live_city='"+user_live_city+"'";
+            }else  {
+                where = " set company='"+user_company+"'";
+            }
+            where = where +" where _id = "+user_id;
+            boolean is_success = appDB.update("pc_user",where);
+            if (is_success){
+                json = AppJsonUtils.returnSuccessJsonString(result,"个人资料修改成功！");
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+            }else {
+                json = AppJsonUtils.returnFailJsonString(result, "个人资料修改失败！");
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+            }
+
+        }else {
+            result.put("error_code", ErrorCode.getToken_expired());
+            json = AppJsonUtils.returnFailJsonString(result, "非法token！");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+        }
+
     }
+
 }

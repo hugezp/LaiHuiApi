@@ -1515,45 +1515,46 @@ public class AppJsonUtils {
     public static JSONObject getPersonalInfo(User user) {
         JSONObject personal_data = new JSONObject();
         String nullString = "";
-        if (user.getAvatar().length()>0){
+        if (user.getAvatar().length()>0  && !user.getAvatar().equals("null") ){
             personal_data.put("user_avater",user.getAvatar());
         }else{
             personal_data.put("user_avater",nullString);
         }
-        if (user.getUser_name().length()>0){
+        if (user.getUser_name().length()>0 && !user.getUser_name().equals("null") ){
             personal_data.put("user_name",user.getUser_name());
-            personal_data.put("is_verified",1);
-
         }else{
             personal_data.put("user_name",nullString);
-            personal_data.put("is_verified",0);
         }
-        if (user.getSex().length()>0){
+
+        personal_data.put("is_validated",user.getIs_validated());
+
+        if (user.getSex().length()>0 && !user.getSex().equals("null") ){
             personal_data.put("user_sex",user.getSex());
         }else{
             personal_data.put("user_sex",nullString);
         }
-        if (user.getSignature().length()>0){
+        if (user.getSignature().length()>0 && !user.getSignature().equals("null") ){
             personal_data.put("user_signature",user.getSignature());
         }else{
-            personal_data.put("user_signature",nullString);
+            personal_data.put("user_signature","你还没有个人签名~");
         }
-        if (user.getBirthday().length()>0){
-            personal_data.put("user_birthday",user.getBirthday());
+        if (user.getBirthday().length()>0 && !user.getBirthday().equals("1000-01-01 00:00:00") ){
+            String user_birthday = user.getBirthday().split(" ")[0];
+            personal_data.put("user_birthday",user_birthday);
         }else{
             personal_data.put("user_birthday",nullString);
         }
-        if (user.getHome().length()>0){
+        if (user.getHome().length()>0 && !user.getHome().equals("null") ){
             personal_data.put("user_home",user.getHome());
         }else{
             personal_data.put("user_home",nullString);
         }
-        if (user.getLive_city().length()>0){
+        if (user.getLive_city().length()>0 && !user.getLive_city().equals("null") ){
             personal_data.put("user_live_city",user.getLive_city());
         }else{
             personal_data.put("user_live_city",nullString);
         }
-        if (user.getCompany().length()>0){
+        if (user.getCompany().length()>0 && !user.getCompany().equals("null") ){
             personal_data.put("user_company",user.getCompany());
         }else{
             personal_data.put("user_company",nullString);
