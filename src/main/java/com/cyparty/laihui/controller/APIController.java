@@ -73,7 +73,7 @@ public class APIController {
                             image_oss = arr[arr.length - 1];
                             try {
                                 if (ossUtil.uploadFileWithResult(request, image_oss, image_local)) {
-                                    image_oss = "http://laihuipincheoss.oss-cn-qingdao.aliyuncs.com/" + image_oss;
+                                    image_oss = "https://laihuipincheoss.oss-cn-qingdao.aliyuncs.com/" + image_oss;
                                 }
                             } catch (Exception e) {
                                 image_oss = null;
@@ -89,7 +89,7 @@ public class APIController {
                             appDB.createSuggestion(user_id, suggestion, contact, 0,image_oss);
                         }
                         result.put("url",image_oss);
-                        json = AppJsonUtils.returnSuccessJsonString(result, "意见反馈成功！");
+                        json = AppJsonUtils.returnSuccessJsonString(result, "您的建议我们已收到，感谢支持！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
                         result.put("error_code", ErrorCode.getToken_expired());
