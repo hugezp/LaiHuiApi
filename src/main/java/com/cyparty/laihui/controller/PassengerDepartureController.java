@@ -91,7 +91,7 @@ public class PassengerDepartureController {
             int duration = nowObject.getIntValue("duration");
             //正式
             double start_price = 0;
-            double  price = distance * 3.3 / 10000f;;
+            double  price = distance * 3.3 / 10000f;
             if (distance<=200000){
                 start_price = 10.0;
 

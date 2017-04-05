@@ -490,7 +490,7 @@ public class AppDB {
     }
 //根据推广码获取推广人表的数据
     public List<Popularize> getPopularized(String code){
-        String SQL = "select * from pc_popularize where popularize_code ="+code;
+        String SQL = "select * from pc_popularize where popularize_code ='"+code+"'";
         List<Popularize> popularizeList = jdbcTemplateObject.query(SQL,new PopularizeMapper());
         return popularizeList;
     }

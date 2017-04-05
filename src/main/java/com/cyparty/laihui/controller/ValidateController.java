@@ -162,6 +162,8 @@ public class ValidateController {
                         }else if(step!=null&&step.equals("2")) {
                             //1.2保存车主信息(创建或者更新)
                             carOwnerInfo.setUser_id(id);
+//                            String user_name = request.getParameter("name");
+//                            String user_idsn =request.getParameter("idsn");
                             carOwnerInfo.setCar_owner_name(request.getParameter("name"));
                             carOwnerInfo.setIdsn(request.getParameter("idsn"));
 
