@@ -1,7 +1,13 @@
 package com.cyparty.laihui.utilities;
 
+import com.cyparty.laihui.domain.ErrorCode;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by zhu on 2016/11/28.
@@ -19,5 +25,17 @@ public class TestUtils {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+    Map<String,Integer> ipMap = new HashMap<>();
+    public int test(String ip){
+        if (!ipMap.containsKey(ip)){
+            ipMap.put(ip,1);
+        }
+        if (ipMap.get(ip)>1){
+            return ipMap.get(ip);
+        }else{
+            return 0;
+        }
+
     }
 }

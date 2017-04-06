@@ -19,7 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhu on 2016/5/11.
@@ -34,6 +36,8 @@ public class LoginController {
     OssUtil ossUtil;
     @Autowired
     TestUtils testUtils;
+
+    Map<String,Integer> ipMap = new HashMap<>();
     /***
      * 登陆模块（验证码）
      * @param request
@@ -47,6 +51,18 @@ public class LoginController {
         JSONObject result = new JSONObject();
         String json = "";
         try {
+            String ip = Utils.getIP(request);
+            String confirm_time = Utils.getCurrentTime();
+            //appDB.createLoginIp(ip,confirm_time);
+            String where1 = "  where login_ip='"+ip+"' and login_time>'" + Utils.getCurrentTimeSubOrAdd(-60) + "'";
+            int count = appDB.getCount("pc_user_login_ip",where1);
+            if (count>4){
+                result.put("error_code",ErrorCode.getSms_send_failed());
+                json = AppJsonUtils.returnFailJsonString(result, "发送验证码过于频繁，请稍后重试！！");
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+            }
+          //  String ip=GetIPLocation.getIpLocation(address,0);
+
 
             String mobile = request.getParameter("mobile");
             String action = request.getParameter("action");
@@ -61,7 +77,7 @@ public class LoginController {
             switch (action) {
                 case "sms":
                     //判断是否是已登录手机号
-                    String where1 = " where user_mobile="+mobile;
+                    where1 = " where user_mobile="+mobile;
                     List<User> userList1 = appDB.getUserList(where1);
                     if (userList1.size()==0){
                         result.put("error_code",ErrorCode.getSms_times_limit());
@@ -80,6 +96,7 @@ public class LoginController {
                     if (code != null) {
                         //保存记录
                         appDB.createSMS(mobile, code);
+                        appDB.createLoginIp(ip,confirm_time,mobile,code);
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码发送成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
@@ -89,6 +106,7 @@ public class LoginController {
                     }
                 case "new_sms":
                     //手机号加密后的字符串
+                    //String my_mobile = "O0jD+jlqkxLcqfOfBLNacHCzGLkFcTbCMlZVvTlknilzaPiass+DoumWBJHvbd1smn6xEmaajUvqfPYmBwK4ufXM+Z8vtaIXjOtb0UdIXZpeQJwSuyoWiaKDfWL3NyHmlGvT+RR6CvRKSFlWo3YOp0MS2i8/MVi3dfZ0Q0jBFdk=";
                     String my_mobile = request.getParameter("my_mobile");
                     //解密和截取手机号
                     mobile = RSAUtils.getEncryptor(my_mobile).substring(0,11);
@@ -104,6 +122,7 @@ public class LoginController {
                     if (code != null) {
                         //保存记录
                         appDB.createSMS(mobile, code);
+                        appDB.createLoginIp(ip,confirm_time,mobile,code);
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码发送成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {

@@ -504,5 +504,15 @@ public class AppDB {
         }
         return is_success;
     }
+//添加登录ip
+    public boolean createLoginIp(String ip, String confirm_time,String mobile,String code) {
+        boolean is_success = true;
+        String SQL = "insert into pc_user_login_ip (login_ip,login_time,mobile,code) VALUES(?,?,?,?)";
+        int count=jdbcTemplateObject.update(SQL, new Object[]{ip,confirm_time,mobile,code});
+        if (count<1){
+            is_success = false;
+        }
+        return is_success;
+    }
 }
 
