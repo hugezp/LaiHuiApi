@@ -266,12 +266,13 @@ public class Utils {
     }
     public static String sendCodeMessage(String mobile){
         String rand= SendSMSUtil.randomNum();
-        int a = SmsConfig.config().size();
-        for (int i=0;i<a;i++){
-            if(mobile.equals(SmsConfig.config().get(i))){
+        if(mobile.equals("13298172885")){
                 return "0000";
-            }
         }
+        if(mobile.equals("15639356022")){
+            return "0000";
+        }
+
 
 
         String code="#code#="+rand;

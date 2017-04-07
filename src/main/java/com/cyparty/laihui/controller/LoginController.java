@@ -54,7 +54,7 @@ public class LoginController {
             //appDB.createLoginIp(ip,confirm_time);
             String where1 = "  where login_ip='"+ip+"' and login_time>'" + Utils.getCurrentTimeSubOrAdd(-60) + "'";
             int count = appDB.getCount("pc_user_login_ip",where1);
-            if (count>4){
+            if (count>9){
                 result.put("error_code",ErrorCode.getSms_send_failed());
                 json = AppJsonUtils.returnFailJsonString(result, "发送验证码过于频繁，请稍后重试！！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -71,6 +71,14 @@ public class LoginController {
             int id = 0;
             switch (action) {
                 case "sms":
+                    //判断是否是已登录手机号
+                    where1 = " where user_mobile="+mobile;
+                    List<User> userList1 = appDB.getUserList(where1);
+                    if (userList1.size()==0){
+                        result.put("error_code",ErrorCode.getSms_times_limit());
+                        json = AppJsonUtils.returnFailJsonString(result, "为了提供更好的服务，请下载最新版本，谢谢合作！");
+                        return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+                    }
                     int total = appDB.getSendCodeTimes(mobile);
                     if (total <= 5) {
                         //发送验证码
@@ -95,6 +103,11 @@ public class LoginController {
                     //手机号加密后的字符串
                     //String my_mobile = "O0jD+jlqkxLcqfOfBLNacHCzGLkFcTbCMlZVvTlknilzaPiass+DoumWBJHvbd1smn6xEmaajUvqfPYmBwK4ufXM+Z8vtaIXjOtb0UdIXZpeQJwSuyoWiaKDfWL3NyHmlGvT+RR6CvRKSFlWo3YOp0MS2i8/MVi3dfZ0Q0jBFdk=";
                     String my_mobile = request.getParameter("my_mobile");
+                    if (my_mobile==null||my_mobile.length()!=172&&my_mobile.length()!=175){
+                        result.put("error_code",ErrorCode.getSms_send_failed());
+                        json = AppJsonUtils.returnFailJsonString(result, "验证码发送失败，请校验您输入的手机号是否正确！");
+                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                    }
                     //解密和截取手机号
                     mobile = RSAUtils.getEncryptor(my_mobile).substring(0,11);
                     int total1 = appDB.getSendCodeTimes(mobile);
