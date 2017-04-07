@@ -1,6 +1,7 @@
 package com.cyparty.laihui.utilities;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cyparty.laihui.TestUtil.SmsConfig;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -265,12 +266,14 @@ public class Utils {
     }
     public static String sendCodeMessage(String mobile){
         String rand= SendSMSUtil.randomNum();
-        if(mobile.equals("13298172885")){
-            rand="0000";
+        int a = SmsConfig.config().size();
+        for (int i=0;i<a;i++){
+            if(mobile.equals(SmsConfig.config().get(i))){
+                return "0000";
+            }
         }
-        if(mobile.equals("13838741275")){
-            rand="1111";
-        }
+
+
         String code="#code#="+rand;
         boolean send_isSuccess= SendSMSUtil.sendSMS(mobile, "push", 0, code);
         if(!send_isSuccess){

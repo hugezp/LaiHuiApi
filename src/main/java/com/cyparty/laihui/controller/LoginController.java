@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,10 +59,7 @@ public class LoginController {
                 json = AppJsonUtils.returnFailJsonString(result, "发送验证码过于频繁，请稍后重试！！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
-          //  String ip=GetIPLocation.getIpLocation(address,0);
-
-
-            String mobile = request.getParameter("mobile");
+         String mobile = request.getParameter("mobile");
             String action = request.getParameter("action");
             boolean is_success = false;
             //验证码
@@ -76,14 +71,6 @@ public class LoginController {
             int id = 0;
             switch (action) {
                 case "sms":
-                    //判断是否是已登录手机号
-                    where1 = " where user_mobile="+mobile;
-                    List<User> userList1 = appDB.getUserList(where1);
-                    if (userList1.size()==0){
-                        result.put("error_code",ErrorCode.getSms_times_limit());
-                        json = AppJsonUtils.returnFailJsonString(result, "为了提供更好的服务，请下载最新版本，谢谢合作！");
-                        return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
-                    }
                     int total = appDB.getSendCodeTimes(mobile);
                     if (total <= 5) {
                         //发送验证码
@@ -146,6 +133,7 @@ public class LoginController {
                     if (codeList.size() > 0) {
                         //得到此次短信的发送记录
                         Code now_code = codeList.get(0);
+
                         if (now_code.getCode().equals(code)) {
                             //创建该用户
                             where = " where user_mobile='" + mobile + "' ";
