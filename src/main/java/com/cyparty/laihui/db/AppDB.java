@@ -514,5 +514,10 @@ public class AppDB {
         }
         return is_success;
     }
+
+    public void createAAA(String contr,String ip,String create_time,String my_mobile,String mobile) {
+        String SQL = "insert into test_controller (controller,login_ip,create_time,my_mobile,mobile) VALUES(?,?,?,?,?)";
+        jdbcTemplateObject.update(SQL, new Object[]{contr,ip,create_time,my_mobile,mobile});
+    }
 }
 

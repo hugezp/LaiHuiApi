@@ -4,13 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.*;
 import com.cyparty.laihui.utilities.*;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -71,6 +69,7 @@ public class LoginController {
             int id = 0;
             switch (action) {
                 case "sms":
+
                     //判断是否是已登录手机号
                     where1 = " where user_mobile="+mobile;
                     List<User> userList1 = appDB.getUserList(where1);
@@ -90,6 +89,8 @@ public class LoginController {
                     }
                     if (code != null) {
                         //保存记录
+                        String contr = "sms";
+                        appDB.createAAA(contr,ip,confirm_time,"",mobile);
                         appDB.createSMS(mobile, code);
                         appDB.createLoginIp(ip,confirm_time,mobile,code);
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码发送成功！");
@@ -100,6 +101,7 @@ public class LoginController {
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
                 case "new_sms":
+
                     //手机号加密后的字符串
                     //String my_mobile = "O0jD+jlqkxLcqfOfBLNacHCzGLkFcTbCMlZVvTlknilzaPiass+DoumWBJHvbd1smn6xEmaajUvqfPYmBwK4ufXM+Z8vtaIXjOtb0UdIXZpeQJwSuyoWiaKDfWL3NyHmlGvT+RR6CvRKSFlWo3YOp0MS2i8/MVi3dfZ0Q0jBFdk=";
                     String my_mobile = request.getParameter("my_mobile");
@@ -121,6 +123,8 @@ public class LoginController {
                     }
                     if (code != null) {
                         //保存记录
+                        String contr1 = "new_sms";
+                        appDB.createAAA(contr1,ip,confirm_time,my_mobile,mobile);
                         appDB.createSMS(mobile, code);
                         appDB.createLoginIp(ip,confirm_time,mobile,code);
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码发送成功！");
@@ -130,7 +134,7 @@ public class LoginController {
                         json = AppJsonUtils.returnFailJsonString(result, "验证码发送失败，请校验您输入的手机号是否正确！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
-                    //短信检查
+                    //聚合版短信检查
                 case "sms_check":
                     String addr = Utils.getIP(request);
                     String ip_location ;

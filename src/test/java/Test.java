@@ -19,7 +19,7 @@ public class Test {
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
 
         PrivateKey privateKey = readPrivateKey();
-        String message = "bz4zz/rIWKQM407/XMiZJyMVBj59s5FXxpX/ZA04OkoxiYiAzklHMhZi1cKKdw1Yz7WDzCpBeJ4/lzveV2TBQxqu4Btoqzo95n9QhWbw7d2iNUDYAf0bQgtampgbbzkJb+mm/hHD7t4+Jst7XaefFkIV3wHwA7NxDNSOceDej5Y=";
+        String message = "uRfGs8TgUIAReW3wJetHUn0FjzYuejs/6sjLIdzitMW29fXNx7bZf3L1exnhkRnQLLBAbpexk7gpcuxWhGqdKo60C+CcoYlTGi9Sa97xgjKULDP4/51mfAYrDTdBOmKVgtqjnpcQNMlb2Uz1E0QF1RMnuBQ1dIc3j/79LtzGMGs=";
         byte[] data = encryptedData(message);
         String text = decrypt(privateKey, data);
         System.out.print(text);
