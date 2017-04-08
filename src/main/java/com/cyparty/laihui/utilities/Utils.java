@@ -1,7 +1,6 @@
 package com.cyparty.laihui.utilities;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cyparty.laihui.TestUtil.SmsConfig;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;

@@ -24,20 +24,20 @@ import javax.crypto.NoSuchPaddingException;
  */
 public final class RSAUtils {
 	private static String RSA = "RSA";
-	private static String privateKeyStr = "MIICeQIBADANBgkqhkiG9w0BAQEFAASCAmMwggJfAgEAAoGBAN1TuADz05124wfx\n" +
-			"L2gCQtygb7uKOp/UHrcszmNRlrzoHYzjrlnIBPw7FYc33iSPy9Ikt+QCINLK3wfm\n" +
-			"3aCFQHXnfWckLj/SjkG29ADvRzukZABuuTJmD138byCjp6EkxGEjFHfJbGfn6xrd\n" +
-			"dJLoLvTHrUcZFuA0dL+CYFOxkmbTAgMBAAECgYEAsoIldE80LFqI/gzfCWpZdwzH\n" +
-			"UWFJq0MwitjOlXhmtXIY81tnce5LZwxYbrj2qFJ6N8F5t6Knypvpirv/oMoYk//k\n" +
-			"bD4BuzjKUYd4uATC8sC0zZGGD5trDHdSZupjZXcK895LcY0mO05f60qKOvw0kM+A\n" +
-			"PwTyMr0mKcbvg9rxJZECQQDwv83o44495mv8A2PHzLGQIYsXpM/6c4IwCacKnTLm\n" +
-			"q7WloSydkYlYbtgaRY/NKVkkE8vJM/fcyYuN5NvrtVlfAkEA61jyf61pKcTpZP3s\n" +
-			"5QQd3XnS93U+BYpxcNPKnEZDiI2byE9FW0y16ek5U2Lncu/sz2fbKYXI5OQdhp0a\n" +
-			"yqdDDQJBAKqm2xeFDdPU3KCD6pu6/fZzwHufCQm4DQVuIikE6wrVlmn0iIKcoiW8\n" +
-			"VJSy0E8WSyimm6JgowavGqwXGMjJALMCQQCc/Y991epxv3XFNZGBz3YwmCQ/iAjg\n" +
-			"X1J+5figuEoyW+wP+bkVRx2ONFJWKoKj7CH21Jugniq9bOG5OzF0/5A9AkEA4VXI\n" +
-			"S0OgQo8RS0OepTzdobtNwXQSG5sCEM29dJAB52hfFZx6AEPxJgk2nFhXh84AqUh4\n" +
-			"NQBFnUEpS9tg9S6YSA==";
+	private static String privateKeyStr = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALiveWcujQEMyYLh\n" +
+			"act26Gc23VzZCnUyHgXu4bNDD9TBwGwWsLxoDgnyxjwFJYowKNTcVncxvN8HWrQR\n" +
+			"MbKmaXbKV6ewTodYyVY3geDFsyXXKTp+6TfkqaWb3fPewa/bECs7jNaspq6fu2TG\n" +
+			"GNTXAtb2iBD/O7q/ys4OUtSQ3NZdAgMBAAECgYBdfyg83kowD+MsSSWgBbCeIB5s\n" +
+			"1MwAjMC6TDci435uPTBHCC2tFBiXXLqSxCA/FyZ0rJ9xdFKjrjtzEYlRYgHdbwAI\n" +
+			"ac6wqO0Uq0hB9w7fRMF1YF+ybbHl5HMje8hOwx4xKlUftLu0lonmTFEeUGjAWIaP\n" +
+			"dAAUVBhq2okvkKLGWQJBAObmNqcbxGzRHpVbhXk7uuqQ7uV+IafEzFaNhO/ykWgB\n" +
+			"/wgoiEAdR5NtzDDeKwhwHLb/rTLEJHYnyZpc2LdynzsCQQDMwyh1/BkUwhXVr22+\n" +
+			"v67L73Qn2LlzUdzo9jAiHyzt0wUbkA42f6uUTQDO8vJDbkl2P1HksuegvoJ+VLBL\n" +
+			"xzdHAkA4PoO5mQ3z48yrXSvaKC6TzNIknODd2RZdTwO+3zuENlhFSHpIA9nXk7tV\n" +
+			"fAjHeWfFO+qYnyaykWaOb2dq6ETZAkEAnf2LD5YnqAulG06TqBVwgqxM/J3NYbxt\n" +
+			"blbehsV1Pj+O9lhtjwFtWy0bDZMI+Jx1FEcBIiwkarP0LhOcP6wD6wJAAvuX8U00\n" +
+			"zxHZQ82oKXkKrntIXzutxGTw0qwGIzGIpyMpcMQCXsr17kJi3tOs4t4NGCIXt0V8\n" +
+			"6KEl9nB4D0uo/w==";
 
 	public static String getEncryptor(String message) throws Exception {
 
@@ -51,15 +51,6 @@ public final class RSAUtils {
 
 	}
 
-	/**
-	 * 随机生成RSA密钥对(默认密钥长度为1024)
-	 * 
-	 * @return
-	 */
-	public static KeyPair generateRSAKeyPair()
-	{
-		return generateRSAKeyPair(1024);
-	}
 
 	/**
 	 * 随机生成RSA密钥对
@@ -89,8 +80,8 @@ public final class RSAUtils {
 	 * 
 	 * @param data
 	 *            需加密数据的byte数据
-	 * @param pubKey
-	 *            公钥
+	 * @param
+	 *
 	 * @return 加密后的byte型数据
 	 */
 	public static byte[] encryptData(byte[] data, PublicKey publicKey)
@@ -284,27 +275,6 @@ public final class RSAUtils {
 		}
 	}
 
-	/**
-	 * 从文件中加载私钥
-	 * 
-	 * @param keyFileName
-	 *            私钥文件名
-	 * @return 是否成功
-	 * @throws Exception
-	 */
-	public static PrivateKey loadPrivateKey(InputStream in) throws Exception
-	{
-		try
-		{
-			return loadPrivateKey(readKey(in));
-		} catch (IOException e)
-		{
-			throw new Exception("私钥数据读取错误");
-		} catch (NullPointerException e)
-		{
-			throw new Exception("私钥输入流为空");
-		}
-	}
 
 	/**
 	 * 读取密钥信息
