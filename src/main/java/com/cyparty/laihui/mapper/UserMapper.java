@@ -38,7 +38,7 @@ public class UserMapper implements RowMapper<User> {
                     default:
                         sexNum = "1";
                 }
-                if (!sexNum.isEmpty()) {
+                if (!sexNum.isEmpty()&&!sexNum.equals(" ")) {
                     if (Integer.parseInt(sexNum) % 2 == 1) {
                         endName = "先生";
                     } else {

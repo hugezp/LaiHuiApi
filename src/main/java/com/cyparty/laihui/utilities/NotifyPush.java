@@ -154,7 +154,7 @@ public class NotifyPush {
 
         JSONObject sendJson=new JSONObject();
         sendJson.put("cql","select * from _Installation where notify_mobile='"+mobile+"'");
-        sendJson.put("prod","dev");
+        sendJson.put("prod","prod");
         sendJson.put("data",dataObject);
         json=sendJson.toJSONString();
         HttpClient httpClient = new DefaultHttpClient();
@@ -192,7 +192,7 @@ public class NotifyPush {
         dataObject.put("alert",content);
         dataObject.put("notify_type",type);
         dataObject.put("id",id);
-        dataObject.put("badge","Increment");
+        dataObject.put("badge","1");
         dataObject.put("sound",type+".caf");
         pushObject.put("push_time",push_time);
         pushObject.put("content",content);
@@ -200,7 +200,7 @@ public class NotifyPush {
 
         JSONObject sendJson=new JSONObject();
         sendJson.put("cql","select * from _Installation where notify_mobile='"+mobile+"'");
-        sendJson.put("prod","dev");
+        sendJson.put("prod","prod");
         sendJson.put("data",dataObject);
         json=sendJson.toJSONString();
         HttpClient httpClient = new DefaultHttpClient();
