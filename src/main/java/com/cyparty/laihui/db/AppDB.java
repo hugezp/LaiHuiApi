@@ -478,7 +478,7 @@ public class AppDB {
     }
 //查询推广是否有重复手机号
     public List<Popularizing> getPopularize(String mobile){
-        String SQL = "select * from pc_popularizing where popularizing_mobile ="+mobile;
+        String SQL = "select * from pc_popularizing where popularizing_mobile ='"+mobile+"'";
         List<Popularizing> popularizes = jdbcTemplateObject.query(SQL, new PopularizingMapper());
         return  popularizes;
     }

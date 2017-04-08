@@ -9,7 +9,7 @@ import java.security.PrivateKey;
  */
 public class Test1 {
     public static void main(String []args) throws Exception {
-        String s ="{\"status\":200}";
-        System.out.println(s.substring(10,13));
+        String s ="O0jD+jlqkxLcqfOfBLNacHCzGLkFcTbCMlZVvTlknilzaPiass+DoumWBJHvbd1smn6xEmaajUvqfPYmBwK4ufXM+Z8vtaIXjOtb0UdIXZpeQJwSuyoWiaKDfWL3NyHmlGvT+RR6CvRKSFlWo3YOp0MS2i8/MVi3dfZ0Q0jBFdk=";
+        System.out.println(s.length());
     }
 }
