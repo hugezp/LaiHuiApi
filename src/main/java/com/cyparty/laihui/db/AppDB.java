@@ -519,5 +519,37 @@ public class AppDB {
         String SQL = "insert into test_controller (controller,login_ip,create_time,my_mobile,mobile) VALUES(?,?,?,?,?)";
         jdbcTemplateObject.update(SQL, new Object[]{contr,ip,create_time,my_mobile,mobile});
     }
+    //添加车主驾证认证
+    public boolean createDriverLicense(int user_id,String driver_name,String driver_license_number,String first_issue_date,String allow_car_type,String effective_date_start,String effective_date_end,String driver_license_photo,String is_enable){
+        boolean is_success = true;
+        String SQL = "insert into pc_user_driver_license_info (user_id,driver_name,driver_license_number,first_issue_date,allow_car_type,effective_date_start,effective_date_end,create_time,driver_license_photo,is_enable) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        int count=jdbcTemplateObject.update(SQL, new Object[]{user_id,driver_name,driver_license_number,first_issue_date,allow_car_type,effective_date_start,effective_date_end,Utils.getCurrentTime(),driver_license_photo,is_enable});
+        if (count<1){
+            is_success = false;
+        }
+        return is_success;
+    }
+    //添加车主行驶证认证
+    public boolean createTravelCard(int user_id,String car_license_number,String car_color,String car_type,String registration_date,String vehicle_owner_name,String travel_license_photo,String is_enable){
+        boolean is_success = true;
+        String SQL = "insert into pc_user_travel_card_info (user_id,car_license_number,car_color,car_type,registration_date,vehicle_owner_name,create_time,travel_license_photo,is_enable) VALUES(?,?,?,?,?,?,?,?,?)";
+        int count=jdbcTemplateObject.update(SQL, new Object[]{user_id,car_license_number,car_color,car_type,registration_date,vehicle_owner_name,Utils.getCurrentTime(),travel_license_photo,is_enable});
+        if (count<1){
+            is_success = false;
+        }
+        return is_success;
+    }
+    //查询车主认证状态
+    public List<UserDriverLicenseInfo> getDriverLicense(int user_id){
+        String SQL = "select * from pc_user_driver_license_info where user_id ="+user_id;
+        List<UserDriverLicenseInfo> driverLicenseInfos = jdbcTemplateObject.query(SQL,new UserDriverLicenseInfoMapper());
+        return driverLicenseInfos;
+    }
+    //查询车主认证状态
+    public List<UserTravelCardInfo> getTravelCard(int user_id){
+        String SQL = "select * from pc_user_travel_card_info where user_id ="+user_id;
+        List<UserTravelCardInfo> userTravelCardInfos = jdbcTemplateObject.query(SQL,new UserTravelCardInfoMapper());
+        return userTravelCardInfos;
+    }
 }
 

@@ -63,8 +63,20 @@ public class DateUtils {
     public static void main(String[]args){
        // System.out.print(getTimesToNow("2017-03-07 15:02:22"));
         getProcessdTime("");
-
     }
+//获取时间格式 例如 20170406 140732
+    public static  String  getCurrentTime(Date date){
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd HHmmss");
+        String time = format.format(date);
+        return  time;
+    }
+    //获取生日格式 0406
+    public static  String  getBrithDay(Date date){
+        SimpleDateFormat format = new SimpleDateFormat("MMdd");
+        String time = format.format(date);
+        return  time;
+    }
+
 }
 
 
