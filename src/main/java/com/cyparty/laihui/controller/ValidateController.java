@@ -499,6 +499,20 @@ public class ValidateController {
                     image_oss = null;
                 }
                 if (image_oss != null) {
+                    List<UserDriverLicenseInfo> userDriverLicenseInfos = appDB.getDriverLicense(user_id);
+                    if(userDriverLicenseInfos.size()>0){
+                        UserDriverLicenseInfo user = userDriverLicenseInfos.get(0);
+                        String is_enable = user.getIs_enable();
+                        if("2".equals(is_enable)){
+                            String where =" set driver_name='"+driver_name+"',driver_license_number='"+driver_license_number+"',first_issue_date='"+first_issue_date+"',allow_car_type='"+allow_car_type+"',effective_date_start='"+effective_date_start+"',effective_date_end='"+effective_date_end+"',driver_license_photo='"+image_oss+"',is_enable='"+1+"' where user_id='"+user_id+"'";
+                            appDB.update("pc_user_driver_license_info",where);
+                            json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");
+                            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+                        }else if("3".equals(is_enable)){
+                            json = AppJsonUtils.returnSuccessJsonString(result, "已经认证，更改无效！");
+                            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+                        }
+                    }
                     boolean is_true = false;
                     is_true = appDB.createDriverLicense(user_id, driver_name, driver_license_number, first_issue_date, allow_car_type, effective_date_start, effective_date_end, image_oss, "1");
                     if (is_true) {
@@ -577,6 +591,20 @@ public class ValidateController {
                     image_oss = null;
                 }
                 if (image_oss != null) {
+                    List<UserTravelCardInfo> userTravelCardInfos = appDB.getTravelCard(user_id);
+                    if(userTravelCardInfos.size()>0){
+                        UserTravelCardInfo user = userTravelCardInfos.get(0);
+                        String is_enable = user.getIs_enable();
+                        if("2".equals(is_enable)){
+                            String where =" set car_license_number='"+car_license_number+"',car_color='"+car_color+"',registration_date='"+registration_date+"',car_type='"+car_type+"',vehicle_owner_name='"+vehicle_owner_name+"',travel_license_photo='"+image_oss+"',is_enable='"+1+"' where user_id='"+user_id+"'";
+                            appDB.update("pc_user_travel_card_info",where);
+                            json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");
+                            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+                        }else if("3".equals(is_enable)){
+                            json = AppJsonUtils.returnSuccessJsonString(result, "已经认证，更改无效！");
+                            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+                        }
+                    }
                     boolean is_true = false;
                     is_true = appDB.createTravelCard(user_id, car_license_number, car_color,  car_type, registration_date, vehicle_owner_name, image_oss, "1");
                     if (is_true) {
@@ -597,11 +625,11 @@ public class ValidateController {
         }
     }
 
-/***
- * 车主驾驶证认证状态查询
- * @param request
- * @return
- */
+    /***
+     * 车主驾驶证认证状态查询
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/driverValidate/status", method = RequestMethod.POST)
     public ResponseEntity<String> driverLicenseStatus(HttpServletRequest request) {
@@ -609,6 +637,7 @@ public class ValidateController {
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
         String json = "";
+        String where = "";
         JSONObject user = new JSONObject();
         JSONObject driver = new JSONObject();
         String token = request.getParameter("token");
@@ -618,24 +647,26 @@ public class ValidateController {
         }
         int user_id = appDB.getIDByToken(token);
         if (user_id > 0) {
+            where = " where _id="+user_id;
+            User users = appDB.getUserList(where).get(0);
             List<UserDriverLicenseInfo> userDriverLicenseInfoList = appDB.getDriverLicense(user_id);
             List<UserTravelCardInfo> userTravelCardInfos= appDB.getTravelCard(user_id);
             if(userDriverLicenseInfoList.size()>0&& userTravelCardInfos.size()>0){
                 UserDriverLicenseInfo userInfo = userDriverLicenseInfoList.get(0);
                 UserTravelCardInfo driverIfo = userTravelCardInfos.get(0);
-                user.put("driver_name",userInfo.getDriver_name());
-                user.put("driver_license_number",userInfo.getDriver_license_number());
+                user.put("driver_name",users.getUser_name());
+                user.put("driver_license_number",users.getUser_idsn());
                 user.put("first_issue_date",userInfo.getFirst_issue_date());
                 user.put("allow_car_type",userInfo.getAllow_car_type());
-                user.put("effective_date_start",userInfo.getEffective_date_end());
-                user.put("effective_date_end",userInfo.getDriver_license_number());
+                user.put("effective_date_start",userInfo.getEffective_date_start());
+                user.put("effective_date_end",userInfo.getEffective_date_end());
                 user.put("photo_url",userInfo.getDriver_license_photo());
                 user.put("status",userInfo.getIs_enable());
                 result.put("driverLicense",user);
                 //行驶证信息
                 driver.put("car_license_number",driverIfo.getCar_license_number());
                 driver.put("car_color",driverIfo.getCar_color());
-                driver.put("car_type",driverIfo.getCar_color());
+                driver.put("car_type",driverIfo.getCar_type());
                 driver.put("registration_date",driverIfo.getRegistration_date());
                 driver.put("vehicle_owner_name",driverIfo.getVehicle_owner_name());
                 driver.put("photo_url",driverIfo.getTravel_license_photo());
@@ -654,12 +685,12 @@ public class ValidateController {
                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }else if(userDriverLicenseInfoList.size()>0&&userTravelCardInfos.size()==0) {
                 UserDriverLicenseInfo userInfo = userDriverLicenseInfoList.get(0);
-                user.put("driver_name", userInfo.getDriver_name());
-                user.put("driver_license_number", userInfo.getDriver_license_number());
+                user.put("driver_name", users.getUser_name());
+                user.put("driver_license_number", users.getUser_idsn());
                 user.put("first_issue_date", userInfo.getFirst_issue_date());
                 user.put("allow_car_type", userInfo.getAllow_car_type());
-                user.put("effective_date_start", userInfo.getEffective_date_end());
-                user.put("effective_date_end", userInfo.getDriver_license_number());
+                user.put("effective_date_start", userInfo.getEffective_date_start());
+                user.put("effective_date_end", userInfo.getEffective_date_end());
                 user.put("photo_url", userInfo.getDriver_license_photo());
                 user.put("status", userInfo.getIs_enable());
                 result.put("driverLicense", user);
@@ -677,8 +708,8 @@ public class ValidateController {
                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }else if(userDriverLicenseInfoList.size()==0&&userTravelCardInfos.size()>0){
                 UserTravelCardInfo driverIfo = userTravelCardInfos.get(0);
-                user.put("driver_name","");
-                user.put("driver_license_number","");
+                user.put("driver_name",users.getUser_name());
+                user.put("driver_license_number",users.getUser_idsn());
                 user.put("first_issue_date","");
                 user.put("allow_car_type","");
                 user.put("effective_date_start","");
@@ -686,10 +717,10 @@ public class ValidateController {
                 user.put("photo_url","");
                 user.put("status","0");
                 result.put("driverLicense",user);
-                    //行驶证信息
+                //行驶证信息
                 driver.put("car_license_number",driverIfo.getCar_license_number());
                 driver.put("car_color",driverIfo.getCar_color());
-                driver.put("car_type",driverIfo.getCar_color());
+                driver.put("car_type",driverIfo.getCar_type());
                 driver.put("registration_date",driverIfo.getRegistration_date());
                 driver.put("vehicle_owner_name",driverIfo.getVehicle_owner_name());
                 driver.put("photo_url",driverIfo.getTravel_license_photo());
@@ -699,7 +730,26 @@ public class ValidateController {
                 json = AppJsonUtils.returnSuccessJsonString(result, "查询消息成功！");
                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }else{
-                json = AppJsonUtils.returnFailJsonString(result, "查询消息失败！");
+                user.put("driver_name",users.getUser_name());
+                user.put("driver_license_number",users.getUser_idsn());
+                user.put("first_issue_date","");
+                user.put("allow_car_type","");
+                user.put("effective_date_start","");
+                user.put("effective_date_end","");
+                user.put("photo_url","");
+                user.put("status","0");
+                result.put("driverLicense",user);
+                //行驶证信息
+                driver.put("car_license_number","");
+                driver.put("car_color","");
+                driver.put("car_type","");
+                driver.put("registration_date","");
+                driver.put("vehicle_owner_name","");
+                driver.put("photo_url","");
+                driver.put("status","0");
+                result.put("travelCard",driver);
+                result.put("status","0");
+                json = AppJsonUtils.returnFailJsonString(result, "暂未查询到您的车主认证信息！");
                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
         }else{
@@ -707,8 +757,5 @@ public class ValidateController {
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
     }
-
-
-
 
 }
