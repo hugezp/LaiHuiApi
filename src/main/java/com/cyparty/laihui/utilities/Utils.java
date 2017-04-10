@@ -42,7 +42,7 @@ public class Utils {
         jedis.auth("zhubangkui");
         System.out.println("Connection to server sucessfully");
         //查看服务是否运行
-        System.out.println("Server is running: "+jedis.ping());
+        System.out.println("Server is running: " + jedis.ping());
     }
 
     public static String getCurrentTime() {
@@ -61,9 +61,10 @@ public class Utils {
 
         return datetime;
     }
-    public static String getTimeSubOrAdd(String time,int minute) {
+
+    public static String getTimeSubOrAdd(String time, int minute) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date= null;
+        Date date = null;
         try {
             date = sdf.parse(time);
         } catch (ParseException e) {
@@ -76,6 +77,7 @@ public class Utils {
 
         return datetime;
     }
+
     public static String getCurrentTimeSubOrAddHour(int hour) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Calendar nowTime = Calendar.getInstance();
@@ -84,20 +86,24 @@ public class Utils {
 
         return datetime;
     }
+
     public static String getTimestamp() {
         Long timestamp = System.currentTimeMillis();
         return timestamp.toString();
     }
-    public static long getCurrenTimeStamp(){
+
+    public static long getCurrenTimeStamp() {
         long time = System.currentTimeMillis();
         return time;
     }
+
     /**
      * 日期格式字符串转换成时间戳
+     *
      * @param date 字符串日期
      * @return
      */
-    public static long date2TimeStamp(String date){
+    public static long date2TimeStamp(String date) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             //return String.valueOf(sdf.parse(date).getTime()/1000);
@@ -107,13 +113,14 @@ public class Utils {
         }
         return 0;
     }
+
     //文件命名
     public static String setFileName(String rootfilepath) {
         String currenttime = Utils.getCurrentTime();
         String files[] = currenttime.split("-");
         String filelast[] = files[2].split(" ");
         String filepathdirectory = rootfilepath + "\\" + files[0] + "\\" + files[1] + "\\" + filelast[0];
-        String filepath = rootfilepath + "\\" + files[0] + "\\" + files[1] + "\\" + filelast[0] + "\\"  + Utils.getTimestamp() + ".png";
+        String filepath = rootfilepath + "\\" + files[0] + "\\" + files[1] + "\\" + filelast[0] + "\\" + Utils.getTimestamp() + ".png";
         File filedirctory = new File(filepathdirectory);
         File file = new File(filepath);
         if (!filedirctory.exists() && !filedirctory.isDirectory()) {
@@ -135,7 +142,7 @@ public class Utils {
     }
 
     //logo上传
-    public static String fileImgUpload( String filename, HttpServletRequest request) {
+    public static String fileImgUpload(String filename, HttpServletRequest request) {
         MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
         MultipartFile file = multipartHttpServletRequest.getFile(filename);
         String filepath = "";
@@ -171,7 +178,7 @@ public class Utils {
             for (int fileIndex = 0; fileIndex < fileList.size(); fileIndex++) {
                 MultipartFile file = fileList.get(fileIndex);
                 try {
-                    if (file != null&&file.getSize()>0) {
+                    if (file != null && file.getSize() > 0) {
                         InputStream inputStream = file.getInputStream();
                         String filePath = request.getSession().getServletContext().getRealPath("/upload");
                         filePath = Utils.setFileName(filePath);
@@ -226,82 +233,89 @@ public class Utils {
         }
         return buf.toString();
     }
+
     public static String getIP(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
-        if(StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)){
+        if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
             //多次反向代理后会有多个ip值，第一个ip才是真实ip
             int index = ip.indexOf(",");
-            if(index != -1){
-                return ip.substring(0,index);
-            }else{
+            if (index != -1) {
+                return ip.substring(0, index);
+            } else {
                 return ip;
             }
         }
         ip = request.getHeader("X-Real-IP");
-        if(StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)){
+        if (StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
             return ip;
         }
         return request.getRemoteAddr();
     }
 
-    public static String checkNull(String input){
-        String result="";
-        if(input==null||input.trim().equals("")||input.trim().equals("null")||input.trim().equals("NULL")){
-            result="";
-        }else {
-            result=input;
+    public static String checkNull(String input) {
+        String result = "";
+        if (input == null || input.trim().equals("") || input.trim().equals("null") || input.trim().equals("NULL")) {
+            result = "";
+        } else {
+            result = input;
         }
         return result;
     }
 
-    public static String checkTime(String input){
-        String result="";
-        if(input!=null&&!input.trim().equals("")){
-            result=input.split("\\.")[0];
-        }else {
-            result=input;
+    public static String checkTime(String input) {
+        String result = "";
+        if (input != null && !input.trim().equals("")) {
+            result = input.split("\\.")[0];
+        } else {
+            result = input;
         }
         return result;
     }
-    public static String sendCodeMessage(String mobile){
-        String rand= SendSMSUtil.randomNum();
-        if(mobile.equals("13298172885")){
-                return "0000";
+
+    public static String sendCodeMessage(String mobile) {
+        String rand = SendSMSUtil.randomNum();
+        if (mobile.equals("13298172885")) {
+            return "0000";
         }
-        if(mobile.equals("15639356022")){
+        if (mobile.equals("15639356022")) {
+            return "0000";
+        }
+        if (mobile.equals("13299999999")) {
             return "0000";
         }
 
 
-
-        String code="#code#="+rand;
-        boolean send_isSuccess= SendSMSUtil.sendSMS(mobile, "push", 0, code);
-        if(!send_isSuccess){
-            code=null;
-        }else {
-            code=rand;
+        String code = "#code#=" + rand;
+        boolean send_isSuccess = SendSMSUtil.sendSMS(mobile, "push", 0, code);
+        if (!send_isSuccess) {
+            code = null;
+        } else {
+            code = rand;
         }
         return code;
     }
+
     //产生8位随机数
-    public static String random(int n){
-        int[] i=new int[n];
-        int count=0;
-        String randomNum="";
-        while(count<n){
-            int t=(int)(Math.random()*9);//抽取的数值小于char类型的“z”（122）
-            if((t>=0&t<=9)){
-                i[count]=t;
+    public static String random(int n) {
+        int[] i = new int[n];
+        int count = 0;
+        String randomNum = "";
+        while (count < n) {
+            int t = (int) (Math.random() * 9);//抽取的数值小于char类型的“z”（122）
+            if ((t >= 0 & t <= 9)) {
+                i[count] = t;
                 count++;
             }
-        }for(int k=0;k<n;k++){
-            if(i[k]>=0&i[k]<=9)
-                randomNum=randomNum+i[k];
+        }
+        for (int k = 0; k < n; k++) {
+            if (i[k] >= 0 & i[k] <= 9)
+                randomNum = randomNum + i[k];
             else
-                randomNum=randomNum+(char)i[k];
+                randomNum = randomNum + (char) i[k];
         }
         return randomNum;
     }
+
     public static String getCharAndNum(int length) {
         String val = "";
         Random random = new Random();
@@ -320,41 +334,46 @@ public class Utils {
         return val;
     }
 
-    public static boolean sendNotifyMessage(String d_mobile,String p_mobile){
-        String typ_val="#mobile#="+p_mobile;
-        boolean send_isSuccess= SendSMSUtil.sendSMS(d_mobile, 19361, typ_val);
+    public static boolean sendNotifyMessage(String d_mobile, String p_mobile) {
+        String typ_val = "#mobile#=" + p_mobile;
+        boolean send_isSuccess = SendSMSUtil.sendSMS(d_mobile, 19361, typ_val);
         return send_isSuccess;
     }
-    public static boolean sendCancleNotifyMessage(String d_mobile,String p_mobile){
-        String typ_val="#mobile#="+p_mobile;
-        boolean send_isSuccess= SendSMSUtil.sendSMS(d_mobile, 8193, typ_val);
+
+    public static boolean sendCancleNotifyMessage(String d_mobile, String p_mobile) {
+        String typ_val = "#mobile#=" + p_mobile;
+        boolean send_isSuccess = SendSMSUtil.sendSMS(d_mobile, 8193, typ_val);
         return send_isSuccess;
     }
-    public static boolean sendAllNotifyMessage(String d_mobile,String title,String content){
-        String typ_val="#title#="+title+"&#orderstatus#="+content;
-        boolean send_isSuccess= SendSMSUtil.sendSMS(d_mobile, 15292, typ_val);
+
+    public static boolean sendAllNotifyMessage(String d_mobile, String title, String content) {
+        String typ_val = "#title#=" + title + "&#orderstatus#=" + content;
+        boolean send_isSuccess = SendSMSUtil.sendSMS(d_mobile, 15292, typ_val);
         return send_isSuccess;
     }
-    public static void getUpperWord(){
-        String key="851wordW";
+
+    public static void getUpperWord() {
+        String key = "851wordW";
         System.out.println(key.toUpperCase());
     }
+
     //随机生成一个在一定范围内的随机数
-    public static int getRandomNum(int limit){
-        int randomNum=(int)(Math.random()*(limit+1));//抽取的数值小于char类型的“z”（122）
+    public static int getRandomNum(int limit) {
+        int randomNum = (int) (Math.random() * (limit + 1));//抽取的数值小于char类型的“z”（122）
         return randomNum;
     }
-    public static String readStringXml( String xml) {
 
-        Document doc ;
-        String result=null;
+    public static String readStringXml(String xml) {
+
+        Document doc;
+        String result = null;
         try {
             doc = DocumentHelper.parseText(xml); // 将字符串转为XML
             Element rootElt = doc.getRootElement(); // 获取根节点
 
             Iterator return_code = rootElt.elementIterator("return_code"); // 获取根节点下的子节点return_code
             // 获取根节点下的子节点return_code
-            String is_success=null;
+            String is_success = null;
 
             // 遍历head节点
             while (return_code.hasNext()) {
@@ -362,7 +381,7 @@ public class Utils {
                 is_success = recordEle.getText(); // 拿到return_code返回值
                 //System.out.println("return_code:" + is_success);
             }
-            if(is_success!=null&&is_success.equals("SUCCESS")){
+            if (is_success != null && is_success.equals("SUCCESS")) {
                 Iterator prepay_id = rootElt.elementIterator("prepay_id");
                 while (prepay_id.hasNext()) {
 
@@ -379,15 +398,16 @@ public class Utils {
         }
         return result;
     }
+
     //解析json
-    public static String  getJsonObject(String str,String add){
+    public static String getJsonObject(String str, String add) {
         JSONObject json = JSONObject.parseObject(str);
         String result = json.getString(add);
         return result;
     }
 
-    public static void getDoubleValue(){
-        String time=Utils.getCurrentTime();
-        System.out.println(time.substring(0,time.length()-3));
+    public static void getDoubleValue() {
+        String time = Utils.getCurrentTime();
+        System.out.println(time.substring(0, time.length() - 3));
     }
 }

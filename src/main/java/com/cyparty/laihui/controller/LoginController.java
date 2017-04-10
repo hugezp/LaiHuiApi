@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 /**
  * Created by zhu on 2016/5/11.
@@ -31,9 +31,6 @@ public class LoginController {
     AppDB appDB;
     @Autowired
     OssUtil ossUtil;
-//    @Autowired
-//    SmsWebApiKit smsWebApiKit;
-
 
     /***
      * 登陆模块（验证码）
@@ -47,19 +44,11 @@ public class LoginController {
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
         String json = "";
+        List<User> userList1 = new ArrayList<>();
+        String where = "";
         try {
-            String ip = Utils.getIP(request);
-            String confirm_time = Utils.getCurrentTime();
-            String where1 = "  where login_ip='" + ip + "' and login_time>'" + Utils.getCurrentTimeSubOrAdd(-60) + "'";
-            int count = appDB.getCount("pc_user_login_ip", where1);
-            if (count > 9) {
-                result.put("error_code", ErrorCode.getSms_send_failed());
-                json = AppJsonUtils.returnFailJsonString(result, "发送验证码过于频繁，请稍后重试！！");
-                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-            }
             String mobile = request.getParameter("mobile");
             String action = request.getParameter("action");
-            boolean is_success = false;
             //验证码
             String code = null;
             String token = null;
@@ -69,10 +58,9 @@ public class LoginController {
             int id = 0;
             switch (action) {
                 case "sms":
-
-                    //判断是否是已登录手机号
-                    where1 = " where user_mobile=" + mobile;
-                    List<User> userList1 = appDB.getUserList(where1);
+                    //判断是否是已注册手机号
+                    where = " where user_mobile=" + mobile;
+                    userList1 = appDB.getUserList(where);
                     if (userList1.size() == 0) {
                         result.put("error_code", ErrorCode.getSms_times_limit());
                         json = AppJsonUtils.returnFailJsonString(result, "为了使您拥有更好的体验，请到应用宝市场下载最新版本");
@@ -89,10 +77,7 @@ public class LoginController {
                     }
                     if (code != null) {
                         //保存记录
-                        String contr = "sms";
-                        appDB.createAAA(contr, ip, confirm_time, "", mobile);
                         appDB.createSMS(mobile, code);
-                        appDB.createLoginIp(ip, confirm_time, mobile, code);
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码发送成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
@@ -112,14 +97,19 @@ public class LoginController {
                     //解密和截取手机号
                     try {
                         mobile = RSAUtils.getEncryptor(my_mobile).substring(0, 11);
+                        //判断是否是已注册手机号
+                        where = " where user_mobile=" + mobile;
+                        userList1 = appDB.getUserList(where);
+                        if (userList1.size() == 0) {
+                            result.put("error_code", ErrorCode.getSms_times_limit());
+                            json = AppJsonUtils.returnFailJsonString(result, "为了使您拥有更好的体验，请到应用宝市场下载最新版本");
+                            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+                        }
                     } catch (Exception e) {
                         result.put("error_code", ErrorCode.getParameter_wrong());
                         json = AppJsonUtils.returnFailJsonString(result, "为了使您拥有更好的体验，请到应用宝市场下载最新版本");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
-
-
-
                     int total1 = appDB.getSendCodeTimes(mobile);
                     if (total1 <= 5) {
                         //发送验证码
@@ -131,10 +121,7 @@ public class LoginController {
                     }
                     if (code != null) {
                         //保存记录
-                        String contr1 = "new_sms";
-                        appDB.createAAA(contr1, ip, confirm_time, my_mobile, mobile);
                         appDB.createSMS(mobile, code);
-                        appDB.createLoginIp(ip, confirm_time, mobile, code);
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码发送成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
@@ -153,7 +140,7 @@ public class LoginController {
                         e.printStackTrace();
                     }
                     code = request.getParameter("code");
-                    String where = " where mobile='" + mobile + "' ";
+                    where = " where mobile='" + mobile + "' ";
                     List<Code> codeList = appDB.getSMS(where);
                     if (codeList.size() > 0) {
                         //得到此次短信的发送记录
@@ -213,6 +200,7 @@ public class LoginController {
                         e.printStackTrace();
                     }
                     code = request.getParameter("code");
+                    //得到返回状态
                     String status = SmsWebApiKit.getInstance().checkcode(mobile, "86", code);
 
                     if (status.equals("200")) {
