@@ -539,13 +539,13 @@ public class AppDB {
         }
         return is_success;
     }
-    //查询车主认证状态
+    //查询车主驾证认证状态
     public List<UserDriverLicenseInfo> getDriverLicense(int user_id){
         String SQL = "select * from pc_user_driver_license_info where user_id ="+user_id;
         List<UserDriverLicenseInfo> driverLicenseInfos = jdbcTemplateObject.query(SQL,new UserDriverLicenseInfoMapper());
         return driverLicenseInfos;
     }
-    //查询车主认证状态
+    //查询车主行驶证认证状态
     public List<UserTravelCardInfo> getTravelCard(int user_id){
         String SQL = "select * from pc_user_travel_card_info where user_id ="+user_id;
         List<UserTravelCardInfo> userTravelCardInfos = jdbcTemplateObject.query(SQL,new UserTravelCardInfoMapper());

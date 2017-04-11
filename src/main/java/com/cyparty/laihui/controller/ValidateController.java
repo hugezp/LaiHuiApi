@@ -306,7 +306,6 @@ public class ValidateController {
                         json = AppJsonUtils.returnFailJsonString(result, "您今日预定次数已达到每日预定次数上限！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
-
             }
             result.put("error_code", ErrorCode.getParameter_wrong());
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
@@ -361,16 +360,8 @@ public class ValidateController {
                     json = AppJsonUtils.returnFailJsonString(result, "身份证号格式不正确");
                     return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                 }
-                String host = "http://idcard3.market.alicloudapi.com";
-                String path = "/idcardAudit";
-                String method = "GET";
-                Map<String, String> headers = new HashMap<String, String>();
-                headers.put("Authorization", "APPCODE 3bd0bd94a2f24acaa375dc1e7f44ea9f");
-                Map<String, String> querys = new HashMap<String, String>();
-                querys.put("idcard", car_id);
-                querys.put("name", name);
-                HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
-                String user = EntityUtils.toString(response.getEntity());
+                //调用阿里Api验证身份信息
+                String user = ValidateUtils.getUrl(car_id,name);
                 String body = Utils.getJsonObject(user, "showapi_res_body");
                 String userCode = Utils.getJsonObject(body, "code");
                 if ("0".equals(userCode)) {
@@ -511,11 +502,18 @@ public class ValidateController {
                         }else if("3".equals(is_enable)){
                             json = AppJsonUtils.returnSuccessJsonString(result, "已经认证，更改无效！");
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+                        }else if("1".equals(is_enable)) {
+                            json = AppJsonUtils.returnSuccessJsonString(result, "系统正在审核，请耐心等待！");
+                            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                         }
                     }
                     boolean is_true = false;
                     is_true = appDB.createDriverLicense(user_id, driver_name, driver_license_number, first_issue_date, allow_car_type, effective_date_start, effective_date_end, image_oss, "1");
-                    if (is_true) {
+                    List<UserTravelCardInfo> userTravelCardInfos = appDB.getTravelCard(user_id);
+                    if(userTravelCardInfos.size()>0){
+                        appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                    }
+                    if (is_true ) {
                         json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     } else {
@@ -603,10 +601,17 @@ public class ValidateController {
                         }else if("3".equals(is_enable)){
                             json = AppJsonUtils.returnSuccessJsonString(result, "已经认证，更改无效！");
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+                        }else if("1".equals(is_enable)) {
+                            json = AppJsonUtils.returnSuccessJsonString(result, "系统正在审核，请耐心等待！");
+                            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                         }
                     }
                     boolean is_true = false;
                     is_true = appDB.createTravelCard(user_id, car_license_number, car_color,  car_type, registration_date, vehicle_owner_name, image_oss, "1");
+                    List<UserDriverLicenseInfo> userDriverLicenseInfos = appDB.getDriverLicense(user_id);
+                    if(userDriverLicenseInfos.size()>0){
+                        appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                    }
                     if (is_true) {
                         json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
