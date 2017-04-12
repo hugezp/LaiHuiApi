@@ -140,24 +140,28 @@ public class AppJsonUtils {
                         info_json.put("car_color", carOwnerInfo.getCar_color());
                         info_json.put("car_type", carOwnerInfo.getCar_type());
                     }else{
-                        UserTravelCardInfo travelCardInfo = appDB.getTravelCard(user.getUser_id()).get(0);
-                        info_json.put("car_no", travelCardInfo.getCar_license_number());
-                        info_json.put("car_brand", "");
-                        info_json.put("car_color", travelCardInfo.getCar_color());
-                        info_json.put("car_type", travelCardInfo.getCar_type());
+                       List <UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(user.getUser_id());
+                       if(travelCardInfos.size()>0){
+                           UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                           info_json.put("car_no", travelCardInfo.getCar_license_number());
+                           info_json.put("car_brand", "");
+                           info_json.put("car_color", travelCardInfo.getCar_color());
+                           info_json.put("car_type", travelCardInfo.getCar_type());
+                       }
                     }
                     driver_json.put("status", 1);
                     driver_json.put("info", info_json);
                 } else {
-                    driver_json.put("status", 0);
+                    driver_json.put("status", driver_status);
                 }
             } else {
-                driver_json.put("status", 0);
+                driver_json.put("status", driver_status);
             }
             if (passenger_status == 1) {
                 passenger_json.put("name", user.getUser_name());
                 passenger_json.put("idsn", user.getUser_idsn());
                 passenger_json.put("status", 1);
+                passenger_json.put("flag",user.getU_flag());
             } else {
                 passenger_json.put("status", 0);
             }
@@ -254,11 +258,15 @@ public class AppJsonUtils {
                     driverObject.put("car_color", carOwnerInfo.getCar_color());
                     driverObject.put("car_type", carOwnerInfo.getCar_type());
                 }
-                UserTravelCardInfo travelCardInfo = appDB.getTravelCard(departure.getUser_id()).get(0);
-                driverObject.put("car_no", travelCardInfo.getCar_license_number());
-                driverObject.put("car_brand", "");
-                driverObject.put("car_color", travelCardInfo.getCar_color());
-                driverObject.put("car_type", travelCardInfo.getCar_type());
+                List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departure.getUser_id());
+                if(travelCardInfos.size()>0){
+                    UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                    driverObject.put("car_no", travelCardInfo.getCar_license_number());
+                    driverObject.put("car_brand", "");
+                    driverObject.put("car_color", travelCardInfo.getCar_color());
+                    driverObject.put("car_type", travelCardInfo.getCar_type());
+                }
+
             } else {
                 driverObject.put("car_no", "");
                 driverObject.put("car_brand", "");
@@ -666,11 +674,15 @@ public class AppJsonUtils {
                         userObject.put("car_color", carOwnerInfo.getCar_color());
                         userObject.put("car_type", carOwnerInfo.getCar_type());
                     }else {
-                        UserTravelCardInfo travelCardInfo = appDB.getTravelCard(order1.getUser_id()).get(0);
-                        userObject.put("car_no",travelCardInfo.getCar_license_number());
-                        userObject.put("car_brand","");
-                        userObject.put("car_color", travelCardInfo.getCar_color());
-                        userObject.put("car_type", travelCardInfo.getCar_type());
+                        List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order1.getUser_id());
+                        if(travelCardInfos.size()>0){
+                            UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                            userObject.put("car_no",travelCardInfo.getCar_license_number());
+                            userObject.put("car_brand","");
+                            userObject.put("car_color", travelCardInfo.getCar_color());
+                            userObject.put("car_type", travelCardInfo.getCar_type());
+                        }
+
                     }
                     userObject.put("grab_id", order1.get_id());
                     userObject.put("mobile", carOwnerInfo.getMobile());
@@ -1367,11 +1379,14 @@ public class AppJsonUtils {
                 }else {
                    //车辆品牌类型
 
-                    UserTravelCardInfo travelCardInfo = appDB.getTravelCard(departureInfo.getUser_id()).get(0);
+                    List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departureInfo.getUser_id());
+                    if(travelCardInfos.size()>0){
+                        UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                        travelCardInfo.getCar_license_number();
+                        jsonObject.put("car_color", travelCardInfo.getCar_color());
+                        jsonObject.put("car_type", travelCardInfo.getCar_type());
+                    }
                     //车牌号
-                    travelCardInfo.getCar_license_number();
-                    jsonObject.put("car_color", travelCardInfo.getCar_color());
-                    jsonObject.put("car_type", travelCardInfo.getCar_type());
                 }
                     jsonObject.put("name", departureInfo.getUser_name());
                     jsonObject.put("user_avatar", departureInfo.getUser_avatar());

@@ -377,6 +377,7 @@ public class ValidateController {
                     }
                     String mobile = users.get(0).getUser_mobile();
                     appDB.procedureUpdateUser("create_user", mobile, 2, name, car_id, id, token, "", 0, "", 0);
+                    appDB.update("pc_user"," set u_flag =1 where _id="+id);
                     //如果是推广来的就进行下面的操作
                     List<Popularizing> popularizeList = appDB.getPopularize(mobile);
                     if (popularizeList.size() > 0) {
@@ -497,6 +498,10 @@ public class ValidateController {
                         if("2".equals(is_enable)){
                             String where =" set driver_name='"+driver_name+"',driver_license_number='"+driver_license_number+"',first_issue_date='"+first_issue_date+"',allow_car_type='"+allow_car_type+"',effective_date_start='"+effective_date_start+"',effective_date_end='"+effective_date_end+"',driver_license_photo='"+image_oss+"',is_enable='"+1+"' where user_id='"+user_id+"'";
                             appDB.update("pc_user_driver_license_info",where);
+                            List<UserTravelCardInfo> userTravelCardInfos = appDB.getTravelCard(user_id);
+                            if(userTravelCardInfos.size()>0){
+                                appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                            }
                             json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                         }else if("3".equals(is_enable)){
@@ -596,6 +601,10 @@ public class ValidateController {
                         if("2".equals(is_enable)){
                             String where =" set car_license_number='"+car_license_number+"',car_color='"+car_color+"',registration_date='"+registration_date+"',car_type='"+car_type+"',vehicle_owner_name='"+vehicle_owner_name+"',travel_license_photo='"+image_oss+"',is_enable='"+1+"' where user_id='"+user_id+"'";
                             appDB.update("pc_user_travel_card_info",where);
+                            List<UserDriverLicenseInfo> userDriverLicenseInfos = appDB.getDriverLicense(user_id);
+                            if(userDriverLicenseInfos.size()>0){
+                                appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                            }
                             json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                         }else if("3".equals(is_enable)){
