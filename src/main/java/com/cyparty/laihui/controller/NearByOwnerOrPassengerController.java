@@ -107,7 +107,7 @@ public class NearByOwnerOrPassengerController {
                     //乘客附近的车主列表
                     List<DriverAndCar> nearByOwenrList1 = new ArrayList();
                     List<DriverAndCar> nearByOwenrList2 = new ArrayList();
-                    where = " and is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc";
+                    where = " and is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit 1000";
                     owenrList = appDB.getOwenrList(where);
                     for (int i = 0; i < owenrList.size(); i++) {
                         //移除本用户的车单
@@ -144,7 +144,7 @@ public class NearByOwnerOrPassengerController {
                                 nearByOwenrList2.add(nearByOwenrList1.get(i));
                             }
                         }
-                        result = AppJsonUtils.getNearByOwnerList(nearByOwenrList2, page, size, count);
+                        result = AppJsonUtils.getNearByOwnerList(nearByOwenrList2, page, size, count,appDB);
                         result.put("active", AppJsonUtils.active(appDB));
                         result.put("order", AppJsonUtils.order(appDB, user_id, 0, "passenger"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
@@ -153,7 +153,7 @@ public class NearByOwnerOrPassengerController {
                         result.put("user_mobile", user.getUser_mobile());
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近车主获取成功");
                     } else {
-                        result = AppJsonUtils.getNearByOwnerList(nearByOwenrList2, page, size, count);
+                        result = AppJsonUtils.getNearByOwnerList(nearByOwenrList2, page, size, count,appDB);
                         result.put("active", AppJsonUtils.active(appDB));
                         result.put("order", AppJsonUtils.order(appDB, user_id, 0, "passenger"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
@@ -172,7 +172,7 @@ public class NearByOwnerOrPassengerController {
                     //乘客附近的车主列表
                     List<PassengerOrder> nearByPassengerList = new ArrayList();
                     List<PassengerOrder> nearByPassengerList2 = new ArrayList();
-                    where = " and is_enable =1 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc";
+                    where = " and is_enable =1 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit 1000";
                     passengerList = appDB.getPassengerList1(where);
                     for (int i = 0; i < passengerList.size(); i++) {
                         if (passengerList.get(i).getUser_id() == user_id) {
@@ -323,10 +323,10 @@ public class NearByOwnerOrPassengerController {
                     }
                     if (nearByOwenrList.size() != 0) {
                         count = nearByOwenrList.size();
-                        result = AppJsonUtils.getNearByOwnerList(nearByOwenrList, page, size, count);
+                        result = AppJsonUtils.getNearByOwnerList(nearByOwenrList, page, size, count,appDB);
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近车主列表获取成功");
                     } else {
-                        result = AppJsonUtils.getNearByOwnerList(nearByOwenrList, page, size, count);
+                        result = AppJsonUtils.getNearByOwnerList(nearByOwenrList, page, size, count,appDB);
                         json = AppJsonUtils.returnFailJsonString(result, "您的附近暂时还没有车主出现哦");
                     }
                     break;

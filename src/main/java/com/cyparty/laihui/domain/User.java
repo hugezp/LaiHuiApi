@@ -23,6 +23,15 @@ public class User {
     private String live_city;//居住地
     private String home;//家乡
     private String company;//公司
+    private int flag;//公司
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
 
     public String getUser_nick_name() {
         return user_nick_name;

@@ -35,6 +35,7 @@ public class PassengerOrder {
     private int destination_address_code=0;
     private int destination_city_code=0;
     private int order_status=0;
+    private int flag=0;
 
     public int getIs_enable() {
         return is_enable;

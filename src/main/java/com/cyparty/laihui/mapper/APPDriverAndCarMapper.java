@@ -37,7 +37,8 @@ public class APPDriverAndCarMapper implements RowMapper<DriverAndCar> {
         departure.setCar_color(resultSet.getString("car_color"));
         String name= Utils.checkNull(resultSet.getString("user_name"));
         String idsn= Utils.checkNull(resultSet.getString("user_idsn"));
-
+        //车主是否通过审核
+        departure.setFlag(resultSet.getInt("flag"));
         if(!name.isEmpty()) {
             String endName = "";
             String sexNum ="";

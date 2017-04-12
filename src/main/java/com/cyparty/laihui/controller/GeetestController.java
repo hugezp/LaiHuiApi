@@ -7,7 +7,6 @@ import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.Utils;
 import com.cyparty.laihui.utilities.sdk.GeetestConfig;
 import com.cyparty.laihui.utilities.sdk.GeetestLib;
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

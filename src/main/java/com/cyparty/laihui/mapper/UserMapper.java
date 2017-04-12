@@ -53,9 +53,9 @@ public class UserMapper implements RowMapper<User> {
             }
         }
         user.setUser_nick_name(name);
-        if(!idsn.trim().equals("")&&idsn.length()>17){
-            idsn=idsn.substring(0,3)+"******"+idsn.substring(14);
-        }
+//        if(!idsn.trim().equals("")&&idsn.length()>17){
+//            idsn=idsn.substring(0,3)+"******"+idsn.substring(14);
+//        }
         user.setUser_idsn(idsn);
         String create_time=resultSet.getString("user_create_time");
         String last_login=resultSet.getString("user_last_login");
@@ -79,6 +79,7 @@ public class UserMapper implements RowMapper<User> {
         user.setSex(Utils.checkNull(resultSet.getString("sex")));
         user.setCompany(Utils.checkNull(resultSet.getString("company")));
         user.setHome(Utils.checkNull(resultSet.getString("home")));
+        user.setFlag(resultSet.getInt("flag"));
         return user;
     }
 }

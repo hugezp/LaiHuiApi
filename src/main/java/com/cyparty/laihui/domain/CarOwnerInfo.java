@@ -14,6 +14,15 @@ public class CarOwnerInfo {
     //关键用户表
     private String user_name;
     private String user_avatar,mobile;
+    private int flag;
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
 
     public String getMobile() {
         return mobile;

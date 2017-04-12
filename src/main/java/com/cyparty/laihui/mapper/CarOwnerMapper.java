@@ -22,6 +22,7 @@ public class CarOwnerMapper implements RowMapper<CarOwnerInfo> {
         /*if(!idsn.trim().equals("")){
             idsn=idsn.substring(0,3)+"******"+idsn.substring(14);
         }*/
+        carOwnerInfo.setFlag(resultSet.getInt("flag"));
         carOwnerInfo.setIdsn(idsn);
         carOwnerInfo.setCar_owner(resultSet.getString("car_owner"));
         carOwnerInfo.setPic_licence(resultSet.getString("pic_licence"));

@@ -62,6 +62,7 @@ public class PassengerOrdersMapper implements RowMapper<PassengerOrder> {
         }
         order.setUser_name(name);
         order.setUser_avatar(Utils.checkNull(resultSet.getString("user_avatar")));
+
         //新增备注字段
         order.setRemark(Utils.checkNull(resultSet.getString("remark")));
         order.setPay_num(resultSet.getString("trade_no"));

@@ -41,6 +41,16 @@ public class DriverAndCar {
     //车主头像
     String user_avatar;
     private String remark;
+    private int flag;
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+
 
     public String getRemark() {
         return remark;
