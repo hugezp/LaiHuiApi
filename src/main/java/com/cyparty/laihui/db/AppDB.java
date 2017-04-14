@@ -551,5 +551,15 @@ public class AppDB {
         List<UserTravelCardInfo> userTravelCardInfos = jdbcTemplateObject.query(SQL,new UserTravelCardInfoMapper());
         return userTravelCardInfos;
     }
+
+    public boolean createMerchantJion(String business_name, String business_mobile, String address, String cooperation_way, String cooperation_description) {
+        boolean is_success = true;
+        String SQL = "insert into pc_merchant_join (business_name,business_mobile,address,cooperation_way,cooperation_description,create_time) VALUES(?,?,?,?,?,?)";
+        int count=jdbcTemplateObject.update(SQL, new Object[]{business_name,business_mobile,address,cooperation_way,cooperation_description,Utils.getCurrentTime()});
+        if (count<1){
+            is_success = false;
+        }
+        return is_success;
+    }
 }
 

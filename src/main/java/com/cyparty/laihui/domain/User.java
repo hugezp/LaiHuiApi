@@ -23,7 +23,7 @@ public class User {
     private String live_city;//居住地
     private String home;//家乡
     private String company;//公司
-    private int flag;//公司
+    private int flag;//判断车主认证标志
     private int u_flag;//新老用户实名认证
 
     public int getFlag() {
