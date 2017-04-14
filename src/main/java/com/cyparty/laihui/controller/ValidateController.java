@@ -360,6 +360,11 @@ public class ValidateController {
                     json = AppJsonUtils.returnFailJsonString(result, "身份证号格式不正确");
                     return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                 }
+                List<User> userList = appDB.getUserList(" where user_idsn ='"+car_id+"' and is_validated =1 and u_flag =1");
+                if(userList.size()>0){
+                    json = AppJsonUtils.returnFailJsonString(result, "该身份证号已经认证！");
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                }
                 //调用阿里Api验证身份信息
                 String user = ValidateUtils.getUrl(car_id,name);
                 String body = Utils.getJsonObject(user, "showapi_res_body");

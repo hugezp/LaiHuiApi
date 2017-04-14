@@ -522,7 +522,8 @@ public class PassengerDepartureController {
 
                     result = AppJsonUtils.getMyBookingOrderInfo(appDB, order_id);
                     String data = Utils.getJsonObject(result.toJSONString(), "passenger_data");
-                    if ("{}".equals(data) || null == data || result == null || result.equals("{}")) {
+                    String data1= Utils.getJsonObject(result.toJSONString(),"driver_data");
+                    if ("{}".equals(data) || null == data || result == null || result.equals("{}")||"{}".equals(data) || null == data) {
                         json = AppJsonUtils.returnFailJsonString(result, "乘客订单已失效！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
 
