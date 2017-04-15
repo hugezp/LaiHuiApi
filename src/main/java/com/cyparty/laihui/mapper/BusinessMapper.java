@@ -13,14 +13,16 @@ public class BusinessMapper implements RowMapper<Business> {
     @Override
     public Business mapRow(ResultSet resultSet, int i) throws SQLException {
         Business business = new Business();
-        business.set_id(resultSet.getInt("_id"));
         business.setBusiness_name(resultSet.getString("business_name"));
         business.setBusiness_mobile(resultSet.getString("business_mobile"));
-        business.setAddress(resultSet.getString("address"));
-        business.setCooperation_way(resultSet.getString("cooperation_way"));
-        business.setCooperation_description(resultSet.getString("cooperation_description"));
-        business.setCreate_time(resultSet.getString("create_time"));
-        business.setFlag(resultSet.getInt("flag"));
+//        business.set_id(resultSet.getInt("_id"));
+//        business.setBusiness_name(resultSet.getString("business_name"));
+//        business.setBusiness_mobile(resultSet.getString("business_mobile"));
+//        business.setAddress(resultSet.getString("address"));
+//        business.setCooperation_way(resultSet.getString("cooperation_way"));
+//        business.setCooperation_description(resultSet.getString("cooperation_description"));
+//        business.setCreate_time(resultSet.getString("create_time"));
+//        business.setFlag(resultSet.getInt("flag"));
 
         return business;
     }

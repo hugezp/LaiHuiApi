@@ -575,7 +575,7 @@ public class AppDB {
     }
 
     public List<Business> getMerchantJion(String where) {
-        String SQL = "select * from pc_merchant_join " + where;
+        String SQL = "select business_name,business_mobile from pc_merchant_join " + where;
         List<Business> businessesList = jdbcTemplateObject.query(SQL,new BusinessMapper());
         return businessesList;
     }

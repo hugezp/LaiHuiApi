@@ -39,13 +39,13 @@ public class BusinessController {
             String address = request.getParameter("address");
             String cooperation_way = request.getParameter("cooperation_way");
             String cooperation_description = request.getParameter("cooperation_description");
-            boolean is_success = appDB.createMerchantJion(business_name,business_mobile,address,cooperation_way,cooperation_description);
             String where = " where business_name='"+business_name+"' and business_mobile='"+business_mobile+"'";
             List<Business>  businessList = appDB.getMerchantJion(where);
             if (businessList.size()>0){
                 json = AppJsonUtils.returnFailJsonString(result,"该信息已经被提交过了，无法再次提交！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
+            boolean is_success = appDB.createMerchantJion(business_name,business_mobile,address,cooperation_way,cooperation_description);
             if (is_success){
                 result.put("business_name",business_name);
                 result.put("business_mobile",business_mobile);
