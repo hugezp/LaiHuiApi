@@ -573,5 +573,11 @@ public class AppDB {
         }
         return is_success;
     }
+
+    public List<Business> getMerchantJion(String where) {
+        String SQL = "select * from pc_merchant_join " + where;
+        List<Business> businessesList = jdbcTemplateObject.query(SQL,new BusinessMapper());
+        return businessesList;
+    }
 }
 
