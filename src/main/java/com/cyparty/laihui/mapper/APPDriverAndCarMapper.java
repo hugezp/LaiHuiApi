@@ -72,6 +72,7 @@ public class APPDriverAndCarMapper implements RowMapper<DriverAndCar> {
         }
         departure.setUser_name(name);
         departure.setUser_avatar(Utils.checkNull(resultSet.getString("user_avatar")));
+
         return departure;
     }
 }

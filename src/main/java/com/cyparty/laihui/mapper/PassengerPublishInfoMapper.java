@@ -32,7 +32,7 @@ public class PassengerPublishInfoMapper implements RowMapper<PassengerOrder> {
         passenger.setorder_status(resultSet.getInt("order_status"));
         passenger.setPay_money(resultSet.getDouble("price"));
         passenger.setPay_num(resultSet.getString("trade_no"));
-
+        passenger.setSource(resultSet.getInt("source"));
         String name= Utils.checkNull(resultSet.getString("user_name"));
         String idsn= Utils.checkNull(resultSet.getString("user_idsn"));
 

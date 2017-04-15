@@ -22,6 +22,15 @@ public class DepartureInfo {
     private String mobile;//手机号
     private int price;//金额
     private String remark;
+    private int source;
+
+    public int getSource() {
+        return source;
+    }
+
+    public void setSource(int source) {
+        this.source = source;
+    }
 
     String departure_county;//起点县
 

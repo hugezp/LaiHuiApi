@@ -165,6 +165,18 @@ public class AppDB {
         }
         return is_success;
     }
+    public boolean update1(String table_name, String where) {
+        boolean is_success = true;
+        String SQL = "update  " + table_name + where;
+        try {
+            int count = jdbcTemplateObject.update(SQL);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        return is_success;
+    }
 
     public boolean delete(String table_name, String where) {
         boolean is_success = true;
@@ -229,7 +241,7 @@ public class AppDB {
      * 获取附近车主列表
      */
     public List<DriverAndCar> getOwenrList(String where) {
-        String SQL = "select a.*,b.car_color,b.car_type ,c.* from pc_driver_publish_info a,pc_car_owner_info b ,pc_user c where  a.user_id=b.user_id and a.mobile =c.user_mobile  "+ where ;
+        String SQL = "select a.*,b.car_color,b.car_type ,c.* from pc_driver_publish_info a,pc_car_owner_info b ,pc_user c where  a.user_id=b.user_id and a.user_id =c._id  "+ where ;
         List<DriverAndCar> NearByOwenrList = jdbcTemplateObject.query(SQL, new APPDriverAndCarMapper());
         return NearByOwenrList;
     }
@@ -276,12 +288,12 @@ public class AppDB {
 
 
 
-    public List<PassengerOrder> getPassengerList(String where) {
+    public List<PassengerOrder> getPassengerList1(String where) {
         String SQL = "SELECT * FROM pc_passenger_publish_info a " + "  left join pc_user b on a.user_id=b._id "+ where ;
         List<PassengerOrder> passengerOrders = jdbcTemplateObject.query(SQL, new PassengerPublishInfoMapper());
         return passengerOrders;
     }
-    public List<PassengerOrder> getPassengerList1(String where) {
+    public List<PassengerOrder> getPassengerList(String where) {
         String SQL = "SELECT * FROM pc_passenger_publish_info a , pc_user b where a.user_id=b._id "+ where ;
         List<PassengerOrder> passengerOrders = jdbcTemplateObject.query(SQL, new PassengerPublishInfoMapper());
         return passengerOrders;

@@ -105,6 +105,18 @@ public class TaskUtils {
                 appDB.update("pc_orders",update_sql);
                 System.out.println("订单号为："+order.getOrder_id()+"的订单超时，已成功处理！");
             }
+            now_time=Utils.getCurrentTimeSubOrAddHour(-5);
+            String passneger_time_over_where = " set is_enable=0 where user_id=-5 and is_enable=1 and departure_time <='"+now_time+"'";
+            boolean is_success = appDB.update("pc_passenger_publish_info",passneger_time_over_where);
+            if (is_success){
+                System.out.println("乘客车单超时，已成功处理！");
+            }
+            now_time=Utils.getCurrentTimeSubOrAddHour(-5);
+            String deriver_time_over_where = " set is_enable=0 where user_id=-5 and is_enable=1 and departure_time <='"+now_time+"'";
+            is_success = appDB.update("pc_driver_publish_info",deriver_time_over_where);
+            if (is_success){
+                System.out.println("车主车单超时，已成功处理！");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

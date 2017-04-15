@@ -221,6 +221,7 @@ public class DriverDepartureController {
                         if (boarding_point != null && !boarding_point.isEmpty()) {
                             JSONObject boardingObject = JSONObject.parseObject(boarding_point);
                             departure_address_code = boardingObject.getIntValue("adCode");
+
                         }
                         if (breakout_point != null && !breakout_point.isEmpty()) {
                             JSONObject breakoutObject = JSONObject.parseObject(breakout_point);

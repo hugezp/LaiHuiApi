@@ -67,6 +67,7 @@ public class APPDriverDepartureInfoMapper implements RowMapper<DepartureInfo> {
         departure.setUser_avatar(Utils.checkNull(resultSet.getString("user_avatar")));
         //新增备注字段
         departure.setRemark(Utils.checkNull(resultSet.getString("remark")));
+        departure.setSource(resultSet.getInt("source"));
        /* departure.setStatus(resultSet.getInt("info_status"));*/
         departure.setBoarding_point(resultSet.getString("boarding_point"));
         departure.setBreakout_point(resultSet.getString("breakout_point"));

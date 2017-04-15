@@ -27,13 +27,14 @@ public class DriverAndCar {
     private String points;
     //描述
     private String description;
+
     //手机号
-    private String mobile;
     //金额
     private int price;
     //起点县
     String departure_county;
 
+    private String mobile;
     //车主名
     String driving_name;
     //车主用户名
@@ -42,6 +43,7 @@ public class DriverAndCar {
     String user_avatar;
     private String remark;
     private int flag;
+
     public int getFlag() {
         return flag;
     }
@@ -49,7 +51,6 @@ public class DriverAndCar {
     public void setFlag(int flag) {
         this.flag = flag;
     }
-
 
 
     public String getRemark() {

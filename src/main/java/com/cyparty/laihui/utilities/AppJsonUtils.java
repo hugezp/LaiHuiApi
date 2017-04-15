@@ -247,6 +247,7 @@ public class AppJsonUtils {
             int booking_count=appDB.getCount("pc_orders",order_where);
             dataObject.put("booking_count",booking_count);*/
             driverObject.put("mobile", departure.getMobile());
+            driverObject.put("source",departure.getSource());
 
             where = " where user_id=" + departure.getUser_id();
             List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo(where);
@@ -277,7 +278,6 @@ public class AppJsonUtils {
             driverObject.put("name", name);
             driverObject.put("avatar", departure.getUser_avatar());
             PCCount driverPCCount = getPCCount(appDB, departure.getUser_id());
-
             driverObject.put("pc_count", driverPCCount.getTotal());
 
             //判断订单是否已过时
@@ -507,7 +507,13 @@ public class AppJsonUtils {
             JSONObject dataObject = new JSONObject();
             JSONObject driverObject = new JSONObject();
             String name = departure.getUser_name();
-            passengerObject.put("mobile", departure.getMobile());
+            if (departure.getSource()==5){
+                passengerObject.put("mobile", departure.getPay_num());
+            }else {
+                passengerObject.put("mobile", departure.getMobile());
+            }
+
+            passengerObject.put("source",departure.getSource());
             passengerObject.put("name", name);
             passengerObject.put("avatar", departure.getUser_avatar());
             PCCount passengerPCCount = getPCCount(appDB, departure.getUser_id());
@@ -857,6 +863,7 @@ public class AppJsonUtils {
             jsonObject.put("create_time", order.getCreate_time());
             jsonObject.put("departure_time", order.getDeparture_time());
             jsonObject.put("price", order.getPrice());
+            jsonObject.put("remake", order.getRemark());
             //判断车主的订单状态和备注
             switch (order.getOrder_status()) {
                 case 0:
@@ -1366,6 +1373,13 @@ public class AppJsonUtils {
                     jsonObject.put("i_province", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("province"));
                     //出发城市
                     jsonObject.put("i_city", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("city"));
+                    String id = net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("id").toString();
+                    if (id==null){
+                        jsonObject.put("is_mobile_user","");
+                    }else {
+                        jsonObject.put("is_mobile_user",id);
+                    }
+
                     //出发地点
                     jsonObject.put("i_name", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("name"));
                     jsonObject.put("o_province", net.sf.json.JSONObject.fromObject(departureInfo.getBreakout_point()).get("province"));
@@ -1410,14 +1424,28 @@ public class AppJsonUtils {
             for (PassengerOrder passenger : nearByPassengerList) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("car_id", passenger.get_id());
-                jsonObject.put("mobile", passenger.getMobile());
+                String mobile = passenger.getMobile();
+                if (mobile.equals("")||mobile==null){
+                    jsonObject.put("mobile",passenger.getPay_num());
+                }else {
+                    jsonObject.put("mobile", mobile);
+                }
                 jsonObject.put("departure_time", DateUtils.getProcessdTime(passenger.getDeparture_time()));
                 jsonObject.put("create_time", DateUtils.getTimesToNow(passenger.getCreate_time()));
                 jsonObject.put("price", passenger.getPay_money());
+                jsonObject.put("boarding_point", passenger.getBoarding_point());
+                jsonObject.put("breakout_point", passenger.getBreakout_point());
                 jsonObject.put("i_province", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("province"));
                 //出发城市
                 jsonObject.put("i_city", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("city"));
                     //出发地点
+                String id = net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("id").toString();
+                if (id==null){
+                    jsonObject.put("is_mobile_user","");
+                }else {
+                    jsonObject.put("is_mobile_user",id);
+                }
+
                 jsonObject.put("i_name", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("name"));
                 jsonObject.put("o_province", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("province"));
                 jsonObject.put("o_city", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("city"));
