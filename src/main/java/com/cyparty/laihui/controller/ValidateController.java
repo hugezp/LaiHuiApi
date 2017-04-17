@@ -505,7 +505,10 @@ public class ValidateController {
                             appDB.update("pc_user_driver_license_info",where);
                             List<UserTravelCardInfo> userTravelCardInfos = appDB.getTravelCard(user_id);
                             if(userTravelCardInfos.size()>0){
-                                appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                                UserTravelCardInfo userTravelCardInfo=userTravelCardInfos.get(0);
+                                if("1".equals(userTravelCardInfo.getIs_enable())){
+                                    appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                                }
                             }
                             json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
@@ -521,7 +524,10 @@ public class ValidateController {
                     is_true = appDB.createDriverLicense(user_id, driver_name, driver_license_number, first_issue_date, allow_car_type, effective_date_start, effective_date_end, image_oss, "1");
                     List<UserTravelCardInfo> userTravelCardInfos = appDB.getTravelCard(user_id);
                     if(userTravelCardInfos.size()>0){
-                        appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                        UserTravelCardInfo userTravelCardInfo=userTravelCardInfos.get(0);
+                        if("1".equals(userTravelCardInfo.getIs_enable())){
+                            appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                        }
                     }
                     if (is_true ) {
                         json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");
@@ -608,7 +614,10 @@ public class ValidateController {
                             appDB.update("pc_user_travel_card_info",where);
                             List<UserDriverLicenseInfo> userDriverLicenseInfos = appDB.getDriverLicense(user_id);
                             if(userDriverLicenseInfos.size()>0){
-                                appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                                UserDriverLicenseInfo userDriverLicenseInfo=userDriverLicenseInfos.get(0);
+                                if("1".equals(userDriverLicenseInfo.getIs_enable())){
+                                    appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                                }
                             }
                             json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
@@ -624,7 +633,10 @@ public class ValidateController {
                     is_true = appDB.createTravelCard(user_id, car_license_number, car_color,  car_type, registration_date, vehicle_owner_name, image_oss, "1");
                     List<UserDriverLicenseInfo> userDriverLicenseInfos = appDB.getDriverLicense(user_id);
                     if(userDriverLicenseInfos.size()>0){
-                        appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                        UserDriverLicenseInfo userDriverLicenseInfo=userDriverLicenseInfos.get(0);
+                        if("1".equals(userDriverLicenseInfo.getIs_enable())){
+                            appDB.update("pc_user"," set is_car_owner =2 where _id ="+user_id);
+                        }
                     }
                     if (is_true) {
                         json = AppJsonUtils.returnSuccessJsonString(result, "信息提交成功，系统正在审核！");

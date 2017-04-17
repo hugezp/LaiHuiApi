@@ -1153,29 +1153,39 @@ public class AppJsonUtils {
                 jsonObject.put("current_seats", departures.get(0).getCurrent_seats());
                 jsonObject.put("init_seats", departures.get(0).getInit_seats());
                 jsonObject.put("car_id", departures.get(0).getR_id());
-                CarOwnerInfo user = appDB.getCarOwnerInfo("where a.user_id=" + order.getDriver_id()).get(0);
-                if (user.getFlag()==0){
-                    driverObject.put("car", user.getCar_id());
-                    driverObject.put("car_brand", user.getCar_brand());
-                    driverObject.put("car_color", user.getCar_color());
-                    driverObject.put("car_type", user.getCar_type());
-                }else {
-                    UserTravelCardInfo travelCardInfo = appDB.getTravelCard(order.getDriver_id()).get(0);
-                    driverObject.put("car",travelCardInfo.getCar_license_number());
-                    driverObject.put("car_brand","");
-                    driverObject.put("car_color", travelCardInfo.getCar_color());
-                    driverObject.put("car_type", travelCardInfo.getCar_type());
+                List<CarOwnerInfo>  carOwnerInfos = appDB.getCarOwnerInfo("where a.user_id=" + order.getDriver_id());
+                if(carOwnerInfos.size()>0){
+                    CarOwnerInfo user =carOwnerInfos.get(0);
+                    if (user.getFlag()==0){
+                        driverObject.put("car", user.getCar_id());
+                        driverObject.put("car_brand", user.getCar_brand());
+                        driverObject.put("car_color", user.getCar_color());
+                        driverObject.put("car_type", user.getCar_type());
+                    }else {
+                        List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order.getDriver_id());
+                        if(travelCardInfos.size()>0){
+                            UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                            driverObject.put("car",travelCardInfo.getCar_license_number());
+                            driverObject.put("car_brand","");
+                            driverObject.put("car_color", travelCardInfo.getCar_color());
+                            driverObject.put("car_type", travelCardInfo.getCar_type());
+                        }
+                    }
+                    driverObject.put("car_owner", user.getCar_owner());
                 }
-                driverObject.put("car_owner", user.getCar_owner());
 
                 where = " where _id=" + order.getDriver_id();
-                User driver = appDB.getUserList(where).get(0);
-                driverObject.put("mobile", driver.getUser_mobile());
-                driverObject.put("name", driver.getUser_nick_name());
-                driverObject.put("avatar", driver.getAvatar());
+                List<User> drivers = appDB.getUserList(where);
+                if(drivers.size()>0){
+                    User driver = drivers.get(0);
+                    driverObject.put("mobile", driver.getUser_mobile());
+                    driverObject.put("name", driver.getUser_nick_name());
+                    driverObject.put("avatar", driver.getAvatar());
 
-                PCCount driverPCCount = getPCCount(appDB, driver.getUser_id());
-                driverObject.put("pc_count", driverPCCount.getTotal());
+                    PCCount driverPCCount = getPCCount(appDB, driver.getUser_id());
+                    driverObject.put("pc_count", driverPCCount.getTotal());
+                }
+
             }
             jsonObject.put("driver_data", driverObject);
             dataArray.add(jsonObject);
