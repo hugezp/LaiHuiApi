@@ -1163,19 +1163,27 @@ public class AppJsonUtils {
                         driverObject.put("car_brand", user.getCar_brand());
                         driverObject.put("car_color", user.getCar_color());
                         driverObject.put("car_type", user.getCar_type());
-                    }else {
+                    }else{
                         List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order.getDriver_id());
+                        UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                        driverObject.put("car",travelCardInfo.getCar_license_number());
                         if(travelCardInfos.size()>0){
-                            UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
-                            driverObject.put("car",travelCardInfo.getCar_license_number());
                             driverObject.put("car_brand","");
                             driverObject.put("car_color", travelCardInfo.getCar_color());
                             driverObject.put("car_type", travelCardInfo.getCar_type());
                         }
                     }
                     driverObject.put("car_owner", user.getCar_owner());
+                }else {
+                    List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order.getDriver_id());
+                    UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                    driverObject.put("car",travelCardInfo.getCar_license_number());
+                    if(travelCardInfos.size()>0){
+                        driverObject.put("car_brand","");
+                        driverObject.put("car_color", travelCardInfo.getCar_color());
+                        driverObject.put("car_type", travelCardInfo.getCar_type());
+                    }
                 }
-
                 where = " where _id=" + order.getDriver_id();
                 List<User> drivers = appDB.getUserList(where);
                 if(drivers.size()>0){
