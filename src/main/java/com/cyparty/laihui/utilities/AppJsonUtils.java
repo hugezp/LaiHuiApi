@@ -716,6 +716,27 @@ public class AppJsonUtils {
                     PCCount driverPCCount = getPCCount(appDB, carOwnerInfo.getUser_id());
                     userObject.put("pc_count", driverPCCount.getTotal());
                 }
+                else {
+                    List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order1.getUser_id());
+                    if(travelCardInfos.size()>0){
+                        UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                        userObject.put("car_no",travelCardInfo.getCar_license_number());
+                        userObject.put("car_brand","");
+                        userObject.put("car_color", travelCardInfo.getCar_color());
+                        userObject.put("car_type", travelCardInfo.getCar_type());
+                    }
+                    where = " where _id=" + order1.getUser_id();
+                    User user = appDB.getUserList(where).get(0);
+                    userObject.put("grab_id", order1.get_id());
+                    userObject.put("mobile", user.getUser_mobile());
+                    userObject.put("name", user.getUser_name());
+                    userObject.put("avatar", user.getAvatar());
+                    PCCount driverPCCount = getPCCount(appDB, user.getUser_id());
+                    userObject.put("pc_count", driverPCCount.getTotal());
+                }
+
+
+
             }
             jsonObject.put("driver_data", userObject);
             jsonObject.put("passenger_data", passengerData);
@@ -847,6 +868,24 @@ public class AppJsonUtils {
                     userObject.put("name", carOwnerInfo.getUser_name());
                     userObject.put("avatar", carOwnerInfo.getUser_avatar());
                     PCCount driverPCCount = getPCCount(appDB, carOwnerInfo.getUser_id());
+                    userObject.put("pc_count", driverPCCount.getTotal());
+                }
+                else {
+                    List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order1.getUser_id());
+                    if(travelCardInfos.size()>0){
+                        UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                        userObject.put("car_no",travelCardInfo.getCar_license_number());
+                        userObject.put("car_brand","");
+                        userObject.put("car_color", travelCardInfo.getCar_color());
+                        userObject.put("car_type", travelCardInfo.getCar_type());
+                    }
+                    where = " where _id = " + order1.getUser_id();
+                    User user = appDB.getUserList(where).get(0);
+                    userObject.put("grab_id", order1.get_id());
+                    userObject.put("mobile", user.getUser_mobile());
+                    userObject.put("name", user.getUser_name());
+                    userObject.put("avatar", user.getAvatar());
+                    PCCount driverPCCount = getPCCount(appDB, user.getUser_id());
                     userObject.put("pc_count", driverPCCount.getTotal());
                 }
             }
