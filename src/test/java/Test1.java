@@ -3,6 +3,7 @@ import com.cyparty.laihui.utilities.RSAUtils;
 
 import java.io.InputStream;
 import java.security.PrivateKey;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -10,7 +11,8 @@ import java.util.UUID;
  */
 public class Test1 {
     public static void main(String []args) throws Exception {
-        UUID uuid = UUID.randomUUID();
-        System.out.println(uuid);
+        Date date = new Date();
+        long s = -date.getTime();
+        System.out.println(-Integer.parseInt((new Date().getTime()+"").substring(4,13)));
     }
 }

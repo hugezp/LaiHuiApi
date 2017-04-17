@@ -239,9 +239,15 @@ public class AppDB {
     }
     /**
      * 获取附近车主列表
+     * select * from pc_passenger_publish_info  p LEFT JOIN pc_user  u ON p.user_id=u._id LEFT JOIN pc_car_owner_info c ON p.user_id = c.user_id
      */
     public List<DriverAndCar> getOwenrList(String where) {
         String SQL = "select a.*,b.car_color,b.car_type ,c.* from pc_driver_publish_info a,pc_car_owner_info b ,pc_user c where  a.user_id=b.user_id and a.user_id =c._id  "+ where ;
+        List<DriverAndCar> NearByOwenrList = jdbcTemplateObject.query(SQL, new APPDriverAndCarMapper());
+        return NearByOwenrList;
+    }
+    public List<DriverAndCar> getOwenrList1(String where) {
+        String SQL = "select p.*,u.*,c.car_color,c.car_type  from pc_driver_publish_info  p LEFT JOIN pc_user  u ON p.user_id=u._id LEFT JOIN pc_car_owner_info c ON p.user_id = c.user_id "+ where ;
         List<DriverAndCar> NearByOwenrList = jdbcTemplateObject.query(SQL, new APPDriverAndCarMapper());
         return NearByOwenrList;
     }

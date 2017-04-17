@@ -251,6 +251,7 @@ public class AppJsonUtils {
 
             where = " where user_id=" + departure.getUser_id();
             List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo(where);
+            List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departure.getUser_id());
             if (carOwnerInfoList.size() > 0) {
                 CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
                 if (carOwnerInfo.getFlag()==0){
@@ -259,7 +260,7 @@ public class AppJsonUtils {
                     driverObject.put("car_color", carOwnerInfo.getCar_color());
                     driverObject.put("car_type", carOwnerInfo.getCar_type());
                 }
-                List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departure.getUser_id());
+                //List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departure.getUser_id());
                 if(travelCardInfos.size()>0){
                     UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
                     driverObject.put("car_no", travelCardInfo.getCar_license_number());
@@ -269,10 +270,19 @@ public class AppJsonUtils {
                 }
 
             } else {
-                driverObject.put("car_no", "");
-                driverObject.put("car_brand", "");
-                driverObject.put("car_color", "");
-                driverObject.put("car_type", "");
+                if(travelCardInfos.size()>0){
+                    UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                    driverObject.put("car_no", travelCardInfo.getCar_license_number());
+                    driverObject.put("car_brand", "");
+                    driverObject.put("car_color", travelCardInfo.getCar_color());
+                    driverObject.put("car_type", travelCardInfo.getCar_type());
+                }else{
+                    driverObject.put("car_no", "");
+                    driverObject.put("car_brand", "");
+                    driverObject.put("car_color", "");
+                    driverObject.put("car_type", "");
+                }
+
             }
             String name = departure.getUser_name();
             driverObject.put("name", name);
@@ -324,10 +334,6 @@ public class AppJsonUtils {
             List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo1(where);
             if (carOwnerInfoList.size() > 0) {
                 CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
-
-                String name = departure.getUser_name();
-                driverObject.put("name", name);
-                driverObject.put("avatar", departure.getUser_avatar());
                 if (carOwnerInfo.getFlag()==0){
                     driverObject.put("car_no", carOwnerInfo.getCar_id());
                     driverObject.put("car_brand", carOwnerInfo.getCar_brand());
@@ -343,9 +349,22 @@ public class AppJsonUtils {
                     driverObject.put("car_color", travelCardInfo.getCar_color());
                     driverObject.put("car_type", travelCardInfo.getCar_type());
                 }
-
-                driverObject.put("mobile", departure.getMobile());
+            }else {
+                //车单品牌类型
+                List<UserTravelCardInfo> travelCardInfoList = appDB.getTravelCard(departure.getUser_id());
+                if (travelCardInfoList.size()>0){
+                    UserTravelCardInfo travelCardInfo = travelCardInfoList.get(0);
+                    //车牌号
+                    driverObject.put("car_brand", "");
+                    driverObject.put("car_no", travelCardInfo.getCar_license_number());
+                    driverObject.put("car_color", travelCardInfo.getCar_color());
+                    driverObject.put("car_type", travelCardInfo.getCar_type());
+                }
             }
+            String name = departure.getUser_name();
+            driverObject.put("name", name);
+            driverObject.put("avatar", departure.getUser_avatar());
+            driverObject.put("mobile", departure.getMobile());
 
             //统计全部拼车次数
            /* String where_count=" where user_id ="+departure.getUser_id()+" and is_enable=1";
@@ -1379,7 +1398,6 @@ public class AppJsonUtils {
                     }else {
                         jsonObject.put("is_mobile_user",id);
                     }
-
                     //出发地点
                     jsonObject.put("i_name", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("name"));
                     jsonObject.put("o_province", net.sf.json.JSONObject.fromObject(departureInfo.getBreakout_point()).get("province"));

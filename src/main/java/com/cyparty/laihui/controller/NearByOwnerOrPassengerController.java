@@ -107,8 +107,9 @@ public class NearByOwnerOrPassengerController {
                     //乘客附近的车主列表
                     List<DriverAndCar> nearByOwenrList1 = new ArrayList();
                     List<DriverAndCar> nearByOwenrList2 = new ArrayList();
-                    where = " and is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit 1000";
-                    owenrList = appDB.getOwenrList(where);
+
+                    where = " where is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit 1000";
+                    owenrList = appDB.getOwenrList1(where);
                     for (int i = 0; i < owenrList.size(); i++) {
                         //移除本用户的车单
                         if (owenrList.get(i).getUser_id() == user_id) {
@@ -296,8 +297,8 @@ public class NearByOwnerOrPassengerController {
 
                     //"latitude > '.$lat.'-1 and latitude < '.$lat.'+1 and longitude > '.$lon.'-1 and longitude < '.$lon.'+1 order by ACOS(SIN(('.$lat.' * 3.1415) / 180 ) *SIN((latitude * 3.1415) / 180 ) +COS(('.$lat.' * 3.1415) / 180 ) * COS((latitude * 3.1415) / 180 ) *COS(('.$lon.'* 3.1415) / 180 - (longitude * 3.1415) / 180 ) ) * 6380 asc limit 10';
 
-                    where = " and is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit " + offset + "," + size;
-                    owenrList = appDB.getOwenrList(where);
+                    where = " where is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit " + offset + "," + size;
+                    owenrList = appDB.getOwenrList1(where);
                     for (int i = 0; i < owenrList.size(); i++) {
                         if (owenrList.get(i).getUser_id() == user_id) {
                             owenrList.remove(i);
