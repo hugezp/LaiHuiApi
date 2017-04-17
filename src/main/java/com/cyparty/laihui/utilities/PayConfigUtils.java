@@ -8,8 +8,8 @@ public class PayConfigUtils {
     private final static String private_key="MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALaMBeCgPn1khvzYO9x/8O5mD+4QGiKUVq5kxlxpLq35p+L6zqNCrzwYZWIxFlgtNT3hBbtndRoakcv86nQmLjQchJIo1ktfFjseCm9eMq00vATjX0Emco8Aub7rgU1KsXY3NPZBbyoEbDjWFgAW1ejJGQEgEPq41H9dfMdklMMvAgMBAAECgYEAiKkFEWgFwEwM/qdHEUk67s67qEanujGBPye0lKQtzRL1C+kl33VhyMSeycbj6nlVvZCDgQvvz+4KLkOWpgObXCV4MRJcr8v1uKagpGn1IEY0pBdjQGq/HLFjME3dIqPoxQdN+NgyLx2Q9/C8O3/c8fF9zMSKZK+gfYlvWM0RgJkCQQDnj+8A4b5jq7f7d/AhRf9hLbIYv4wMv9ZBFjdJItg27lv2VwAcVg+6LY0fOv1laOciCzg+JY+mscVGwa+0dNu1AkEAyc/at6N52wV40VMcd6yGcjFN8awEZnWZKaorH2qAp7x7RGeZv2CUVyc1fx5G5OmdASaOr9Kl9BHjZfqmKvMZ0wJAYEAyvzIWOkXBVtR2ys3WpiUhVyofY5lFzI4Yctz59HNFZHKrSBv5s5CFjUqu0z00fbEeMq7YNBjGgG+3whGk1QJBAL4Z46d0gIbGIsbbiUdZ5tOOiiOKrCJvyDUtLK3NPx/CNkN7a6KQsWtfbc8ukA112gWJcoNA5D6C0zfu4bQ3hy0CQBJA+DlKHJgLvo56ypQK0lWD6tUlxIT5pvWYuxYB8fKEANGlQvgc2Ancp3xGwyJdQSRweLkLP4xhZHyfNnEAbAQ=";
     private final static String alipay_public_key="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB";
     private final static String app_id="2016072001643878";
-    private final static String wx_app_id="wx6527ab831ef9f8f0";
-    private final static String wx_mch_id="1409441702";
+    private final static String wx_app_id="wx6527ab831ef9f8f0";//公众号id
+    private final static String wx_mch_id="1409441702";//商户号
     private final static String wx_app_secret_key="eo2MwtDcK6y3HaWzkbTpMvW8tMMxIbo4";
 
     private final static String wx_pay_notify_url="http://api.laihuipinche.com/wx_pay/notify";//运行环境

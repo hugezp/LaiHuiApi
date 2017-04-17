@@ -97,6 +97,11 @@ public class DriverDepartureController {
                         }
                         String user_where = " where _id=" + user_id;
                         String mobile = appDB.getUserList(user_where).get(0).getUser_mobile();
+                        if (appDB.getUserList(user_where).get(0).getIs_validated() != 1) {
+                            result.put("error_code", ErrorCode.getIs_validated());
+                            json = AppJsonUtils.returnFailJsonString(result, "请先进行实名认证！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        }
                         if (appDB.getUserList(user_where).get(0).getIs_car_owner() != 1) {
                             result.put("error_code", ErrorCode.getIs_car_owner());
                             json = AppJsonUtils.returnFailJsonString(result, "请先进行车主认证！");
