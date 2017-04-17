@@ -561,6 +561,8 @@ public class AppJsonUtils {
                 order = orderList.get(0);
                 dataObject.put("id", orderList.get(0).get_id());
                 dataObject.put("info_id", orderList.get(0).getOrder_id());
+            }else{
+                dataObject.put("info_id", departure.get_id());
             }
             dataObject.put("order_status", order.getOrder_status());
             dataObject.put("is_enable", departure.getIs_enable());
