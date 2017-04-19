@@ -104,6 +104,8 @@ public class PassengerDepartureController {
 
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
+//            resultObject.put("price",0.01);
+//            resultObject.put("total_price",0.01);
             resultObject.put("price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             resultObject.put("total_price", new BigDecimal(last_price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             resultObject.put("cost_time", duration / 60 + "分钟");

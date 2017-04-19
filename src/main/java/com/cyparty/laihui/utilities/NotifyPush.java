@@ -29,7 +29,7 @@ public class NotifyPush {
         JSONObject jsonObject=new JSONObject();
         jsonObject.put("push_time",Utils.getCurrentTime());
         jsonObject.put("content","测试内容");
-        pinCheNotify("11","18515381796","测试推送",28,jsonObject,Utils.getCurrentTime());
+        pinCheNotify("11","15738961936","测试推送",28,jsonObject,Utils.getCurrentTime());
     }
     @Async
     public static JSONObject pinCheNotify(String type,String mobile,String content,int id,JSONObject pushObject,String push_time)  {
@@ -154,7 +154,7 @@ public class NotifyPush {
 
         JSONObject sendJson=new JSONObject();
         sendJson.put("cql","select * from _Installation where notify_mobile='"+mobile+"'");
-        sendJson.put("prod","prod");
+        sendJson.put("prod","dev");
         sendJson.put("data",dataObject);
         json=sendJson.toJSONString();
         HttpClient httpClient = new DefaultHttpClient();
@@ -200,7 +200,7 @@ public class NotifyPush {
 
         JSONObject sendJson=new JSONObject();
         sendJson.put("cql","select * from _Installation where notify_mobile='"+mobile+"'");
-        sendJson.put("prod","prod");
+        sendJson.put("prod","dev");
         sendJson.put("data",dataObject);
         json=sendJson.toJSONString();
         HttpClient httpClient = new DefaultHttpClient();

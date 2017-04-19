@@ -77,7 +77,7 @@ public class ValidateController {
     }
 
     /***
-     * 身份认证模块(乘客实名认证，车主认证)
+     * 身份认证模块(乘客实名认证，车主认证)（old）
      * @param request
      * @return
      */
@@ -95,10 +95,13 @@ public class ValidateController {
             String token = null;
             if (request.getParameter("token") != null) {
                 token = request.getParameter("token");
+                json = AppJsonUtils.returnFailJsonString(result, "为了使你获得更好的服务体验，请下载最新版本！");
+                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
             int id = 0;
             if (token != null) {
                 id = appDB.getIDByToken(token);
+
             } else {
                 result.put("error_code", ErrorCode.getToken_expired());
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");

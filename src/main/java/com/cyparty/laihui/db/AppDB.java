@@ -522,21 +522,6 @@ public class AppDB {
         }
         return is_success;
     }
-//添加登录ip
-    public boolean createLoginIp(String ip, String confirm_time,String mobile,String code) {
-        boolean is_success = true;
-        String SQL = "insert into pc_user_login_ip (login_ip,login_time,mobile,code) VALUES(?,?,?,?)";
-        int count=jdbcTemplateObject.update(SQL, new Object[]{ip,confirm_time,mobile,code});
-        if (count<1){
-            is_success = false;
-        }
-        return is_success;
-    }
-
-    public void createAAA(String contr,String ip,String create_time,String my_mobile,String mobile) {
-        String SQL = "insert into test_controller (controller,login_ip,create_time,my_mobile,mobile) VALUES(?,?,?,?,?)";
-        jdbcTemplateObject.update(SQL, new Object[]{contr,ip,create_time,my_mobile,mobile});
-    }
     //添加车主驾证认证
     public boolean createDriverLicense(int user_id,String driver_name,String driver_license_number,String first_issue_date,String allow_car_type,String effective_date_start,String effective_date_end,String driver_license_photo,String is_enable){
         boolean is_success = true;
@@ -585,5 +570,6 @@ public class AppDB {
         List<Business> businessesList = jdbcTemplateObject.query(SQL,new BusinessMapper());
         return businessesList;
     }
+
 }
 

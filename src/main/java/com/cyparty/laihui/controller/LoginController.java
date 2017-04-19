@@ -137,7 +137,7 @@ public class LoginController {
                         ip_location = GetIPLocation.getIpLocation(addr, 0);
                     } catch (Exception e) {
                         ip_location = "查询失败";
-                        e.printStackTrace();
+                        //e.printStackTrace();
                     }
                     code = request.getParameter("code");
                     where = " where mobile='" + mobile + "' ";
@@ -197,9 +197,30 @@ public class LoginController {
                         ip_location1 = GetIPLocation.getIpLocation(addr1, 0);
                     } catch (Exception e) {
                         ip_location1 = "查询失败";
-                        e.printStackTrace();
+                        //e.printStackTrace();
                     }
                     code = request.getParameter("code");
+                    //测试手机号判断
+                    if (TestConfigUtils.getMobile(mobile)) {
+                        if (!code.equals("0603")){
+                            result.put("error_code", ErrorCode.getSms_checked_failed());
+                            json = AppJsonUtils.returnFailJsonString(result, "验证码错误，请核对您的校验码！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        }
+                        //创建该用户
+                        where = " where user_mobile='" + mobile + "' ";
+                        List<User> userList = appDB.getUserList(where);
+                        if (userList.size() > 0) {
+                            //update
+                            id = userList.get(0).getUser_id();
+                            //通过用户id生成身份令牌
+                            token = IDTransform.transformID(id);
+                            appDB.procedureUpdateUser("create_user", mobile, 1, "", "", id, token, addr1, 0, ip_location1, 0);
+                            result.put("token", token);
+                            json = AppJsonUtils.returnSuccessJsonString(result, "验证码正确！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        }
+                    }
                     //得到返回状态
                     String status = SmsWebApiKit.getInstance().checkcode(mobile, "86", code);
 

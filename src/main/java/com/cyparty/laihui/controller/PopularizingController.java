@@ -102,8 +102,8 @@ public class PopularizingController {
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
                 }else{
-                    json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
-                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+                    //json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }
             }else{
                 json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");

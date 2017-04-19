@@ -592,15 +592,17 @@ public class AppJsonUtils {
         String where_count = " where user_id =" + user_id + " and is_enable=1";
         int driver_departure_total = appDB.getCount("pc_driver_publish_info", where_count);//司机发车次数
 
-        where_count = where_count + " and order_status =1";
-        int booking_total = appDB.getCount("pc_orders", where_count);//订单次数
+        where_count = where_count + " and order_status =3 and order_type=2";
+        int booking_total = appDB.getCount("pc_orders", where_count);//司机订单次数
+        where_count = where_count + " and order_status =4 and order_type=0";
+        int passenger_total = appDB.getCount("pc_orders", where_count);//订单次数
 
         pcCount.setDriver_departure_count(driver_departure_total);
 
         pcCount.setPassenger_booking_count(booking_total);
 
 
-        pcCount.setTotal(driver_departure_total + booking_total);
+        pcCount.setTotal(driver_departure_total + booking_total + passenger_total);
 
         return pcCount;
     }

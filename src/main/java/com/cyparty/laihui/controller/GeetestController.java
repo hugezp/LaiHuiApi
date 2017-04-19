@@ -122,4 +122,25 @@ public class GeetestController {
 
     }
 
+    /**
+     * 调用短信接口
+     * 如果sms_status=1 聚合短信
+     * 如果sms_status=2 mob短信
+     *
+     * @param request
+     * @return
+     */
+
+    @RequestMapping(value = "/sms/status", method = RequestMethod.POST)
+    public ResponseEntity<String> smsStatus(HttpServletRequest request) {
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        JSONObject result = new JSONObject();
+        String json = "";
+        result.put("sms_status",1);
+        json = AppJsonUtils.returnSuccessJsonString(result,"获取状态成功");
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+    }
+
 }

@@ -275,19 +275,19 @@ public class Utils {
     public static String sendCodeMessage(String mobile) {
         String rand = SendSMSUtil.randomNum();
         if (mobile.equals("13298172885")) {
-            return "1028";
+            return "0603";
         }
         if (mobile.equals("15639356022")) {
-            return "7923";
+            return "0603";
         }
         if (mobile.equals("18538191908")) {
             return "0603";
         }
         if (mobile.equals("18560459018")) {
-            return "7923";
+            return "0603";
         }
         if (mobile.equals("15516015893")) {
-            return "7923";
+            return "0603";
         }
         String code = "#code#=" + rand;
         boolean send_isSuccess = SendSMSUtil.sendSMS(mobile, "push", 0, code);
