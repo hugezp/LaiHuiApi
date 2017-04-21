@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.*;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -134,20 +135,20 @@ public class AppJsonUtils {
                     info_json.put("name", carOwnerInfo.getCar_owner_name());
                     info_json.put("idsn", carOwnerInfo.getIdsn());
 
-                    if(user.getFlag()==0){
+                    if (user.getFlag() == 0) {
                         info_json.put("car_no", carOwnerInfo.getCar_id());
                         info_json.put("car_brand", carOwnerInfo.getCar_brand());
                         info_json.put("car_color", carOwnerInfo.getCar_color());
                         info_json.put("car_type", carOwnerInfo.getCar_type());
-                    }else{
-                       List <UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(user.getUser_id());
-                       if(travelCardInfos.size()>0){
-                           UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
-                           info_json.put("car_no", travelCardInfo.getCar_license_number());
-                           info_json.put("car_brand", "");
-                           info_json.put("car_color", travelCardInfo.getCar_color());
-                           info_json.put("car_type", travelCardInfo.getCar_type());
-                       }
+                    } else {
+                        List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(user.getUser_id());
+                        if (travelCardInfos.size() > 0) {
+                            UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                            info_json.put("car_no", travelCardInfo.getCar_license_number());
+                            info_json.put("car_brand", "");
+                            info_json.put("car_color", travelCardInfo.getCar_color());
+                            info_json.put("car_type", travelCardInfo.getCar_type());
+                        }
                     }
                     driver_json.put("status", 1);
                     driver_json.put("info", info_json);
@@ -161,7 +162,7 @@ public class AppJsonUtils {
                 passenger_json.put("name", user.getUser_name());
                 passenger_json.put("idsn", user.getUser_idsn());
                 passenger_json.put("status", 1);
-                passenger_json.put("flag",user.getU_flag());
+                passenger_json.put("flag", user.getU_flag());
             } else {
                 passenger_json.put("status", 0);
             }
@@ -247,21 +248,21 @@ public class AppJsonUtils {
             int booking_count=appDB.getCount("pc_orders",order_where);
             dataObject.put("booking_count",booking_count);*/
             driverObject.put("mobile", departure.getMobile());
-            driverObject.put("source",departure.getSource());
+            driverObject.put("source", departure.getSource());
 
             where = " where user_id=" + departure.getUser_id();
             List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo(where);
             List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departure.getUser_id());
             if (carOwnerInfoList.size() > 0) {
                 CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
-                if (carOwnerInfo.getFlag()==0){
+                if (carOwnerInfo.getFlag() == 0) {
                     driverObject.put("car_no", carOwnerInfo.getCar_id());
                     driverObject.put("car_brand", carOwnerInfo.getCar_brand());
                     driverObject.put("car_color", carOwnerInfo.getCar_color());
                     driverObject.put("car_type", carOwnerInfo.getCar_type());
                 }
                 //List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departure.getUser_id());
-                if(travelCardInfos.size()>0){
+                if (travelCardInfos.size() > 0) {
                     UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
                     driverObject.put("car_no", travelCardInfo.getCar_license_number());
                     driverObject.put("car_brand", "");
@@ -270,13 +271,13 @@ public class AppJsonUtils {
                 }
 
             } else {
-                if(travelCardInfos.size()>0){
+                if (travelCardInfos.size() > 0) {
                     UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
                     driverObject.put("car_no", travelCardInfo.getCar_license_number());
                     driverObject.put("car_brand", "");
                     driverObject.put("car_color", travelCardInfo.getCar_color());
                     driverObject.put("car_type", travelCardInfo.getCar_type());
-                }else{
+                } else {
                     driverObject.put("car_no", "");
                     driverObject.put("car_brand", "");
                     driverObject.put("car_color", "");
@@ -334,12 +335,12 @@ public class AppJsonUtils {
             List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo1(where);
             if (carOwnerInfoList.size() > 0) {
                 CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
-                if (carOwnerInfo.getFlag()==0){
+                if (carOwnerInfo.getFlag() == 0) {
                     driverObject.put("car_no", carOwnerInfo.getCar_id());
                     driverObject.put("car_brand", carOwnerInfo.getCar_brand());
                     driverObject.put("car_color", carOwnerInfo.getCar_color());
                     driverObject.put("car_type", carOwnerInfo.getCar_type());
-                }else {
+                } else {
                     //车单品牌类型
                     UserTravelCardInfo travelCardInfo = appDB.getTravelCard(departure.getUser_id()).get(0);
 
@@ -349,10 +350,10 @@ public class AppJsonUtils {
                     driverObject.put("car_color", travelCardInfo.getCar_color());
                     driverObject.put("car_type", travelCardInfo.getCar_type());
                 }
-            }else {
+            } else {
                 //车单品牌类型
                 List<UserTravelCardInfo> travelCardInfoList = appDB.getTravelCard(departure.getUser_id());
-                if (travelCardInfoList.size()>0){
+                if (travelCardInfoList.size() > 0) {
                     UserTravelCardInfo travelCardInfo = travelCardInfoList.get(0);
                     //车牌号
                     driverObject.put("car_brand", "");
@@ -418,15 +419,15 @@ public class AppJsonUtils {
             List<Order> orderList = appDB.getOrderReview(order_where, 0);
 
             //获取乘客订单
-            List<Order> orders = appDB.getOrderReview(" where user_id="+ user_id+" and order_type=0 and is_enable=1 order by create_time DESC limit 1",0);
-            if(orders.size()>0){
+            List<Order> orders = appDB.getOrderReview(" where user_id=" + user_id + " and order_type=0 and is_enable=1 order by create_time DESC limit 1", 0);
+            if (orders.size() > 0) {
                 Order order = orders.get(0);
                 int newOrder_id = order.getOrder_id();
-                List<Order> orderNewList = appDB.getOrderReview(" where order_id = "+newOrder_id+" and order_type =2 and is_enable=1 order by create_time DESC limit 1" ,0);
-                if(orderNewList.size()>0){
-                    Order driverOrder =orderNewList.get(0);
+                List<Order> orderNewList = appDB.getOrderReview(" where order_id = " + newOrder_id + " and order_type =2 and is_enable=1 order by create_time DESC limit 1", 0);
+                if (orderNewList.size() > 0) {
+                    Order driverOrder = orderNewList.get(0);
                     int grab_id = driverOrder.get_id();
-                    jsonObject.put("grab_id",grab_id);
+                    jsonObject.put("grab_id", grab_id);
                 }
             }
             JSONArray orderArray = new JSONArray();
@@ -485,6 +486,7 @@ public class AppJsonUtils {
         String forword_where = " where is_enable=1  and order_status!=1";
         List<PassengerOrder> passengerOrderList = new ArrayList<>();
         int count = 0;
+        int offset = page*size;
         if (id == 0) {
             if (departure_address_code != 0 && destination_address_code != 0) {
                 //精确搜索不分页
@@ -492,18 +494,18 @@ public class AppJsonUtils {
 //                    return result_json;
 //                }
                 //1.最精确
-                where = forword_where + "  and departure_address_code=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC ";
+                where = forword_where + "  and departure_address_code=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
                 List<PassengerOrder> passengerOrderList1 = appDB.getPassengerDepartureInfo(where);
                 //2.锁定目的地code
                 String city_code = (departure_address_code + "").substring(0, 4) + "00";
-                where = forword_where + "  and departure_city_code =" + city_code + " and departure_address_code!=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC ";
+                where = forword_where + "  and departure_city_code =" + city_code + " and departure_address_code!=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
                 List<PassengerOrder> passengerOrderList2 = appDB.getPassengerDepartureInfo(where);
                 //3.锁定出发地code
                 String des_city_code = (destination_address_code + "").substring(0, 4) + "00";
-                where = forword_where + "  and departure_address_code=" + departure_address_code + " and destination_address_code!=" + destination_address_code + " and destination_city_code = " + des_city_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC ";
+                where = forword_where + "  and departure_address_code=" + departure_address_code + " and destination_address_code!=" + destination_address_code + " and destination_city_code = " + des_city_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
                 List<PassengerOrder> passengerOrderList3 = appDB.getPassengerDepartureInfo(where);
                 //4.两边都使用citycode
-                where = forword_where + "  and  departure_city_code =" + city_code + " and departure_address_code!=" + departure_address_code + " and destination_address_code !=" + destination_address_code + " and destination_city_code = " + des_city_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC ";
+                where = forword_where + "  and  departure_city_code =" + city_code + " and departure_address_code!=" + departure_address_code + " and destination_address_code !=" + destination_address_code + " and destination_city_code = " + des_city_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
                 List<PassengerOrder> passengerOrderList4 = appDB.getPassengerDepartureInfo(where);
                 passengerOrderList.addAll(passengerOrderList1);
                 passengerOrderList.addAll(passengerOrderList2);
@@ -526,13 +528,13 @@ public class AppJsonUtils {
             JSONObject dataObject = new JSONObject();
             JSONObject driverObject = new JSONObject();
             String name = departure.getUser_name();
-            if (departure.getSource()==5){
+            if (departure.getSource() == 5) {
                 passengerObject.put("mobile", departure.getPay_num());
-            }else {
+            } else {
                 passengerObject.put("mobile", departure.getMobile());
             }
 
-            passengerObject.put("source",departure.getSource());
+            passengerObject.put("source", departure.getSource());
             passengerObject.put("name", name);
             passengerObject.put("avatar", departure.getUser_avatar());
             PCCount passengerPCCount = getPCCount(appDB, departure.getUser_id());
@@ -561,7 +563,7 @@ public class AppJsonUtils {
                 order = orderList.get(0);
                 dataObject.put("id", orderList.get(0).get_id());
                 dataObject.put("info_id", orderList.get(0).getOrder_id());
-            }else{
+            } else {
                 dataObject.put("info_id", departure.get_id());
             }
             dataObject.put("order_status", order.getOrder_status());
@@ -697,17 +699,17 @@ public class AppJsonUtils {
                 List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo(where);
                 if (carOwnerInfoList.size() > 0) {
                     CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
-                    if (carOwnerInfo.getFlag()==0){
+                    if (carOwnerInfo.getFlag() == 0) {
                         userObject.put("car_no", carOwnerInfo.getCar_id());
                         userObject.put("car_brand", carOwnerInfo.getCar_brand());
                         userObject.put("car_color", carOwnerInfo.getCar_color());
                         userObject.put("car_type", carOwnerInfo.getCar_type());
-                    }else {
+                    } else {
                         List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order1.getUser_id());
-                        if(travelCardInfos.size()>0){
+                        if (travelCardInfos.size() > 0) {
                             UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
-                            userObject.put("car_no",travelCardInfo.getCar_license_number());
-                            userObject.put("car_brand","");
+                            userObject.put("car_no", travelCardInfo.getCar_license_number());
+                            userObject.put("car_brand", "");
                             userObject.put("car_color", travelCardInfo.getCar_color());
                             userObject.put("car_type", travelCardInfo.getCar_type());
                         }
@@ -719,13 +721,12 @@ public class AppJsonUtils {
                     userObject.put("avatar", carOwnerInfo.getUser_avatar());
                     PCCount driverPCCount = getPCCount(appDB, carOwnerInfo.getUser_id());
                     userObject.put("pc_count", driverPCCount.getTotal());
-                }
-                else {
+                } else {
                     List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order1.getUser_id());
-                    if(travelCardInfos.size()>0){
+                    if (travelCardInfos.size() > 0) {
                         UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
-                        userObject.put("car_no",travelCardInfo.getCar_license_number());
-                        userObject.put("car_brand","");
+                        userObject.put("car_no", travelCardInfo.getCar_license_number());
+                        userObject.put("car_brand", "");
                         userObject.put("car_color", travelCardInfo.getCar_color());
                         userObject.put("car_type", travelCardInfo.getCar_type());
                     }
@@ -738,7 +739,6 @@ public class AppJsonUtils {
                     PCCount driverPCCount = getPCCount(appDB, user.getUser_id());
                     userObject.put("pc_count", driverPCCount.getTotal());
                 }
-
 
 
             }
@@ -787,15 +787,15 @@ public class AppJsonUtils {
                 if (carOwnerInfoList.size() > 0) {
                     CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
                     userObject.put("order_status", 100);
-                    if (carOwnerInfo.getFlag()==0){
+                    if (carOwnerInfo.getFlag() == 0) {
                         userObject.put("car_no", carOwnerInfo.getCar_id());
                         userObject.put("car_brand", carOwnerInfo.getCar_brand());
                         userObject.put("car_color", carOwnerInfo.getCar_color());
                         userObject.put("car_type", carOwnerInfo.getCar_type());
-                    }else {
+                    } else {
                         UserTravelCardInfo travelCardInfo = appDB.getTravelCard(order1.getUser_id()).get(0);
-                        userObject.put("car_no",travelCardInfo.getCar_license_number());
-                        userObject.put("car_brand","");
+                        userObject.put("car_no", travelCardInfo.getCar_license_number());
+                        userObject.put("car_brand", "");
                         userObject.put("car_color", travelCardInfo.getCar_color());
                         userObject.put("car_type", travelCardInfo.getCar_type());
                     }
@@ -855,15 +855,15 @@ public class AppJsonUtils {
                 userObject.put("current_seats", departureInfo.getCurrent_seats());
                 if (carOwnerInfoList.size() > 0) {
                     CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
-                    if (carOwnerInfo.getFlag()==0){
+                    if (carOwnerInfo.getFlag() == 0) {
                         userObject.put("car_no", carOwnerInfo.getCar_id());
                         userObject.put("car_brand", carOwnerInfo.getCar_brand());
                         userObject.put("car_color", carOwnerInfo.getCar_color());
                         userObject.put("car_type", carOwnerInfo.getCar_type());
-                    }else {
+                    } else {
                         UserTravelCardInfo travelCardInfo = appDB.getTravelCard(order1.getUser_id()).get(0);
-                        userObject.put("car_no",travelCardInfo.getCar_license_number());
-                        userObject.put("car_brand","");
+                        userObject.put("car_no", travelCardInfo.getCar_license_number());
+                        userObject.put("car_brand", "");
                         userObject.put("car_color", travelCardInfo.getCar_color());
                         userObject.put("car_type", travelCardInfo.getCar_type());
                     }
@@ -873,13 +873,12 @@ public class AppJsonUtils {
                     userObject.put("avatar", carOwnerInfo.getUser_avatar());
                     PCCount driverPCCount = getPCCount(appDB, carOwnerInfo.getUser_id());
                     userObject.put("pc_count", driverPCCount.getTotal());
-                }
-                else {
+                } else {
                     List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order1.getUser_id());
-                    if(travelCardInfos.size()>0){
+                    if (travelCardInfos.size() > 0) {
                         UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
-                        userObject.put("car_no",travelCardInfo.getCar_license_number());
-                        userObject.put("car_brand","");
+                        userObject.put("car_no", travelCardInfo.getCar_license_number());
+                        userObject.put("car_brand", "");
                         userObject.put("car_color", travelCardInfo.getCar_color());
                         userObject.put("car_type", travelCardInfo.getCar_type());
                     }
@@ -1157,38 +1156,38 @@ public class AppJsonUtils {
                 jsonObject.put("current_seats", departures.get(0).getCurrent_seats());
                 jsonObject.put("init_seats", departures.get(0).getInit_seats());
                 jsonObject.put("car_id", departures.get(0).getR_id());
-                List<CarOwnerInfo>  carOwnerInfos = appDB.getCarOwnerInfo("where a.user_id=" + order.getDriver_id());
-                if(carOwnerInfos.size()>0){
-                    CarOwnerInfo user =carOwnerInfos.get(0);
-                    if (user.getFlag()==0){
+                List<CarOwnerInfo> carOwnerInfos = appDB.getCarOwnerInfo("where a.user_id=" + order.getDriver_id());
+                if (carOwnerInfos.size() > 0) {
+                    CarOwnerInfo user = carOwnerInfos.get(0);
+                    if (user.getFlag() == 0) {
                         driverObject.put("car", user.getCar_id());
                         driverObject.put("car_brand", user.getCar_brand());
                         driverObject.put("car_color", user.getCar_color());
                         driverObject.put("car_type", user.getCar_type());
-                    }else{
+                    } else {
                         List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order.getDriver_id());
                         UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
-                        driverObject.put("car",travelCardInfo.getCar_license_number());
-                        if(travelCardInfos.size()>0){
-                            driverObject.put("car_brand","");
+                        driverObject.put("car", travelCardInfo.getCar_license_number());
+                        if (travelCardInfos.size() > 0) {
+                            driverObject.put("car_brand", "");
                             driverObject.put("car_color", travelCardInfo.getCar_color());
                             driverObject.put("car_type", travelCardInfo.getCar_type());
                         }
                     }
                     driverObject.put("car_owner", user.getCar_owner());
-                }else {
+                } else {
                     List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order.getDriver_id());
                     UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
-                    driverObject.put("car",travelCardInfo.getCar_license_number());
-                    if(travelCardInfos.size()>0){
-                        driverObject.put("car_brand","");
+                    driverObject.put("car", travelCardInfo.getCar_license_number());
+                    if (travelCardInfos.size() > 0) {
+                        driverObject.put("car_brand", "");
                         driverObject.put("car_color", travelCardInfo.getCar_color());
                         driverObject.put("car_type", travelCardInfo.getCar_type());
                     }
                 }
                 where = " where _id=" + order.getDriver_id();
                 List<User> drivers = appDB.getUserList(where);
-                if(drivers.size()>0){
+                if (drivers.size() > 0) {
                     User driver = drivers.get(0);
                     driverObject.put("mobile", driver.getUser_mobile());
                     driverObject.put("name", driver.getUser_nick_name());
@@ -1440,40 +1439,40 @@ public class AppJsonUtils {
 
 
     //获取附近车主列表
-    public static JSONObject getNearByOwnerList(List<DriverAndCar> nearByOwenrList, int page, int size, int count,AppDB appDB) {
+    public static JSONObject getNearByOwnerList(List<DriverAndCar> nearByOwenrList, int page, int size, int count, AppDB appDB) {
         JSONObject result_json = new JSONObject();
         JSONArray dataArray = new JSONArray();
         if (nearByOwenrList.size() > 0) {
             for (DriverAndCar departureInfo : nearByOwenrList) {
                 JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("car_id", departureInfo.getR_id());
-                    jsonObject.put("mobile", departureInfo.getMobile());
-                    jsonObject.put("departure_time", DateUtils.getProcessdTime(departureInfo.getStart_time()));
-                    jsonObject.put("create_time", DateUtils.getTimesToNow(departureInfo.getCreate_time()));
-                    jsonObject.put("i_province", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("province"));
-                    //出发城市
-                    jsonObject.put("i_city", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("city"));
-                    String id = net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("id").toString();
-                    if (id==null){
-                        jsonObject.put("is_mobile_user","");
-                    }else {
-                        jsonObject.put("is_mobile_user",id);
-                    }
-                    //出发地点
-                    jsonObject.put("i_name", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("name"));
-                    jsonObject.put("o_province", net.sf.json.JSONObject.fromObject(departureInfo.getBreakout_point()).get("province"));
-                    jsonObject.put("o_city", net.sf.json.JSONObject.fromObject(departureInfo.getBreakout_point()).get("city"));
-                    jsonObject.put("o_name", net.sf.json.JSONObject.fromObject(departureInfo.getBreakout_point()).get("name"));
-                    jsonObject.put("ini_seats", departureInfo.getInit_seats());
-                    jsonObject.put("current_seats", departureInfo.getCurrent_seats());
-                if (departureInfo.getFlag()==0){
+                jsonObject.put("car_id", departureInfo.getR_id());
+                jsonObject.put("mobile", departureInfo.getMobile());
+                jsonObject.put("departure_time", DateUtils.getProcessdTime(departureInfo.getStart_time()));
+                jsonObject.put("create_time", DateUtils.getTimesToNow(departureInfo.getCreate_time()));
+                jsonObject.put("i_province", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("province"));
+                //出发城市
+                jsonObject.put("i_city", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("city"));
+                String id = net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("id").toString();
+                if (id == null) {
+                    jsonObject.put("is_mobile_user", "");
+                } else {
+                    jsonObject.put("is_mobile_user", id);
+                }
+                //出发地点
+                jsonObject.put("i_name", net.sf.json.JSONObject.fromObject(departureInfo.getBoarding_point()).get("name"));
+                jsonObject.put("o_province", net.sf.json.JSONObject.fromObject(departureInfo.getBreakout_point()).get("province"));
+                jsonObject.put("o_city", net.sf.json.JSONObject.fromObject(departureInfo.getBreakout_point()).get("city"));
+                jsonObject.put("o_name", net.sf.json.JSONObject.fromObject(departureInfo.getBreakout_point()).get("name"));
+                jsonObject.put("ini_seats", departureInfo.getInit_seats());
+                jsonObject.put("current_seats", departureInfo.getCurrent_seats());
+                if (departureInfo.getFlag() == 0) {
                     jsonObject.put("car_color", departureInfo.getCar_color());
                     jsonObject.put("car_type", departureInfo.getCar_type());
-                }else {
-                   //车辆品牌类型
+                } else {
+                    //车辆品牌类型
 
                     List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departureInfo.getUser_id());
-                    if(travelCardInfos.size()>0){
+                    if (travelCardInfos.size() > 0) {
                         UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
                         travelCardInfo.getCar_license_number();
                         jsonObject.put("car_color", travelCardInfo.getCar_color());
@@ -1481,9 +1480,9 @@ public class AppJsonUtils {
                     }
                     //车牌号
                 }
-                    jsonObject.put("name", departureInfo.getUser_name());
-                    jsonObject.put("user_avatar", departureInfo.getUser_avatar());
-                    jsonObject.put("remark", departureInfo.getRemark());
+                jsonObject.put("name", departureInfo.getUser_name());
+                jsonObject.put("user_avatar", departureInfo.getUser_avatar());
+                jsonObject.put("remark", departureInfo.getRemark());
                 dataArray.add(jsonObject);
             }
         }
@@ -1504,9 +1503,9 @@ public class AppJsonUtils {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("car_id", passenger.get_id());
                 String mobile = passenger.getMobile();
-                if (mobile.equals("")||mobile==null){
-                    jsonObject.put("mobile",passenger.getPay_num());
-                }else {
+                if (mobile.equals("") || mobile == null) {
+                    jsonObject.put("mobile", passenger.getPay_num());
+                } else {
                     jsonObject.put("mobile", mobile);
                 }
                 jsonObject.put("departure_time", DateUtils.getProcessdTime(passenger.getDeparture_time()));
@@ -1517,21 +1516,21 @@ public class AppJsonUtils {
                 jsonObject.put("i_province", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("province"));
                 //出发城市
                 jsonObject.put("i_city", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("city"));
-                    //出发地点
+                //出发地点
                 String id = net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("id").toString();
-                if (id==null){
-                    jsonObject.put("is_mobile_user","");
-                }else {
-                    jsonObject.put("is_mobile_user",id);
+                if (id == null) {
+                    jsonObject.put("is_mobile_user", "");
+                } else {
+                    jsonObject.put("is_mobile_user", id);
                 }
 
                 jsonObject.put("i_name", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("name"));
                 jsonObject.put("o_province", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("province"));
                 jsonObject.put("o_city", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("city"));
                 jsonObject.put("o_name", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("name"));
-                if (passenger.getUser_name()==null){
+                if (passenger.getUser_name() == null) {
                     jsonObject.put("name", "");
-                }else {
+                } else {
                     jsonObject.put("name", passenger.getUser_name());
                 }
 
@@ -1706,56 +1705,68 @@ public class AppJsonUtils {
 
     /**
      * 获得个人资料
+     *
      * @param user
      */
-    public static JSONObject getPersonalInfo(User user) {
+    public static JSONObject getPersonalInfo(AppDB appDB, User user) {
+        List<Popularize> populars = appDB.getPopular(user.getUser_id());
         JSONObject personal_data = new JSONObject();
         String nullString = "";
-        if (user.getAvatar().length()>0  && !user.getAvatar().equals("null") ){
-            personal_data.put("user_avater",user.getAvatar());
-        }else{
-            personal_data.put("user_avater",nullString);
+        int level = 1;
+        if (populars.size() > 0) {
+            Popularize popularize = populars.get(0);
+            if (popularize.getLevel() == 0) {
+                //专业代理员级别 0级最高 5级最低
+                level = 0;
+
+            }
         }
-        if (user.getUser_name().length()>0 && !user.getUser_name().equals("null") ){
-            personal_data.put("user_name",user.getUser_name());
-        }else{
-            personal_data.put("user_name",nullString);
+        personal_data.put("level",level);
+        if (user.getAvatar().length() > 0 && !user.getAvatar().equals("null")) {
+            personal_data.put("user_avater", user.getAvatar());
+        } else {
+            personal_data.put("user_avater", nullString);
+        }
+        if (user.getUser_name().length() > 0 && !user.getUser_name().equals("null")) {
+            personal_data.put("user_name", user.getUser_name());
+        } else {
+            personal_data.put("user_name", nullString);
         }
 
-        personal_data.put("is_validated",user.getIs_validated());
+        personal_data.put("is_validated", user.getIs_validated());
 
-        if (user.getSex().length()>0 && !user.getSex().equals("null") ){
-            personal_data.put("user_sex",user.getSex());
-        }else{
-            personal_data.put("user_sex",nullString);
+        if (user.getSex().length() > 0 && !user.getSex().equals("null")) {
+            personal_data.put("user_sex", user.getSex());
+        } else {
+            personal_data.put("user_sex", nullString);
         }
-        if (user.getSignature().length()>0 && !user.getSignature().equals("null") ){
-            personal_data.put("user_signature",user.getSignature());
-        }else{
-            personal_data.put("user_signature","你还没有个人签名~");
+        if (user.getSignature().length() > 0 && !user.getSignature().equals("null")) {
+            personal_data.put("user_signature", user.getSignature());
+        } else {
+            personal_data.put("user_signature", "你还没有个人签名~");
         }
-        if (user.getBirthday().length()>0 && !user.getBirthday().equals("1000-01-01 00:00:00") ){
+        if (user.getBirthday().length() > 0 && !user.getBirthday().equals("1000-01-01 00:00:00")) {
             String user_birthday = user.getBirthday().split(" ")[0];
-            personal_data.put("user_birthday",user_birthday);
-        }else{
-            personal_data.put("user_birthday",nullString);
+            personal_data.put("user_birthday", user_birthday);
+        } else {
+            personal_data.put("user_birthday", nullString);
         }
-        if (user.getHome().length()>0 && !user.getHome().equals("null") ){
-            personal_data.put("user_home",user.getHome());
-        }else{
-            personal_data.put("user_home",nullString);
+        if (user.getHome().length() > 0 && !user.getHome().equals("null")) {
+            personal_data.put("user_home", user.getHome());
+        } else {
+            personal_data.put("user_home", nullString);
         }
-        if (user.getLive_city().length()>0 && !user.getLive_city().equals("null") ){
-            personal_data.put("user_live_city",user.getLive_city());
-        }else{
-            personal_data.put("user_live_city",nullString);
+        if (user.getLive_city().length() > 0 && !user.getLive_city().equals("null")) {
+            personal_data.put("user_live_city", user.getLive_city());
+        } else {
+            personal_data.put("user_live_city", nullString);
         }
-        if (user.getCompany().length()>0 && !user.getCompany().equals("null") ){
-            personal_data.put("user_company",user.getCompany());
-        }else{
-            personal_data.put("user_company",nullString);
+        if (user.getCompany().length() > 0 && !user.getCompany().equals("null")) {
+            personal_data.put("user_company", user.getCompany());
+        } else {
+            personal_data.put("user_company", nullString);
         }
 
-    return personal_data;
+        return personal_data;
     }
 }

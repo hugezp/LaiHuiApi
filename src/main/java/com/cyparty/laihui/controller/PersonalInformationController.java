@@ -72,7 +72,7 @@ public class PersonalInformationController {
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
         result = AppJsonUtils.getUserInfo(appDB, user_id);
-        result.put("personal_info", AppJsonUtils.getPersonalInfo(user));
+        result.put("personal_info", AppJsonUtils.getPersonalInfo(appDB,user));
         json = AppJsonUtils.returnSuccessJsonString(result, "个人信息获取成功");
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
