@@ -9,7 +9,9 @@ package com.cyparty.laihui.utilities.SMSUtils;
  *
  */
 public class SmsWebApiKit {
-	
+	//Android
+	//private static String appkey ="1d31fe189149b" ;
+	//Ios
 	private static String appkey ="1cccf2e4d10d0" ;
 	
 //	public SmsWebApiKit(String appkey) {

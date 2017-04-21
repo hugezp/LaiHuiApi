@@ -17,6 +17,9 @@ import java.io.IOException;
  */
 @Service
 public class NotifyPush {
+    //推送环境
+    //正式环境：prod  测试环境：dev
+    private static String val ="dev" ;
     public static void main(String[] args) {
         //pinCheNotify("d6a5018284f8e0ffd4d2789a84d5c884");
         //pinCheNotify("24","18638016939","李先生",28);
@@ -154,7 +157,7 @@ public class NotifyPush {
 
         JSONObject sendJson=new JSONObject();
         sendJson.put("cql","select * from _Installation where notify_mobile='"+mobile+"'");
-        sendJson.put("prod","dev");
+        sendJson.put("prod",val);
         sendJson.put("data",dataObject);
         json=sendJson.toJSONString();
         HttpClient httpClient = new DefaultHttpClient();
@@ -200,7 +203,7 @@ public class NotifyPush {
 
         JSONObject sendJson=new JSONObject();
         sendJson.put("cql","select * from _Installation where notify_mobile='"+mobile+"'");
-        sendJson.put("prod","dev");
+        sendJson.put("prod",val);
         sendJson.put("data",dataObject);
         json=sendJson.toJSONString();
         HttpClient httpClient = new DefaultHttpClient();

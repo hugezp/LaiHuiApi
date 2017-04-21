@@ -165,18 +165,6 @@ public class AppDB {
         }
         return is_success;
     }
-    public boolean update1(String table_name, String where) {
-        boolean is_success = true;
-        String SQL = "update  " + table_name + where;
-        try {
-            int count = jdbcTemplateObject.update(SQL);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-        return is_success;
-    }
 
     public boolean delete(String table_name, String where) {
         boolean is_success = true;

@@ -115,11 +115,12 @@ public class CommonRouteController {
                 String destinat_city = request.getParameter("destinat_city");
                 //目的地点
                 String destinat_address = request.getParameter("destinat_address");
-//                String destinat_city = "2";
-//                String destinat_address = "2";
-//                String departure_city = "2";
-//                String departure_address = "2";
-                where = " set departure_city = '" + departure_city + "',departure_address = '" + departure_address + "',destinat_city = '" + destinat_city + "',destinat_address = '" + destinat_address + "'where id=" + id;
+                String departure_lon = request.getParameter("departure_lon");
+                String departure_lat = request.getParameter("departure_lat");
+                String destinat_lon = request.getParameter("destinat_lon");
+                String destinat_lat = request.getParameter("destinat_lat");
+
+                where = " set departure_city = '" + departure_city + "',departure_address = '" + departure_address + "',destinat_city = '" + destinat_city + "',destinat_address = '" + destinat_address + "',destinat_lat = '" + destinat_lat + "',destinat_lon = '" + destinat_lon + "',departure_lat = '" + departure_lat + "',departure_lon = '" + departure_lon + "'where id=" + id;
                 boolean is_success = appDB.update("pc_common_route", where);
                 if (is_success) {
                     json = AppJsonUtils.returnSuccessJsonString(result, "您的路线更新成功！");

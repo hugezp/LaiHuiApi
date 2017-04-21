@@ -277,6 +277,12 @@ public class Utils {
         if (mobile.equals("13298172885")) {
             return "0603";
         }
+        if (mobile.equals("15738961936")) {
+            return "0603";
+        }
+        if (mobile.equals("17698909223")) {
+            return "0603";
+        }
         if (mobile.equals("15639356022")) {
             return "0603";
         }

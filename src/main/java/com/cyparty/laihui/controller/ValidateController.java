@@ -405,9 +405,13 @@ public class ValidateController {
                                     String popularize_code = SerialNumberUtil.toSerialNumber(id);
                                     if (level == 0) {
                                         appDB.createPopularize(id, user_id, user_id + "", user_id, popularize_code, 1, 1);
+                                        String where = " set p_id ="+user_id+" where _id="+id;
+                                        appDB.update("pc_user",where);
                                     } else {
                                         String[] strs = popularize_parents_id.split(",");
                                         appDB.createPopularize(id, user_id, popularize_parents_id + "," + user_id, Integer.parseInt(strs[0]), popularize_code, 1, level + 1);
+                                        String where = " set p_id ="+Integer.parseInt(strs[0])+" where _id="+id;
+                                        appDB.update("pc_user",where);
                                     }
                                 }
                             }

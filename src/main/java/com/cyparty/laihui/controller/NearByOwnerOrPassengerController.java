@@ -53,7 +53,7 @@ public class NearByOwnerOrPassengerController {
         String where = null;
         User user = new User();
         //获取系统时间
-        String current_time = Utils.getCurrentTime();
+        String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         //附近车主（乘客）搜索范围
         double query_distance = 200000.0;
         try {
@@ -107,7 +107,6 @@ public class NearByOwnerOrPassengerController {
                     //乘客附近的车主列表
                     List<DriverAndCar> nearByOwenrList1 = new ArrayList();
                     List<DriverAndCar> nearByOwenrList2 = new ArrayList();
-
                     where = " where is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit 1000";
                     owenrList = appDB.getOwenrList1(where);
                     for (int i = 0; i < owenrList.size(); i++) {
@@ -252,7 +251,7 @@ public class NearByOwnerOrPassengerController {
         int user_id = 0;
         //乘客与车主的距离
         double distance = 0.0;
-        String current_time = Utils.getCurrentTime();
+        String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         //设定附近的定义范围
         double query_distance = 200000.0;
         try {
