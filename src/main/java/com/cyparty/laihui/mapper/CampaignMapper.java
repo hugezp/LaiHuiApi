@@ -17,7 +17,7 @@ public class CampaignMapper implements RowMapper<Campaign> {
 
         campaign.setUser_id(resultSet.getInt("user_id"));
         campaign.setBe_popularized_mobile(resultSet.getString("be_popularized_mobile"));
-
+        campaign.setIs_reg(resultSet.getInt("is_reg"));
         return campaign;
     }
 }

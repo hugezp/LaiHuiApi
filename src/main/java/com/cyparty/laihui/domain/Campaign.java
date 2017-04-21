@@ -7,6 +7,7 @@ package com.cyparty.laihui.domain;
 public class Campaign {
     private int user_id;
     private String be_popularized_mobile; //推广人手机号
+    private int is_reg;
 
     public int getUser_id() {
         return user_id;
@@ -23,4 +24,9 @@ public class Campaign {
     public void setBe_popularized_mobile(String be_popularized_mobile) {
         this.be_popularized_mobile = be_popularized_mobile;
     }
+
+    public int getIs_reg() {return is_reg;}
+
+    public void setIs_reg(int is_reg) {this.is_reg = is_reg;}
+
 }

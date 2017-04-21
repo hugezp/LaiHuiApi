@@ -23,6 +23,7 @@ public class PopularizeMapper implements RowMapper<Popularize> {
         popularize.setUpdate_time(Utils.checkNull(resultSet.getString("update_time")));
         popularize.setIs_enable(resultSet.getInt("is_enable"));
         popularize.setLevel(resultSet.getInt("level"));
+        popularize.setP_id(resultSet.getInt("p_id"));
 
         return popularize;
     }

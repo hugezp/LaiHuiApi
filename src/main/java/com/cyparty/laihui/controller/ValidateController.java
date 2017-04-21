@@ -416,6 +416,21 @@ public class ValidateController {
                                 }
                             }
                         }
+                    }else{
+                        //如果是全民推广推广来的用户is_reg 1为全民推广的用户，0 为非全民推广的用户
+                        List<Campaign> campaigns = appDB.getCampaign(" where be_popularized_mobile ='"+mobile+"'");
+                        if(campaigns.size()>0){
+                            Campaign campaign = campaigns.get(0);
+                            if(0==campaign.getIs_reg()){
+                                String startTime = Utils.getCurrentTime();
+                                appDB.update("pc_campaign"," set is_reg =1 ,reg_time ='"+startTime+"' where be_popularized_mobile ='"+mobile+"'");
+                                appDB.update("pc_user", " set p_id="+campaign.getUser_id()+" where is_validated =1 and u_flag=1 and user_mobile='"+mobile+"'");
+                            }else{
+                                result.put("msg", "您已经全民推广用户了");
+                                json = AppJsonUtils.returnFailJsonString(result, "您已经全民推广用户了！");
+                                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+                            }
+                        }
                     }
                     result.put("data", body);
                     json = AppJsonUtils.returnSuccessJsonString(result, "实名认证通过！");
