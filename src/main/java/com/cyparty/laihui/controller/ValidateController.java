@@ -369,59 +369,59 @@ public class ValidateController {
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }
                 //测试
-                if (car_id.equals("411422199401032416")){
-                    String mobile ="17698909223";
-                    appDB.procedureUpdateUser("create_user", mobile, 2, name, car_id, id, token, "", 0, "", 0);
-                    appDB.update("pc_user"," set u_flag =1 where _id="+id);
-                    //如果是推广来的就进行下面的操作
-                    List<Popularizing> popularizeList = appDB.getPopularize(mobile);
-                    if (popularizeList.size() > 0) {
-                        Popularizing popularizing = popularizeList.get(0);
-                        String code = popularizing.getPopularize_code();
-                        List<Popularize> popularizes = appDB.getPopularized(code);
-                        if (popularizes.size() > 0) {
-                            Popularize popular = popularizes.get(0);
-                            int user_id = popular.getPopularize_id();
-                            int level = popular.getLevel();
-                            String popularize_parents_id = popular.getPopularize_parents_id();
-                            //重复则不能添加
-                            List<Popularize> populars = appDB.getPopular(id);
-                            if (populars.size() == 0) {
-                                //判断上级等级大小，如果等于5则不再生成推广码
-                                if (level < 5) {
-                                    String popularize_code = SerialNumberUtil.toSerialNumber(id);
-                                    if (level == 0) {
-                                        appDB.createPopularize(id, user_id, user_id + "", user_id, popularize_code, 1, 1);
-                                        String where = " set p_id ="+user_id+" where _id="+id;
-                                        appDB.update("pc_user",where);
-                                    } else {
-                                        String[] strs = popularize_parents_id.split(",");
-                                        appDB.createPopularize(id, user_id, popularize_parents_id + "," + user_id, Integer.parseInt(strs[0]), popularize_code, 1, level + 1);
-                                        String where = " set p_id ="+Integer.parseInt(strs[0])+" where _id="+id;
-                                        appDB.update("pc_user",where);
-                                    }
-                                }
-                            }
-                        }
-                    }else{
-                        //如果是全民推广推广来的用户is_reg 1为全民推广的用户，0 为非全民推广的用户
-                        List<Campaign> campaigns = appDB.getCampaign(" where be_popularized_mobile ='"+mobile+"'");
-                        if(campaigns.size()>0){
-                            Campaign campaign = campaigns.get(0);
-                            if(0==campaign.getIs_reg()){
-                                String startTime = Utils.getCurrentTime();
-                                appDB.update("pc_campaign"," set is_reg =1 ,reg_time ='"+startTime+"' where be_popularized_mobile ='"+mobile+"'");
-                                appDB.update("pc_user", " set p_id="+campaign.getUser_id()+" where is_validated =1 and u_flag=1 and user_mobile='"+mobile+"'");
-                                json = AppJsonUtils.returnSuccessJsonString(result, "实名认证通过！");
-                                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
-                            }else{
-                                result.put("msg", "您已经全民推广用户了");
-                                json = AppJsonUtils.returnFailJsonString(result, "您已经全民推广用户了！");
-                                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
-                            }
-                        }
-                    }
-                }
+//                if (car_id.equals("411422199401032416")){
+//                    String mobile ="15738961936";
+//                    appDB.procedureUpdateUser("create_user", mobile, 2, name, car_id, id, token, "", 0, "", 0);
+//                    appDB.update("pc_user"," set u_flag =1 where _id="+id);
+//                    //如果是推广来的就进行下面的操作
+//                    List<Popularizing> popularizeList = appDB.getPopularize(mobile);
+//                    if (popularizeList.size() > 0) {
+//                        Popularizing popularizing = popularizeList.get(0);
+//                        String code = popularizing.getPopularize_code();
+//                        List<Popularize> popularizes = appDB.getPopularized(code);
+//                        if (popularizes.size() > 0) {
+//                            Popularize popular = popularizes.get(0);
+//                            int user_id = popular.getPopularize_id();
+//                            int level = popular.getLevel();
+//                            String popularize_parents_id = popular.getPopularize_parents_id();
+//                            //重复则不能添加
+//                            List<Popularize> populars = appDB.getPopular(id);
+//                            if (populars.size() == 0) {
+//                                //判断上级等级大小，如果等于5则不再生成推广码
+//                                if (level < 5) {
+//                                    String popularize_code = SerialNumberUtil.toSerialNumber(id);
+//                                    if (level == 0) {
+//                                        appDB.createPopularize(id, user_id, user_id + "", user_id, popularize_code, 1, 1);
+//                                        String where = " set p_id ="+user_id+" where _id="+id;
+//                                        appDB.update("pc_user",where);
+//                                    } else {
+//                                        String[] strs = popularize_parents_id.split(",");
+//                                        appDB.createPopularize(id, user_id, popularize_parents_id + "," + user_id, Integer.parseInt(strs[0]), popularize_code, 1, level + 1);
+//                                        String where = " set p_id ="+Integer.parseInt(strs[0])+" where _id="+id;
+//                                        appDB.update("pc_user",where);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }else{
+//                        //如果是全民推广推广来的用户is_reg 1为全民推广的用户，0 为非全民推广的用户
+//                        List<Campaign> campaigns = appDB.getCampaign(" where be_popularized_mobile ='"+mobile+"'");
+//                        if(campaigns.size()>0){
+//                            Campaign campaign = campaigns.get(0);
+//                            if(0==campaign.getIs_reg()){
+//                                String startTime = Utils.getCurrentTime();
+//                                appDB.update("pc_campaign"," set is_reg =1 ,reg_time ='"+startTime+"' where be_popularized_mobile ='"+mobile+"'");
+//                                appDB.update("pc_user", " set p_id="+campaign.getUser_id()+" where is_validated =1 and u_flag=1 and user_mobile='"+mobile+"'");
+//                                json = AppJsonUtils.returnSuccessJsonString(result, "实名认证通过！");
+//                                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+//                            }else{
+//                                result.put("msg", "您已经全民推广用户了");
+//                                json = AppJsonUtils.returnFailJsonString(result, "您已经全民推广用户了！");
+//                                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+//                            }
+//                        }
+//                    }
+//                }
                 //调用阿里Api验证身份信息
                 String user = ValidateUtils.getUrl(car_id,name);
                 String body = Utils.getJsonObject(user, "showapi_res_body");
