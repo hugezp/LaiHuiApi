@@ -11,6 +11,7 @@ import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.DateUtils;
 import com.cyparty.laihui.utilities.NotifyPush;
 import com.cyparty.laihui.utilities.Utils;
+import org.jsoup.helper.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,113 @@ public class PushListController {
     AppDB appDB;
     @Autowired
     NotifyPush notifyPush;
+
+    /**
+     * 获取消息列表
+     *
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/push/newList", method = RequestMethod.POST)
+    public ResponseEntity<String> PushList(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        JSONObject result = new JSONObject();
+        JSONObject activity_msg = new JSONObject();
+        JSONObject order_msg = new JSONObject();
+        JSONObject system_msg = new JSONObject();
+
+        String json = "";
+        try {
+            String action = request.getParameter("action");
+            int page = 0;
+            int size = 10;
+            if (request.getParameter("page") != null && !request.getParameter("page").trim().equals("")) {
+                try {
+                    page = Integer.parseInt(request.getParameter("page"));
+                } catch (NumberFormatException e) {
+                    page = 0;
+                    e.printStackTrace();
+                }
+            }
+            if (request.getParameter("size") != null && !request.getParameter("size").trim().equals("")) {
+                try {
+                    size = Integer.parseInt(request.getParameter("size"));
+                } catch (NumberFormatException e) {
+                    size = 10;
+                    e.printStackTrace();
+                }
+            }
+            JSONArray jsonArray = new JSONArray();
+            String token = request.getParameter("token");
+            if (null != token && token.length() == 32) {
+                int user_id = appDB.getIDByToken(token);
+                String where = "";
+                int total = 0;
+                int flag = 0;
+                String msg = "";
+                switch (action) {
+                    case "show":
+                        result.put("activity_msg", AppJsonUtils.getPushAll(appDB,1,"精选活动"));
+                        result.put("order_msg", AppJsonUtils.getPushAll(appDB,0,"车单状态"));
+                        result.put("system_msg", AppJsonUtils.getPushAll(appDB,2,"系统消息"));
+                        json = AppJsonUtils.returnSuccessJsonString(result, "推送消息列表获取成功！");
+                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                    case "show_activity":
+                        List<PushNotification> pushList = appDB.getPushList(" where flag=1 and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc");
+                        flag = 1;
+                        msg = "activity_msg";
+                        if (pushList.size() > 0) {
+                            json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getPushList(pushList,appDB,flag,msg), "精选活动消息列表获取成功！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        }else{
+                            json = AppJsonUtils.returnFailJsonString(result, "精选活动消息列表获取失败！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                    }
+                    case "show_order":
+                        List<PushNotification> pushLists = appDB.getPushList(" where  receive_id=" + user_id + " and flag = 0 and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc");
+                        if (pushLists.size() > 0) {
+                            List<User> users = appDB.getUserList(" where _id ="+user_id);
+                            String photo ="";
+                            String nickName ="";
+                            if(users.size()>0){
+                                photo = users.get(0).getAvatar();
+                                nickName = users.get(0).getUser_nick_name();
+                            }
+                            json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getPushOrder(pushLists,nickName,photo), "车单状态列表获取成功！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        } else {
+                            json = AppJsonUtils.returnFailJsonString(result, "车单状态列表获取失败！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        }
+                    case "show_system":
+                        List<PushNotification> pushNotifications = appDB.getPushList(" where flag=2 and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc");
+                        if (pushNotifications.size() > 0) {
+                            flag = 2 ;
+                            msg = "system_msg";
+                            json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getPushList(pushNotifications,appDB,flag,msg), "系统消息列表获取成功！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        } else {
+                            json = AppJsonUtils.returnFailJsonString(result, "系统消息列表获取失败！");
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                        }
+                }
+                result.put("error_code", ErrorCode.getParameter_wrong());
+                json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+            } else {
+                result.put("error_code", ErrorCode.getToken_expired());
+                json = AppJsonUtils.returnFailJsonString(result, "无效的token");
+                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("error_code", ErrorCode.getParameter_wrong());
+            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     /**
      * 获取消息列表
@@ -117,7 +225,6 @@ public class PushListController {
         }
     }
 
-
     /**
      * 判断消息是否已读
      *
@@ -187,6 +294,7 @@ public class PushListController {
 
     }
 
+
     /**
      * 判断是否有新消息
      *
@@ -220,7 +328,46 @@ public class PushListController {
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
     }
+    /**
+     * 消息列表清空
+     *
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/delete/pushOne", method = RequestMethod.POST)
+    public ResponseEntity<String> deletePushOne(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        JSONObject result = new JSONObject();
+        String json = "";
+        int user_id = 0;
+        String token = request.getParameter("token");
+        String id = request.getParameter("message_id");
+        if (token != null && token.length() == 32) {
+            user_id = appDB.getIDByToken(token);
 
+        } else {
+            result.put("error_code", ErrorCode.getToken_expired());
+            json = AppJsonUtils.returnFailJsonString(result, "非法token！");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+        }
+        if(StringUtil.isBlank(id)||"".equals(id)){
+            json = AppJsonUtils.returnFailJsonString(result, "参数错误");
+            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+        }
+        int push_id = Integer.parseInt(id);
+        String where = " set is_enable=0 where receive_id=" + user_id + " and is_enable=1 and _id ="+push_id;
+        boolean is_success = appDB.update("pc_push_notification", where);
+        if (is_success) {
+            json = AppJsonUtils.returnSuccessJsonString(result, "清空列表成功！");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+        } else {
+            json = AppJsonUtils.returnFailJsonString(result, "清空列表失败！");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+        }
+
+    }
     /**
      * 推送广告
      * @param request
@@ -230,7 +377,7 @@ public class PushListController {
      * @param  "content"
      * @return result
      */
-    @ResponseBody
+   /* @ResponseBody
     @RequestMapping(value = "/advert/push", method = RequestMethod.POST)
     public ResponseEntity<String> Advert(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -315,7 +462,7 @@ public class PushListController {
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
     /**
      * 生日推送
      * @param request
@@ -325,57 +472,57 @@ public class PushListController {
      * @param  "content"
      * @return result
      */
-    @ResponseBody
-    @RequestMapping(value = "/brith/push", method = RequestMethod.POST)
-    public ResponseEntity<String> HappyBrith(HttpServletRequest request) {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        JSONObject result = new JSONObject();
-        String json = "";
-        String time = request.getParameter("time");
-//        String mobile = request.getParameter("mobile");
-//        String link_url =request.getParameter("url");
-//        int type = Integer.parseInt(request.getParameter("type"));
-//        String content = request.getParameter("content");
-//        birth.put("link_url", link_url);
-//        birth.put("type",type);
-        int type = 50;
-        String startTime = Utils.getCurrentTime();
-        JSONObject birth = new JSONObject();
-        String content = "";
-        Date date = new Date();
-        String brithday;
-        if(null != time){
-//            date = DateUtils.getTime(time);
-
-            brithday = time.replace("-","").substring(4,8);
-        }else{
-            brithday = DateUtils.getBrithDay(date);
-        }
-
-        String where = " a INNER JOIN (select CONCAT(right(left(user_idsn,14),4)) as birth ,_id  from pc_user   where  user_idsn is not null and length(user_idsn)>14)as b\n" +
-                "on a._id = b._id where b.birth ='";
-        List<User> userList = appDB.getUserList(where+brithday+"' and is_validated=1");
-        if(userList.size()>0){
-            for (User user : userList) {
-                content =user.getUser_nick_name()+"你好:\n" +
-                        "愿你\n" +
-                        "一生努力，一生被爱\n" +
-                        "想要的都拥有\n" +
-                        "得不到的都释怀\n" +
-                        "愿你被世界温柔以待\n" +
-                        "来回拼车祝你生日快乐";
-                birth.put("type",type);
-                birth.put("mobile",user.getUser_mobile());
-                birth.put("content",content);
-                notifyPush.pinCheNotifies(String.valueOf(type), user.getUser_mobile(), content, user.getUser_id(), birth, startTime);
-            }
-            result.put("data",birth);
-            json = AppJsonUtils.returnSuccessJsonString(result, "生日消息推送成功！");
-            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-        }else {
-            json = AppJsonUtils.returnFailJsonString(result, "生日消息推送失败！");
-            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-        }
-    }
+//    @ResponseBody
+//    @RequestMapping(value = "/brith/push", method = RequestMethod.POST)
+//    public ResponseEntity<String> HappyBrith(HttpServletRequest request) {
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+//        JSONObject result = new JSONObject();
+//        String json = "";
+//        String time = request.getParameter("time");
+////        String mobile = request.getParameter("mobile");
+////        String link_url =request.getParameter("url");
+////        int type = Integer.parseInt(request.getParameter("type"));
+////        String content = request.getParameter("content");
+////        birth.put("link_url", link_url);
+////        birth.put("type",type);
+//        int type = 50;
+//        String startTime = Utils.getCurrentTime();
+//        JSONObject birth = new JSONObject();
+//        String content = "";
+//        Date date = new Date();
+//        String brithday;
+//        if(null != time){
+////            date = DateUtils.getTime(time);
+//
+//            brithday = time.replace("-","").substring(4,8);
+//        }else{
+//            brithday = DateUtils.getBrithDay(date);
+//        }
+//
+//        String where = " a INNER JOIN (select CONCAT(right(left(user_idsn,14),4)) as birth ,_id  from pc_user   where  user_idsn is not null and length(user_idsn)>14)as b\n" +
+//                "on a._id = b._id where b.birth ='";
+//        List<User> userList = appDB.getUserList(where+brithday+"' and is_validated=1");
+//        if(userList.size()>0){
+//            for (User user : userList) {
+//                content =user.getUser_nick_name()+"你好:\n" +
+//                        "愿你\n" +
+//                        "一生努力，一生被爱\n" +
+//                        "想要的都拥有\n" +
+//                        "得不到的都释怀\n" +
+//                        "愿你被世界温柔以待\n" +
+//                        "来回拼车祝你生日快乐";
+//                birth.put("type",type);
+//                birth.put("mobile",user.getUser_mobile());
+//                birth.put("content",content);
+//                notifyPush.pinCheNotifies(String.valueOf(type), user.getUser_mobile(), content, user.getUser_id(), birth, startTime);
+//            }
+//            result.put("data",birth);
+//            json = AppJsonUtils.returnSuccessJsonString(result, "生日消息推送成功！");
+//            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+//        }else {
+//            json = AppJsonUtils.returnFailJsonString(result, "生日消息推送失败！");
+//            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+//        }
+//    }
 }

@@ -1769,4 +1769,71 @@ public class AppJsonUtils {
 
         return personal_data;
     }
+    //获取系统消息或者活动消息的方法
+    public static JSONObject getPushList(List<PushNotification> pushList,AppDB appDB,int flag,String msg) {
+        JSONObject result = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        for (PushNotification push : pushList) {
+            JSONObject pushJson = new JSONObject();
+            pushJson.put("title",push.getTitle());
+            pushJson.put("alert", push.getAlert());
+            pushJson.put("type", push.getType());
+            pushJson.put("time", push.getTime());
+            pushJson.put("link_url", push.getLink_url());
+            jsonArray.add(pushJson);
+        }
+        List<PushNotification> pushs = appDB.getPushList(" where flag="+flag+" and is_enable=1 and status =1");
+        if (pushs.size() > 0) {
+            for (PushNotification push : pushs) {
+                appDB.update("pc_push_notification", " set status = 0 where _id =" + push.get_id());
+            }
+        }
+        result.put(msg, jsonArray);
+        return result;
+    }
+    //车单推送消息返回结果
+    public static JSONObject getPushOrder(List<PushNotification> pushList,String nickName,String photo) {
+        JSONObject result = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        for (PushNotification push : pushList) {
+            JSONObject pushJson = new JSONObject();
+            pushJson.put("message_id", push.get_id());
+            pushJson.put("order_id", push.getOrder_id());
+            pushJson.put("push_id", push.getPush_id());
+            pushJson.put("receive_id", push.getReceive_id());
+            pushJson.put("push_type", push.getPush_type());
+            pushJson.put("alert", push.getAlert());
+            pushJson.put("type", push.getType());
+            pushJson.put("data", push.getData());
+            pushJson.put("time", push.getTime());
+            pushJson.put("status", push.getStatus());
+            pushJson.put("avatar",photo);
+            pushJson.put("user_name", nickName);
+            jsonArray.add(pushJson);
+        }
+        result.put("order_msg", jsonArray);
+        return result;
+    }
+
+    //车单推送消息返回结果
+    public static JSONObject getPushAll(AppDB appDB,int flag ,String title) {
+        JSONObject result = new JSONObject();
+        int total = 0;
+        String where = " where flag = "+flag+" and is_enable=1 order by time limit 1 ";
+        List<PushNotification> pushActivity = appDB.getPushList(where);
+        if (pushActivity.size() > 0) {
+            total = appDB.getTotalCount("pc_push_notification"," where flag = "+flag+" and is_enable=1 and status = 1");
+            PushNotification push = pushActivity.get(0);
+            result.put("title",title);
+            result.put("content", push.getAlert());
+            result.put("time", push.getTime());
+            result.put("total",total);
+        } else {
+            result.put("title","");
+            result.put("content", "");
+            result.put("time", "");
+            result.put("total",total);
+        }
+        return result;
+    }
 }
