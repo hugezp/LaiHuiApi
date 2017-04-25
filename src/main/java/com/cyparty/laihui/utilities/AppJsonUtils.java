@@ -42,24 +42,56 @@ public class AppJsonUtils {
     //闪屏和弹出广告json
     public static JSONObject getCarouselJson(AppDB appDB) {
         JSONObject result_json = new JSONObject();
-        String where = " where pc_type = 2 order by pc_image_seq desc,pc_image_create_time desc limit 1";
-        String flashWhere = "where pc_type = 4 order by pc_image_create_time desc limit 1";
+        int limit = 0;
+        int flimit = 0;
+        int start = 0;
+        int fstart = 0;
+        String where = " where pc_type = 2 order by pc_image_seq desc";
+        String flashWhere = "where pc_type = 4 order by pc_image_seq desc";
         //弹出广告
-        Carousel carousel = appDB.getCarouselObj(where);
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", carousel.get_id());
-        jsonObject.put("image_url", carousel.getImage_url());
-        jsonObject.put("image_link", carousel.getImage_link());
-        jsonObject.put("image_title", carousel.getImage_title());
-        result_json.put("slides", carousel);
-        //闪屏
-        Carousel splashScreen = appDB.getCarouselObj(flashWhere);
-        JSONObject flash = new JSONObject();
-        flash.put("flash_id",splashScreen.get_id());
-        flash.put("flash_url", splashScreen.getImage_url());
-        flash.put("flash_link", splashScreen.getImage_link());
-        flash.put("flash_title", splashScreen.getImage_title());
-        result_json.put("flash", flash);
+        List<Carousel> carouselList = appDB.getCarousel(where);
+        List<Carousel> splashScreenList = appDB.getCarousel(flashWhere);
+        if (carouselList.size() == 0 && splashScreenList.size() == 0){
+            return result_json;
+        }
+        if (carouselList.size()>0){
+            for (Carousel carousel : carouselList) {
+                limit = limit + carousel.getSeq();
+            }
+            int rand = Utils.getRandomNum(limit);
+            for (Carousel carousel : carouselList) {
+                if (start <= rand && rand <= (carousel.getSeq() + start)) {
+                    JSONObject carouselObject = new JSONObject();
+                    carouselObject.put("image_url", carousel.getImage_url());
+                    carouselObject.put("image_link", carousel.getImage_link());
+                    carouselObject.put("image_title", carousel.getImage_title());
+                    carouselObject.put("create_time", carousel.getCreate_time());
+                    carouselObject.put("carousel_id", carousel.get_id());
+                    result_json.put("slides",carouselObject);
+                    break;
+                }
+                start = start + carousel.getSeq();
+            }
+        }
+        if (splashScreenList.size()>0){
+            for (Carousel flash : splashScreenList) {
+                flimit = flimit + flash.getSeq();
+            }
+            int frand = Utils.getRandomNum(flimit);
+            for (Carousel flash : splashScreenList) {
+                if (fstart <= frand && frand <= (flash.getSeq() + fstart)) {
+                    JSONObject flashObject = new JSONObject();
+                    flashObject.put("image_url", flash.getImage_url());
+                    flashObject.put("image_link", flash.getImage_link());
+                    flashObject.put("image_title", flash.getImage_title());
+                    flashObject.put("create_time", flash.getCreate_time());
+                    flashObject.put("carousel_id", flash.get_id());
+                    result_json.put("flash",flashObject);
+                    break;
+                }
+                fstart = fstart + flash.getSeq();
+            }
+        }
         return result_json;
     }
 
