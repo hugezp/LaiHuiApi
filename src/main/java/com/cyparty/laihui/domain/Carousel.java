@@ -12,7 +12,15 @@ public class Carousel {
     private String  image_title;
     private String  image_subtitle;//副标题
     private String  create_time;
-    private String  update_time;
+    private int type;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public String getCreate_time() {
         return create_time;
@@ -20,14 +28,6 @@ public class Carousel {
 
     public void setCreate_time(String create_time) {
         this.create_time = create_time;
-    }
-
-    public String getUpdate_time() {
-        return update_time;
-    }
-
-    public void setUpdate_time(String update_time) {
-        this.update_time = update_time;
     }
 
     public int get_id() {

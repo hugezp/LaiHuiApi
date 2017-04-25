@@ -21,8 +21,6 @@ public class CarouselMapper implements RowMapper<Carousel> {
         carousel.setImage_subtitle(resultSet.getString("pc_image_subtitle"));
         carousel.setSeq(resultSet.getInt("pc_image_seq"));
         carousel.setCreate_time(resultSet.getString("pc_image_create_time").split("\\.")[0]);
-        carousel.setUpdate_time(resultSet.getString("pc_image_update_time").split("\\.")[0]);
-
         return carousel;
     }
 }

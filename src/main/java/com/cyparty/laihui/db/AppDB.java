@@ -5,21 +5,17 @@ import com.cyparty.laihui.domain.*;
 import com.cyparty.laihui.mapper.*;
 import com.cyparty.laihui.utilities.Utils;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static com.alibaba.druid.support.console.Option.SQL;
 
 /**
  * Created by zhu on 2015/12/29.
@@ -297,6 +293,13 @@ public class AppDB {
         List<Carousel> carouselList = jdbcTemplateObject.query(SQL, new CarouselMapper());
         return carouselList;
     }
+
+    public Carousel getCarouselObj(String where) {
+        String SQL = "SELECT * FROM pc_carousel " + where ;
+        Carousel carousel = jdbcTemplateObject.queryForObject(SQL, new CarouselMapper());
+        return carousel;
+    }
+
     //创建广告
     public boolean createAd(Adviertisement adviertisement) {
         boolean is_success = true;
@@ -557,6 +560,17 @@ public class AppDB {
         String SQL = "select business_name,business_mobile from pc_merchant_join " + where;
         List<Business> businessesList = jdbcTemplateObject.query(SQL,new BusinessMapper());
         return businessesList;
+    }
+
+    //创建广告
+    public boolean createCarousel(Carousel carousel) {
+        boolean is_success = true;
+        String SQL = "insert into pc_carousel(pc_image_url,pc_image_link,pc_image_title,pc_image_seq,pc_image_create_time,pc_image_update_time,pc_type) VALUES (?,?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{carousel.getImage_url(), carousel.getImage_link(), carousel.getImage_title(), carousel.getSeq(), Utils.getCurrentTime(), Utils.getCurrentTime(), carousel.getType()});
+        if (count < 1) {
+            is_success = false;
+        }
+        return is_success;
     }
 
 }
