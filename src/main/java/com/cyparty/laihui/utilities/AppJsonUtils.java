@@ -1822,7 +1822,11 @@ public class AppJsonUtils {
         } else {
             personal_data.put("user_company", nullString);
         }
-
+        if(user.getDelivery_address().length()>0 &&!user.getDelivery_address().equals("null")){
+            personal_data.put("deliveryAddress",user.getDelivery_address());
+        } else {
+            personal_data.put("deliveryAddress", nullString);
+        }
         return personal_data;
     }
     //获取系统消息或者活动消息的方法

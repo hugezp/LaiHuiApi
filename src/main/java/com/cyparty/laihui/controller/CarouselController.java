@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * app广告接口
+ * app骞垮憡鎺ュ彛
  * Created YangGuang on 2017/4/25.
  */
 @Controller
@@ -27,7 +27,7 @@ public class CarouselController {
     private AppDB appDB;
 
     /**
-     * 闪屏,弹出广告接口
+     * 闂睆,寮瑰嚭骞垮憡鎺ュ彛
      */
     @ResponseBody
     @RequestMapping(value = "/splash_screen", method = RequestMethod.POST)
@@ -43,18 +43,19 @@ public class CarouselController {
                 case "show":
                     result = AppJsonUtils.getCarouselJson(appDB);
                     if (result.isEmpty()){
-                        json = AppJsonUtils.returnFailJsonString(result, "没有图片数据");
+                        json = AppJsonUtils.returnFailJsonString(result, "娌℃湁鍥剧墖鏁版嵁");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
-                    json = AppJsonUtils.returnSuccessJsonString(result, "闪屏信息获取成功");
+                    json = AppJsonUtils.returnSuccessJsonString(result, "闂睆淇℃伅鑾峰彇鎴愬姛");
                     return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
-            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+            json = AppJsonUtils.returnFailJsonString(result, "鑾峰彇鍙傛暟閿欒");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+            json = AppJsonUtils.returnFailJsonString(result, "鑾峰彇鍙傛暟閿欒");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
         }
     }
+
 }
