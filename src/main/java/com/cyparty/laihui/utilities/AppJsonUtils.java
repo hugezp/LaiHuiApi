@@ -39,6 +39,29 @@ public class AppJsonUtils {
         return jsonString;
     }
 
+    //闪屏和弹出广告json
+    public static JSONObject getCarouselJson(AppDB appDB) {
+        JSONObject result_json = new JSONObject();
+        String where = " where pc_type = 2 order by pc_image_seq desc,pc_image_create_time desc limit 1";
+        String flashWhere = "where pc_type = 4 order by pc_image_create_time desc limit 1";
+        //弹出广告
+        Carousel carousel = appDB.getCarouselObj(where);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", carousel.get_id());
+        jsonObject.put("image_url", carousel.getImage_url());
+        jsonObject.put("image_link", carousel.getImage_link());
+        jsonObject.put("image_title", carousel.getImage_title());
+        result_json.put("slides", carousel);
+        //闪屏
+        Carousel splashScreen = appDB.getCarouselObj(flashWhere);
+        JSONObject flash = new JSONObject();
+        flash.put("flash_id",splashScreen.get_id());
+        flash.put("flash_url", splashScreen.getImage_url());
+        flash.put("flash_link", splashScreen.getImage_link());
+        flash.put("flash_title", splashScreen.getImage_title());
+        result_json.put("flash", flash);
+        return result_json;
+    }
 
     /**
      * 获取ContentTypeList

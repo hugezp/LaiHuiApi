@@ -2,8 +2,8 @@ package com.cyparty.laihui.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
+import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.OssUtil;
-import com.cyparty.laihui.utilities.ReturnJsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -44,14 +44,14 @@ public class CarouselController {
             boolean is_success=false;
             switch (action) {
                 case "show":
-                    json = ReturnJsonUtil.returnSuccessJsonString(ReturnJsonUtil.getCarouselJson(appDB), "闪屏信息获取成功");
+                    json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getCarouselJson(appDB), "闪屏信息获取成功");
                     return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
-            json = ReturnJsonUtil.returnFailJsonString(result, "获取参数错误");
+            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            json = ReturnJsonUtil.returnFailJsonString(result, "获取参数错误");
+            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
         }
     }
