@@ -26,9 +26,6 @@ public class CarouselController {
     @Autowired
     private AppDB appDB;
 
-    @Autowired
-    OssUtil ossUtil;
-
     /**
      * 闪屏,弹出广告接口
      */
