@@ -473,6 +473,7 @@ public class DriverDepartureController {
                             }
                             for (Order order : orderList) {
                                 //修改车主订单为已发车
+                                order_id = order.getOrder_id();
                                 update_sql = " set order_status=-1 ,update_time='" + confirm_time + "' where _id=" + order.get_id();
                                 appDB.update("pc_orders", update_sql);
 //                                where = " where order_id="+order.getOrder_id()+" and order_type=2 and is_enable=1";
@@ -480,7 +481,22 @@ public class DriverDepartureController {
 //                                //更改乘客行程单状态
 //                                update_sql=" set order_status=1 , update_time='"+Utils.getCurrentTime()+"' where _id="+order.get_id();
 //                                appDB.update("pc_orders",update_sql);
-
+                                String content = "车主" + user.getUser_nick_name() + "于" + confirm_time + "发车，请您及时乘车！";
+                                List<Order> passengerOrders =appDB.getOrderReview(" where order_type =0 and  order_id ='"+order_id+"'",0);
+                                if(passengerOrders.size()>0){
+                                    Order passengerOrder =passengerOrders.get(0);
+                                    JSONObject passengerData = AppJsonUtils.getPushObject(appDB, passengerOrder, 1);
+                                    int push_id = user_id;
+                                    int receive_id = passengerOrder.getUser_id();
+                                    int push_type = 29;
+                                    List<User> passengers = appDB.getUserList(" where _id="+passengerOrder.getUser_id());
+                                    String p_mobile="";
+                                    if(passengers.size()>0){
+                                        p_mobile = passengers.get(0).getUser_mobile();
+                                    }
+                                    appDB.createPush(order_id, push_id, receive_id, push_type, content, push_type, "29.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
+                                    notifyPush.pinCheNotify("29", p_mobile, content, order_id, passengerData, confirm_time);
+                                }
                             }
                             json = AppJsonUtils.returnSuccessJsonString(result, "车主发车成功！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -529,9 +545,11 @@ public class DriverDepartureController {
                         String d_mobile = "";
                         List<Order> passengerOrderList;
                         int passenger_order_id = 0;
+                        int id =0;
                         if (orderList.size() > 0) {
                             passenger_order_id = orderList.get(0).getOrder_id();//得到乘客出行单id
                             d_mobile = orderList.get(0).getUser_mobile();
+                            id = orderList.get(0).getUser_id();
                             where_order = " a left join pc_passenger_publish_info b on a.order_id=b._id where b._id=" + passenger_order_id + " and b.is_enable=1 and b.order_status=1 and departure_time>='" + Utils.getCurrentTime() + "'";
                             passengerOrderList = appDB.getOrderReview(where_order, 2);
                         } else {
@@ -560,7 +578,12 @@ public class DriverDepartureController {
                                     String content = "乘客" + user.getUser_nick_name() + "在" + confirm_time + "确认了您的抢单，等待乘客支付！";
                                     //乘客信息，司机信息，乘客订单信息
                                     JSONObject passengerData = AppJsonUtils.getPushObject(appDB, passengerOrder, 1);
-                                    notifyPush.pinCheNotify("21", d_mobile, content, order_id, passengerData, confirm_time);
+                                    int push_type = 21;
+                                    int push_id = user_id ;
+                                    boolean is_true =appDB.createPush(passengerOrder.get_id(),push_id,id,push_type,content,push_type,push_type+".caf",passengerData.toJSONString(),1,user.getUser_nick_name(),"");
+                                    if(is_true){
+                                       notifyPush.pinCheNotify("21", d_mobile, content, order_id, passengerData, confirm_time);
+                                    }
                                 } else {
                                     update_sql = " set order_status=4 ,update_time='" + confirm_time + "' where _id=" + order_id;
                                     appDB.update("pc_orders", update_sql);//司机抢单记录状态
@@ -582,8 +605,12 @@ public class DriverDepartureController {
                                     //乘客信息，司机信息，乘客订单信息
                                     String content = "乘客" + user.getUser_nick_name() + "在" + confirm_time + "拒绝了您的抢单！";
                                     JSONObject passengerData = AppJsonUtils.getPushObject(appDB, passengerOrder, 1);
-                                    notifyPush.pinCheNotify("22", d_mobile, content, order_id, passengerData, confirm_time);
-
+                                    int push_type = 22;
+                                    int push_id = user_id;
+                                    boolean is_true = appDB.createPush(passengerOrder.get_id(),push_id,id,push_type,content,push_type,push_type+".caf",passengerData.toJSONString(),1,user.getUser_nick_name(),null);
+                                    if(is_true){
+                                        notifyPush.pinCheNotify("22", d_mobile, content, order_id, passengerData, confirm_time);
+                                    }
                                 }
                                 result.put("action_time", confirm_time);
                                 json = AppJsonUtils.returnSuccessJsonString(result, "处理成功！");
@@ -647,7 +674,13 @@ public class DriverDepartureController {
 
                             //乘客信息，司机信息，乘客订单信息
                             JSONObject driverData = AppJsonUtils.getPushObject(appDB, passengerOrder, 2);
-                            notifyPush.pinCheNotify("12", p_mobile, content, passengerOrder.get_id(), driverData, current_time);
+                            int push_type = 12;
+                            int push_id = user_id;
+                            int receive_id = passengerOrder.getUser_id();
+                            boolean is_true = appDB.createPush(passengerOrder.get_id(),push_id,receive_id,push_type,content,push_type,push_type+".caf",driverData.toJSONString(),1,driver ,null);
+                            if(is_true) {
+                                notifyPush.pinCheNotify("12", p_mobile, content, passengerOrder.get_id(), driverData, current_time);
+                            }
                             /*}else if(order.getOrder_status()==2)
                             {
                                 String where= " where _id="+passengerDepartureInfo.get(0).getUser_id();

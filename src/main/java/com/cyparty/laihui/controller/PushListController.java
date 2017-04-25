@@ -49,10 +49,6 @@ public class PushListController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
-        JSONObject activity_msg = new JSONObject();
-        JSONObject order_msg = new JSONObject();
-        JSONObject system_msg = new JSONObject();
-
         String json = "";
         try {
             String action = request.getParameter("action");
@@ -84,9 +80,9 @@ public class PushListController {
                 String msg = "";
                 switch (action) {
                     case "show":
-                        result.put("activity_msg", AppJsonUtils.getPushAll(appDB,1,"精选活动"));
-                        result.put("order_msg", AppJsonUtils.getPushAll(appDB,0,"车单状态"));
-                        result.put("system_msg", AppJsonUtils.getPushAll(appDB,2,"系统消息"));
+                        result.put("activity_msg", AppJsonUtils.getPushActivity(appDB,1,"精选活动"));
+                        result.put("order_msg", AppJsonUtils.getPushAll(appDB,0,"车单状态",user_id));
+                        result.put("system_msg", AppJsonUtils.getPushAll(appDB,2,"系统消息",user_id));
                         json = AppJsonUtils.returnSuccessJsonString(result, "推送消息列表获取成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     case "show_activity":
@@ -97,34 +93,27 @@ public class PushListController {
                             json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getPushList(pushList,appDB,flag,msg), "精选活动消息列表获取成功！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }else{
-                            json = AppJsonUtils.returnFailJsonString(result, "精选活动消息列表获取失败！");
+                            json = AppJsonUtils.returnFailJsonString(result, "精选活动暂无消息！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
                     case "show_order":
                         List<PushNotification> pushLists = appDB.getPushList(" where  receive_id=" + user_id + " and flag = 0 and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc");
                         if (pushLists.size() > 0) {
-                            List<User> users = appDB.getUserList(" where _id ="+user_id);
-                            String photo ="";
-                            String nickName ="";
-                            if(users.size()>0){
-                                photo = users.get(0).getAvatar();
-                                nickName = users.get(0).getUser_nick_name();
-                            }
-                            json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getPushOrder(pushLists,nickName,photo), "车单状态列表获取成功！");
+                            json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getPushOrder(pushLists,appDB), "车单状态列表获取成功！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
-                            json = AppJsonUtils.returnFailJsonString(result, "车单状态列表获取失败！");
+                            json = AppJsonUtils.returnFailJsonString(result, "车单状态暂无消息！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                     case "show_system":
-                        List<PushNotification> pushNotifications = appDB.getPushList(" where flag=2 and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc");
+                        List<PushNotification> pushNotifications = appDB.getPushList(" where receive_id=" + user_id + " and flag=2 and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc");
                         if (pushNotifications.size() > 0) {
                             flag = 2 ;
                             msg = "system_msg";
                             json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getPushList(pushNotifications,appDB,flag,msg), "系统消息列表获取成功！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
-                            json = AppJsonUtils.returnFailJsonString(result, "系统消息列表获取失败！");
+                            json = AppJsonUtils.returnFailJsonString(result, "暂无系统消息！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                 }
@@ -282,7 +271,7 @@ public class PushListController {
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
-        String where = " set is_enable=0 where receive_id=" + user_id + " and is_enable=1";
+        String where = " set is_enable=0 where receive_id=" + user_id + " and is_enable=1 and flag=0";
         boolean is_success = appDB.update("pc_push_notification", where);
         if (is_success) {
             json = AppJsonUtils.returnSuccessJsonString(result, "清空列表成功！");
@@ -357,7 +346,7 @@ public class PushListController {
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
         int push_id = Integer.parseInt(id);
-        String where = " set is_enable=0 where receive_id=" + user_id + " and is_enable=1 and _id ="+push_id;
+        String where = " set is_enable=0 where receive_id=" + user_id + " and is_enable=1 and flag=0 and _id ="+push_id;
         boolean is_success = appDB.update("pc_push_notification", where);
         if (is_success) {
             json = AppJsonUtils.returnSuccessJsonString(result, "清空列表成功！");

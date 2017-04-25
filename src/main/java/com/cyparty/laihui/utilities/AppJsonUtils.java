@@ -1717,8 +1717,9 @@ public class AppJsonUtils {
      */
     public static JSONObject isNewMessage(AppDB appDB, int user_id) {
         List<PushNotification> pushList = appDB.getPushList("where receive_id=" + user_id + " and status=1 and is_enable=1");
+        List<PushNotification> pushs = appDB.getPushList("where flag =1 and status=1 and is_enable=1");
         JSONObject jsonObject = new JSONObject();
-        if (pushList.size() > 0) {
+        if (pushList.size() > 0||pushs.size()>0) {
             jsonObject.put("is_message", 1);
         } else {
             jsonObject.put("is_message", 0);
@@ -1815,7 +1816,7 @@ public class AppJsonUtils {
         return result;
     }
     //车单推送消息返回结果
-    public static JSONObject getPushOrder(List<PushNotification> pushList,String nickName,String photo) {
+    public static JSONObject getPushOrder(List<PushNotification> pushList,AppDB appDB) {
         JSONObject result = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         for (PushNotification push : pushList) {
@@ -1830,19 +1831,47 @@ public class AppJsonUtils {
             pushJson.put("data", push.getData());
             pushJson.put("time", push.getTime());
             pushJson.put("status", push.getStatus());
-            pushJson.put("avatar",photo);
-            pushJson.put("user_name", nickName);
+            List<User> users = appDB.getUserList(" where _id ="+push.getPush_id());
+            if(users.size()>0){
+                pushJson.put("avatar",users.get(0).getAvatar());
+                pushJson.put("user_name", users.get(0).getUser_nick_name());
+            }else{
+                pushJson.put("avatar","");
+                pushJson.put("user_name", "");
+            }
             jsonArray.add(pushJson);
         }
         result.put("order_msg", jsonArray);
         return result;
     }
 
-    //车单推送消息返回结果
-    public static JSONObject getPushAll(AppDB appDB,int flag ,String title) {
+    //车单推送系统消息需要接受者id
+    public static JSONObject getPushAll(AppDB appDB,int flag ,String title,int id) {
         JSONObject result = new JSONObject();
         int total = 0;
-        String where = " where flag = "+flag+" and is_enable=1 order by time limit 1 ";
+        String where = " where flag = "+flag+" and is_enable=1 and receive_id ="+id+" order by time desc limit 1 ";
+        List<PushNotification> pushActivity = appDB.getPushList(where);
+        if (pushActivity.size() > 0) {
+            total = appDB.getTotalCount("pc_push_notification"," where flag = "+flag+" and is_enable=1 and receive_id ="+id+" and status = 1 ");
+            PushNotification push = pushActivity.get(0);
+            result.put("title",title);
+            result.put("content", push.getAlert());
+            result.put("time", push.getTime());
+            result.put("total",total);
+        } else {
+            result.put("title",title);
+            result.put("content", "");
+            result.put("time", "");
+            result.put("total",total);
+        }
+        return result;
+    }
+
+    //精选活动不需要接收者id,
+    public static JSONObject getPushActivity(AppDB appDB,int flag ,String title) {
+        JSONObject result = new JSONObject();
+        int total = 0;
+        String where = " where flag = "+flag+" and is_enable=1 order by time desc limit 1 ";
         List<PushNotification> pushActivity = appDB.getPushList(where);
         if (pushActivity.size() > 0) {
             total = appDB.getTotalCount("pc_push_notification"," where flag = "+flag+" and is_enable=1 and status = 1");
@@ -1852,7 +1881,7 @@ public class AppJsonUtils {
             result.put("time", push.getTime());
             result.put("total",total);
         } else {
-            result.put("title","");
+            result.put("title",title);
             result.put("content", "");
             result.put("time", "");
             result.put("total",total);

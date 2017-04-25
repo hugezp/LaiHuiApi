@@ -99,6 +99,7 @@ public class PersonalInformationController {
         String  user_home = request.getParameter("user_home");
         String  user_live_city = request.getParameter("user_live_city");
         String  user_company = request.getParameter("user_company");
+        String  delivery_address =request.getParameter("deliveryAddress");
         Date date = new Date();
         if (user_birthday!=null){
             try {
@@ -135,8 +136,10 @@ public class PersonalInformationController {
                 where = " set home='"+user_home+"'";
             }else if (user_live_city!=null){
                 where = " set live_city='"+user_live_city+"'";
-            }else  {
+            }else if (user_company != null){
                 where = " set company='"+user_company+"'";
+            }else if(delivery_address != null){
+                where = " set delivery_address='"+delivery_address+"'";
             }
             where = where +" where _id = "+user_id;
             boolean is_success = appDB.update("pc_user",where);

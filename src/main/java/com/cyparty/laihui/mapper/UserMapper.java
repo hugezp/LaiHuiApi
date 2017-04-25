@@ -81,6 +81,7 @@ public class UserMapper implements RowMapper<User> {
         user.setHome(Utils.checkNull(resultSet.getString("home")));
         user.setFlag(resultSet.getInt("flag"));
         user.setU_flag(resultSet.getInt("u_flag"));
+        user.setDelivery_address(Utils.checkNull(resultSet.getString("delivery_address")));
         return user;
     }
 }

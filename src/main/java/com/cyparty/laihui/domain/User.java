@@ -25,6 +25,7 @@ public class User {
     private String company;//公司
     private int flag;//判断车主认证标志
     private int u_flag;//新老用户实名认证
+    private String delivery_address;//收货地址
 
     public int getFlag() {
         return flag;
@@ -181,4 +182,8 @@ public class User {
     public int getU_flag() {return u_flag;}
 
     public void setU_flag(int u_flag) {this.u_flag = u_flag;}
+
+    public String getDelivery_address() {return delivery_address;}
+
+    public void setDelivery_address(String delivery_address) {this.delivery_address = delivery_address;}
 }

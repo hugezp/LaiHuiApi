@@ -198,7 +198,7 @@ public class AlipayNotifyController {
                                 int push_id = user_id;
                                 int receive_id = driver_id;
                                 int push_type = 26;
-                                boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,11,"11.caf",jsonObject.toJSONString(),1,p_name,null);
+                                boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
 
                                 notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
                                 System.out.println("支付记录保存成功！");
@@ -432,7 +432,7 @@ public class AlipayNotifyController {
                         int push_id = user_id;
                         int receive_id = driver_id;
                         int push_type = 26;
-                        boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,11,"11.caf",jsonObject.toJSONString(),1,p_name,null);
+                        boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
 
                         notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
                         System.out.println("微信支付记录保存成功！");

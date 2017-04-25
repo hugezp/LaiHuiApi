@@ -90,17 +90,22 @@ public class PassengerDepartureController {
             int distance = nowObject.getIntValue("distance");
             int duration = nowObject.getIntValue("duration");
             //正式
-            double start_price = 0;
-            double  price = distance * 3.3 / 10000f;
-            if (distance<=200000){
-                start_price = 10.0;
+//            double start_price = 0;
+//            double  price = distance * 3.3 / 10000f;
+//            if (distance<=200000){
+//                start_price = 10.0;
+//
+//            }
+//            double last_price = start_price + price*person;
+            //测试
+            double  price =0.01;
+            double last_price =0.01;
 
-            }
-            double last_price = start_price + price*person;
+
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
-//            resultObject.put("price",0.01);
-//            resultObject.put("total_price",0.01);
+            resultObject.put("price",0.01);
+            resultObject.put("total_price",0.01);
             resultObject.put("price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             resultObject.put("total_price", new BigDecimal(last_price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             resultObject.put("cost_time", duration / 60 + "分钟");
@@ -489,7 +494,7 @@ public class PassengerDepartureController {
                                         int push_id = user_id;
                                         int receive_id = driverList.get(0).getUser_id();
                                         int push_type = 23;
-                                        appDB.createPush(order_id, push_id, receive_id, push_type, content, 11, "11.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
+                                        appDB.createPush(order_id, push_id, receive_id, push_type, content, 23, "23.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
                                         notifyPush.pinCheNotify("23", d_mobile, content, order_id, passengerData, confirm_time);
                                     }
                                     json = AppJsonUtils.returnSuccessJsonString(result, "订单取消成功！");
@@ -559,6 +564,10 @@ public class PassengerDepartureController {
 
                         String content = "乘客" + user.getUser_nick_name() + "在" + confirm_time + "确认到达了目的地！";
                         JSONObject passengerData = AppJsonUtils.getPushObject(appDB, order, 1);
+                        int push_id = user_id;
+                        int receive_id = driverList.get(0).getUser_id();
+                        int push_type = 24;
+                        appDB.createPush(grab_id, push_id, receive_id, push_type, content, push_type, "24.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
                         notifyPush.pinCheNotify("24", d_mobile, content, grab_id, passengerData, confirm_time);
 
                         json = AppJsonUtils.returnSuccessJsonString(result, "确认到达成功！");
@@ -625,7 +634,7 @@ public class PassengerDepartureController {
                             int push_id = user_id;
                             int receive_id = driver_user_id;
                             int push_type = 28;
-                            appDB.createPush(grab_id, push_id, receive_id, push_type, content, 11, "11.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
+                            appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
                             //将邀请消息推送给车主
                             notifyPush.pinCheNotify("28", driver_mobile, content, grab_id, passengerData, confirm_time);
 
@@ -782,10 +791,18 @@ public class PassengerDepartureController {
                 String content = "乘客" + user.getUser_nick_name() + "在" + confirm_time + "提醒您发车！";
                 JSONObject passengerData = new JSONObject();
                 passengerData.put("order_status", 100);
-                notifyPush.pinCheNotify("27", driver_mobile, content, id, passengerData, confirm_time);
+                int push_type =27;
+                List<User> drivers = appDB.getUserList(" where user_mobile ='"+driver_mobile+"'");
+                if(drivers.size()>0){
+                    appDB.createPush(id, user_id, drivers.get(0).getUser_id(), push_type, content, push_type, "27.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
+                    notifyPush.pinCheNotify("27", driver_mobile, content, id, passengerData, confirm_time);
 
-                json = AppJsonUtils.returnSuccessJsonString(result, "提醒发车成功！");
-                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                    json = AppJsonUtils.returnSuccessJsonString(result, "提醒发车成功！");
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                }else{
+                    json = AppJsonUtils.returnFailJsonString(result, "提醒发车失败！");
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 result.put("error_code", ErrorCode.getParameter_wrong());

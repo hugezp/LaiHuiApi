@@ -149,6 +149,17 @@ public class NotifyPush {
                 pushObject.put("content",content);
                 pushObject.put("push_time",push_time);
                 break;
+            case "29":
+                //车主发车
+                dataObject.put("alert",content);
+                dataObject.put("notify_type",type);
+                //订单id
+                dataObject.put("id",id);
+                dataObject.put("badge","Increment");
+                dataObject.put("sound",type+".caf");
+                pushObject.put("content",content);
+                pushObject.put("push_time",push_time);
+                break;
             default:
                 break;
         }
