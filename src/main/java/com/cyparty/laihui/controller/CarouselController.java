@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping(value = "/api/app", method = RequestMethod.POST)
 public class CarouselController {
-    
+
     @Autowired
     private AppDB appDB;
 

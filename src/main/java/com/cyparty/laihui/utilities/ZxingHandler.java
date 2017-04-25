@@ -13,14 +13,14 @@ import java.io.File;
 import java.util.Hashtable;
 
 /**
- * ÌõĞÎÂëºÍ¶şÎ¬Âë±àÂë½âÂë
+ * æ¡å½¢ç å’ŒäºŒç»´ç ç¼–ç è§£ç 
  * @author YangGuang
  * @version 2017-04-25
  */
 public class ZxingHandler {
 
 	/**
-	 * ÌõĞÎÂë±àÂë
+	 * æ¡å½¢ç ç¼–ç 
 	 * @param contents
 	 * @param width
 	 * @param height
@@ -46,7 +46,7 @@ public class ZxingHandler {
 	}
 
 	/**
-	 * ÌõĞÎÂë½âÂë
+	 * æ¡å½¢ç è§£ç 
 	 * @param imgPath
 	 * @return String
 	 */
@@ -68,9 +68,9 @@ public class ZxingHandler {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * ¶şÎ¬Âë±àÂë
+	 * äºŒç»´ç ç¼–ç 
 	 * @param contents
 	 * @param width
 	 * @param height
@@ -78,9 +78,9 @@ public class ZxingHandler {
 	 */
 	public static void encode2(String contents, int width, int height, String imgPath) {
 		Hashtable<EncodeHintType, Object> hints = new Hashtable<EncodeHintType, Object>();
-		// Ö¸¶¨¾À´íµÈ¼¶
+		// æŒ‡å®šçº é”™ç­‰çº§
 		hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-		// Ö¸¶¨±àÂë¸ñÊ½
+		// æŒ‡å®šç¼–ç æ ¼å¼
 		hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 		try {
 			BitMatrix bitMatrix = new MultiFormatWriter().encode(contents,BarcodeFormat.QR_CODE, width, height, hints);
@@ -91,16 +91,16 @@ public class ZxingHandler {
 	}
 
 	/**
-	 * ¶şÎ¬Âë±àÂë,´øÍ·Ïñ
+	 * äºŒç»´ç ç¼–ç ,å¸¦å¤´åƒ
 	 * @param contents
 	 * @param width
 	 * @param height
 	 * @param imgPath
 	 */
 	public static void encode2(String contents, int width, int height, String imgPath,Hashtable hints) {
-		// Ö¸¶¨¾À´íµÈ¼¶
+		// æŒ‡å®šçº é”™ç­‰çº§
 		hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-		// Ö¸¶¨±àÂë¸ñÊ½
+		// æŒ‡å®šç¼–ç æ ¼å¼
 		hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 		try {
 			BitMatrix bitMatrix = new MultiFormatWriter().encode(contents,
@@ -115,7 +115,7 @@ public class ZxingHandler {
 	}
 
 	/**
-	 * ¶şÎ¬Âë½âÂë
+	 * äºŒç»´ç è§£ç 
 	 * @param imgPath
 	 * @return String
 	 */
@@ -154,11 +154,11 @@ public class ZxingHandler {
 		System.out.println("finished zxing encode.");
 
 		String decodeContent2 = ZxingHandler.decode2(imgPath2);
-		System.out.println("½âÂëÄÚÈİÈçÏÂ£º" + decodeContent2);
+		System.out.println("è§£ç å†…å®¹å¦‚ä¸‹ï¼š" + decodeContent2);
 		System.out.println("finished zxing decode.");
-		
+
 	}
-    
+
 }
 
 
