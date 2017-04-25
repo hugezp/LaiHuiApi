@@ -97,11 +97,6 @@ public class PassengerDepartureController {
 
             }
             double last_price = start_price + price*person;
-            //测试
-//            double  price =0.01;
-//            double last_price =0.01;
-
-
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
 //            resultObject.put("price",0.01);
