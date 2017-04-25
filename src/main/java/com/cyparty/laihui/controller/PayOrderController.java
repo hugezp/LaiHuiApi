@@ -1,6 +1,8 @@
 package com.cyparty.laihui.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.PassengerOrder;
 import com.cyparty.laihui.utilities.AppJsonUtils;
@@ -32,6 +34,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 
+import static com.alipay.api.internal.util.AlipaySignature.getSignContent;
+
 
 /**
  * Created by zhu on 2016/5/11.
@@ -52,7 +56,7 @@ public class PayOrderController {
         //订单ID
         String order_id=request.getParameter("order_id");
         String pay_type=request.getParameter("pay_type");
-
+        String flag = request.getParameter("flag");
         String body="拼车费用";
         String description="拼车费用";
         PassengerOrder passengerOrder;
@@ -71,74 +75,146 @@ public class PayOrderController {
         }
 
         if(pay_type!=null&&!pay_type.isEmpty()){
-            //微信支付
-            String now_ip=Utils.getIP(request);
-            String nonce_str=Utils.getCharAndNum(32);
-            double inputFee=passengerOrder.getPay_money()*100;
-            int inputIntFee=(int)inputFee;
-            String total_fee=inputIntFee+"";
-            //total_fee="1";//
-            String prepay_id=null;
-            Map<String,String> paraMap=new HashMap<>();
-            paraMap.put("appid", PayConfigUtils.getWx_app_id());
-            paraMap.put("attach", description);
-            paraMap.put("body", body);
-            paraMap.put("mch_id", PayConfigUtils.getWx_mch_id());
-            paraMap.put("nonce_str", nonce_str);
-            paraMap.put("notify_url", PayConfigUtils.getWx_pay_notify_url());
-            paraMap.put("out_trade_no", passengerOrder.getPay_num());
-            paraMap.put("spbill_create_ip", now_ip);
-            paraMap.put("total_fee", total_fee);
-            paraMap.put("trade_type", "APP");
-            List<String> keys =new ArrayList<>(paraMap.keySet());
-            Collections.sort(keys);
+            //微信支付(来回公司名下)
+            if (flag!=null&&!flag.isEmpty()){
+                String now_ip=Utils.getIP(request);
+                String nonce_str=Utils.getCharAndNum(32);
+                double inputFee=passengerOrder.getPay_money()*100;
+                int inputIntFee=(int)inputFee;
+                String total_fee=inputIntFee+"";
+                //total_fee="1";//
+                String prepay_id=null;
+                Map<String,String> paraMap=new HashMap<>();
+                paraMap.put("appid", PayConfigUtils.getWx_laihui_app_id());
+                paraMap.put("attach", description);
+                paraMap.put("body", body);
+                paraMap.put("mch_id", PayConfigUtils.getWx_laihui_mch_id());
+                paraMap.put("nonce_str", nonce_str);
+                paraMap.put("notify_url", PayConfigUtils.getWx_pay_laihui_notify_url());
+                paraMap.put("out_trade_no", passengerOrder.getPay_num());
+                paraMap.put("spbill_create_ip", now_ip);
+                paraMap.put("total_fee", total_fee);
+                paraMap.put("trade_type", "APP");
+                List<String> keys =new ArrayList<>(paraMap.keySet());
+                Collections.sort(keys);
 
-            StringBuilder authInfo = new StringBuilder();
-            for (int i=0;i<keys.size()-1; i++) {
-                String value = paraMap.get(keys.get(i));
-                authInfo.append(keys.get(i)+"="+value+"&");
-            }
-            authInfo.append(keys.get(keys.size()-1)+"="+paraMap.get(keys.get(keys.size()-1)));
-            String stringA=authInfo.toString()+"&key="+PayConfigUtils.getWx_app_secret_key();
-            String sign=Utils.encode("MD5",stringA).toUpperCase();
-            //封装xml
-            String paras="<xml>\n" +
-                    "   <appid>"+PayConfigUtils.getWx_app_id()+"</appid>\n" +
-                    "   <attach>"+description+"</attach>\n" +
-                    "   <body>"+body+"</body>\n" +
-                    "   <mch_id>"+PayConfigUtils.getWx_mch_id()+"</mch_id>\n" +
-                    "   <nonce_str>"+nonce_str+"</nonce_str>\n" +
-                    "   <notify_url>"+PayConfigUtils.getWx_pay_notify_url()+"</notify_url>\n" +
-                    "   <out_trade_no>"+passengerOrder.getPay_num()+"</out_trade_no>\n" +
-                    "   <spbill_create_ip>"+now_ip+"</spbill_create_ip>\n" +
-                    "   <total_fee>"+total_fee+"</total_fee>\n" +
-                    "   <trade_type>APP</trade_type>\n" +
-                    "   <sign>"+sign+"</sign>\n" +
-                    "</xml>";
-            try {
-                String content=senPost(paras);
-                if(content!=null){
-                   prepay_id=Utils.readStringXml(content);
+                StringBuilder authInfo = new StringBuilder();
+                for (int i=0;i<keys.size()-1; i++) {
+                    String value = paraMap.get(keys.get(i));
+                    authInfo.append(keys.get(i)+"="+value+"&");
                 }
-                if(prepay_id!=null){
-                    String current_noncestr=Utils.getCharAndNum(32);
-                    String current_sign=null;
-                    long current_timestamp=System.currentTimeMillis()/1000;
-                    result.put("appid",PayConfigUtils.getWx_app_id());
-                    result.put("partnerid",PayConfigUtils.getWx_mch_id());
-                    result.put("prepayid",prepay_id);
-                    result.put("package","Sign=WXPay");
-                    result.put("noncestr",current_noncestr);
-                    result.put("timestamp",current_timestamp);
-                    //加密算法
-                    String nowStringA="appid="+PayConfigUtils.getWx_app_id()+"&noncestr="+current_noncestr+"&package=Sign=WXPay&partnerid="+PayConfigUtils.getWx_mch_id()+"&prepayid="+prepay_id+"&timestamp="+current_timestamp+"&key="+PayConfigUtils.getWx_app_secret_key();
-                    current_sign=Utils.encode("MD5",nowStringA).toUpperCase();
-                    result.put("sign",current_sign);
+                authInfo.append(keys.get(keys.size()-1)+"="+paraMap.get(keys.get(keys.size()-1)));
+                String stringA=authInfo.toString()+"&key="+PayConfigUtils.getWx_laihui_app_secret_key();
+                String sign=Utils.encode("MD5",stringA).toUpperCase();
+                //封装xml
+                String paras="<xml>\n" +
+                        "   <appid>"+PayConfigUtils.getWx_laihui_app_id()+"</appid>\n" +
+                        "   <attach>"+description+"</attach>\n" +
+                        "   <body>"+body+"</body>\n" +
+                        "   <mch_id>"+PayConfigUtils.getWx_laihui_mch_id()+"</mch_id>\n" +
+                        "   <nonce_str>"+nonce_str+"</nonce_str>\n" +
+                        "   <notify_url>"+PayConfigUtils.getWx_pay_laihui_notify_url()+"</notify_url>\n" +
+                        "   <out_trade_no>"+passengerOrder.getPay_num()+"</out_trade_no>\n" +
+                        "   <spbill_create_ip>"+now_ip+"</spbill_create_ip>\n" +
+                        "   <total_fee>"+total_fee+"</total_fee>\n" +
+                        "   <trade_type>APP</trade_type>\n" +
+                        "   <sign>"+sign+"</sign>\n" +
+                        "</xml>";
+                try {
+                    String content=senPost(paras);
+                    if(content!=null){
+                        prepay_id=Utils.readStringXml(content);
+                    }
+                    if(prepay_id!=null){
+                        String current_noncestr=Utils.getCharAndNum(32);
+                        String current_sign=null;
+                        long current_timestamp=System.currentTimeMillis()/1000;
+                        result.put("appid",PayConfigUtils.getWx_laihui_app_id());
+                        result.put("partnerid",PayConfigUtils.getWx_laihui_mch_id());
+                        result.put("prepayid",prepay_id);
+                        result.put("package","Sign=WXPay");
+                        result.put("noncestr",current_noncestr);
+                        result.put("timestamp",current_timestamp);
+                        //加密算法
+                        String nowStringA="appid="+PayConfigUtils.getWx_laihui_app_id()+"&noncestr="+current_noncestr+"&package=Sign=WXPay&partnerid="+PayConfigUtils.getWx_laihui_mch_id()+"&prepayid="+prepay_id+"&timestamp="+current_timestamp+"&key="+PayConfigUtils.getWx_laihui_app_secret_key();
+                        current_sign=Utils.encode("MD5",nowStringA).toUpperCase();
+                        result.put("sign",current_sign);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                return new ResponseEntity<>(result.toString(), responseHeaders, HttpStatus.OK);
+                //微信支付(锦程百贷名下)
+            }else {
+                String now_ip=Utils.getIP(request);
+                String nonce_str=Utils.getCharAndNum(32);
+                double inputFee=passengerOrder.getPay_money()*100;
+                int inputIntFee=(int)inputFee;
+                String total_fee=inputIntFee+"";
+                //total_fee="1";//
+                String prepay_id=null;
+                Map<String,String> paraMap=new HashMap<>();
+                paraMap.put("appid", PayConfigUtils.getWx_app_id());
+                paraMap.put("attach", description);
+                paraMap.put("body", body);
+                paraMap.put("mch_id", PayConfigUtils.getWx_mch_id());
+                paraMap.put("nonce_str", nonce_str);
+                paraMap.put("notify_url", PayConfigUtils.getWx_pay_notify_url());
+                paraMap.put("out_trade_no", passengerOrder.getPay_num());
+                paraMap.put("spbill_create_ip", now_ip);
+                paraMap.put("total_fee", total_fee);
+                paraMap.put("trade_type", "APP");
+                List<String> keys =new ArrayList<>(paraMap.keySet());
+                Collections.sort(keys);
+
+                StringBuilder authInfo = new StringBuilder();
+                for (int i=0;i<keys.size()-1; i++) {
+                    String value = paraMap.get(keys.get(i));
+                    authInfo.append(keys.get(i)+"="+value+"&");
+                }
+                authInfo.append(keys.get(keys.size()-1)+"="+paraMap.get(keys.get(keys.size()-1)));
+                String stringA=authInfo.toString()+"&key="+PayConfigUtils.getWx_app_secret_key();
+                String sign=Utils.encode("MD5",stringA).toUpperCase();
+                //封装xml
+                String paras="<xml>\n" +
+                        "   <appid>"+PayConfigUtils.getWx_app_id()+"</appid>\n" +
+                        "   <attach>"+description+"</attach>\n" +
+                        "   <body>"+body+"</body>\n" +
+                        "   <mch_id>"+PayConfigUtils.getWx_mch_id()+"</mch_id>\n" +
+                        "   <nonce_str>"+nonce_str+"</nonce_str>\n" +
+                        "   <notify_url>"+PayConfigUtils.getWx_pay_notify_url()+"</notify_url>\n" +
+                        "   <out_trade_no>"+passengerOrder.getPay_num()+"</out_trade_no>\n" +
+                        "   <spbill_create_ip>"+now_ip+"</spbill_create_ip>\n" +
+                        "   <total_fee>"+total_fee+"</total_fee>\n" +
+                        "   <trade_type>APP</trade_type>\n" +
+                        "   <sign>"+sign+"</sign>\n" +
+                        "</xml>";
+                try {
+                    String content=senPost(paras);
+                    if(content!=null){
+                        prepay_id=Utils.readStringXml(content);
+                    }
+                    if(prepay_id!=null){
+                        String current_noncestr=Utils.getCharAndNum(32);
+                        String current_sign=null;
+                        long current_timestamp=System.currentTimeMillis()/1000;
+                        result.put("appid",PayConfigUtils.getWx_app_id());
+                        result.put("partnerid",PayConfigUtils.getWx_mch_id());
+                        result.put("prepayid",prepay_id);
+                        result.put("package","Sign=WXPay");
+                        result.put("noncestr",current_noncestr);
+                        result.put("timestamp",current_timestamp);
+                        //加密算法
+                        String nowStringA="appid="+PayConfigUtils.getWx_app_id()+"&noncestr="+current_noncestr+"&package=Sign=WXPay&partnerid="+PayConfigUtils.getWx_mch_id()+"&prepayid="+prepay_id+"&timestamp="+current_timestamp+"&key="+PayConfigUtils.getWx_app_secret_key();
+                        current_sign=Utils.encode("MD5",nowStringA).toUpperCase();
+                        result.put("sign",current_sign);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return new ResponseEntity<>(result.toString(), responseHeaders, HttpStatus.OK);
             }
-            return new ResponseEntity<>(result.toString(), responseHeaders, HttpStatus.OK);
+
         }else {
             //支付宝支付
             double total_fee=passengerOrder.getPay_money();
@@ -160,7 +236,13 @@ public class PayOrderController {
             keyValues.put("version", "1.0");
 
             keyValues.put("notify_url", PayConfigUtils.getAlipay_notify_url());
-
+//            String signContent = getSignContent(keyValues);
+//            String sign= null;
+//            try {
+//                sign = "sign="+ AlipaySignature.rsaSign(signContent, PayConfigUtils.getPrivate_key(),"UTF-8","RSA2");
+//            } catch (AlipayApiException e) {
+//                e.printStackTrace();
+//            }
             String sign=getSign(keyValues,PayConfigUtils.getPrivate_key());
             json=buildOrderParam(keyValues)+"&"+sign;
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -279,7 +361,7 @@ public class PayOrderController {
 
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost post = new HttpPost(url);
-            StringEntity postingString = new StringEntity(paras,"utf-8");// xml传递
+            StringEntity postingString = new StringEntity(paras,"UTF-8");// xml传递
             post.setEntity(postingString);
             post.setHeader("Content-type", "text/html; charset=UTF-8");
             HttpResponse response = httpClient.execute(post);

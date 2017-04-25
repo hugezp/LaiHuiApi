@@ -455,5 +455,224 @@ public class AlipayNotifyController {
 
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
+    //来回微信支付回调地址
+    @RequestMapping(value = "/wx_pays/notify", method = RequestMethod.POST)
+    public ResponseEntity<String> wx_pays(HttpServletRequest request,HttpServletResponse response) {
 
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        String json = "";
+        try {
+            PrintWriter out=response.getWriter();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String response_content="<xml> \n" +
+                "\n" +
+                "  <return_code><![CDATA[SUCCESS]]></return_code>\n" +
+                "  <return_msg><![CDATA[OK]]></return_msg>\n" +
+                "</xml> \n";
+
+        //获取回执参数
+        System.out.println("-----开始处理微信通知------");
+        InputStream is;
+        String return_xml=null;
+        try {
+            is = request.getInputStream();
+            return_xml= IOUtils.toString(is, "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //System.out.println("微信异步通知内容："+return_xml);
+        boolean is_success = true;
+        Document doc ;
+        Map<String, String> parameterMap = new HashMap<>();
+        try {
+            doc = DocumentHelper.parseText(return_xml); // 将字符串转为XML
+            Element rootElt = doc.getRootElement(); // 获取根节点
+            Iterator return_code = rootElt.elementIterator("return_code"); // 获取根节点下的子节点return_code
+            while (return_code.hasNext()) {
+                Element recordEle = (Element) return_code.next();
+                String code = recordEle.getText(); // 拿到return_code返回值
+                if(code!=null&&code.equals("SUCCESS"))
+                {
+                    is_success=true;
+                }
+                System.out.println("code:" + code);
+            }
+            if(is_success){
+                //System.out.println("得到的xml:"+return_xml);
+                parameterMap= XmlParse.parse(return_xml);
+            }else {
+                //直接停止执行
+                PrintWriter out = null;
+                try {
+                    response.reset();
+                    out = response.getWriter();
+                    out.write(response_content);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    out.close();
+                }
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+            }
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String sign = parameterMap.get("sign");
+        String result_code = parameterMap.get("result_code");
+        String out_trade_no = parameterMap.get("out_trade_no");
+        //System.out.println("map大小："+parameterMap.size()+"sign="+sign+"result_code="+result_code+"out_trade_no="+out_trade_no);
+
+        List<String> keys=new ArrayList<>(parameterMap.keySet());
+        keys.remove("sign");
+        String result_parameter = "";
+        Collections.sort(keys);
+        for (String str : keys) {
+            result_parameter = result_parameter + str +"="+ parameterMap.get(str)+"&";
+        }
+        result_parameter=result_parameter+"key="+ PayConfigUtils.getWx_laihui_app_secret_key();
+
+        //System.out.println("待签名字符串为："+result_parameter);
+        String current_sign=Utils.encode("MD5",result_parameter).toUpperCase();
+        if(current_sign.equals(sign))
+        {
+            is_success=true;
+        }else {
+            is_success=false;
+        }
+        System.out.println("微信支付签名校验："+is_success);
+
+        if(is_success){
+            if(result_code.equals("SUCCESS")){
+                //System.out.println("查询是否已经收到异步通知！");
+                String check_where=" where out_trade_no='"+out_trade_no+"' and trade_status ='SUCCESS'";
+                List<AlipayNotify> alipayNotifyList=appDB.getAlipayNotify(check_where);
+                if(alipayNotifyList.size()>0){
+                    PrintWriter out= null;
+                    try {
+                        response.reset();
+                        out = response.getWriter();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    out.write(response_content);
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                }
+                System.out.println("开始创建支付log！");
+                //Todo:创建微信支付记录
+                AlipayNotify wxPay=new AlipayNotify();
+                double price=0;
+                double pay_amount=0;
+                try {
+                    price=Integer.parseInt(parameterMap.get("total_fee"))/100d;
+                    pay_amount=Integer.parseInt(parameterMap.get("cash_fee"))/100d;
+                } catch (NumberFormatException e) {
+                    price=0;
+                    pay_amount=0;
+                    e.printStackTrace();
+                }
+                wxPay.setPrice(price+"");
+                wxPay.setBuyer_pay_amount(pay_amount+"");
+                wxPay.setTrade_no(parameterMap.get("transaction_id"));
+                wxPay.setOut_trade_no(parameterMap.get("out_trade_no"));
+                wxPay.setTrade_status(parameterMap.get("result_code"));
+                wxPay.setBuyer_id(parameterMap.get("openid"));
+                wxPay.setSeller_id(parameterMap.get("mch_id"));
+
+                is_success=appDB.createPayNotify(wxPay, 1);
+                System.out.println("微信支付log创建成功！");
+                if(is_success) {
+                    String where = " where trade_no=" + out_trade_no;
+                    PassengerOrder departureInfo;
+                    List<PassengerOrder> passengerOrderList = appDB.getPassengerDepartureInfo(where);
+                    if (passengerOrderList.size() > 0) {
+                        //支付完成，更改各个状态
+                        departureInfo = passengerOrderList.get(0);
+
+                        String update_sql = " set order_status=3 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=0";//记录状态
+                        appDB.update("pc_orders", update_sql);
+
+                        update_sql = " set order_status=2 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=2 and order_status=1 ";//抢单状态
+                        appDB.update("pc_orders", update_sql);
+                        System.out.println("订单状态更新成功！");
+                        //用户支付记录
+                        int user_id = departureInfo.getUser_id();
+                        int order_id = departureInfo.get_id();
+                        int p_id = departureInfo.getP_id();
+                        double money = departureInfo.getPay_money();
+                        int driver_id = 0;
+                        int grab_id = 0;
+                        String d_mobile="";
+                        where = " a left join pc_user b on a.user_id=b._id where order_id=" + departureInfo.get_id() + " and order_type=2 and order_status=2";
+                        List<Order> orderList = appDB.getOrderReview(where, 1);
+                        if (orderList.size() > 0) {
+                            grab_id=orderList.get(0).get_id();
+                            driver_id = orderList.get(0).getUser_id();
+                            d_mobile=orderList.get(0).getUser_mobile();
+                        }
+                        //支付成功，座位锁定，数据库中剩余座位减相应座位数
+                        update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
+                        appDB.update("pc_driver_publish_info",update_sql);
+
+                        where = " a left join pc_user b on a.user_id=b._id where order_id=" + departureInfo.get_id() + " and order_type=0";
+                        List<Order> passengerList = appDB.getOrderReview(where, 1);
+                        String p_name="";
+                        if (passengerList.size() > 0) {
+                            p_name = passengerList.get(0).getUser_name();
+                        }
+                        PayLog pay = new PayLog();
+                        pay.setUser_id(user_id);
+                        pay.setOrder_id(order_id);
+                        pay.setP_id(p_id);
+                        pay.setCash(money);
+                        pay.setDriver_id(driver_id);
+                        pay.setAction_type(0);
+                        pay.setPay_type(1);
+                        pay.setOrder_status(1);
+                        pay.setDeparture_time(departureInfo.getDeparture_time());
+
+                        appDB.createPayLog(pay);
+
+                        //推送通知车主
+                        String title="车主";
+                        String time=Utils.getCurrentTime();
+                        String content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"完成了支付，";
+                        Utils.sendAllNotifyMessage(d_mobile,title,content);
+
+
+                        content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"通过微信完成了支付，祝您路途愉快！";
+                        JSONObject jsonObject=new JSONObject();
+                        jsonObject.put("order_status",100);
+                        //保存到消息数据库中
+                        int push_id = user_id;
+                        int receive_id = driver_id;
+                        int push_type = 26;
+                        boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,11,"11.caf",jsonObject.toJSONString(),1,p_name,null);
+
+                        notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
+                        System.out.println("微信支付记录保存成功！");
+                    } else {
+                        System.out.println("未查询到该商户号对应的订单信息");
+                    }
+                    PrintWriter out = null;
+                    try {
+                        response.reset();
+                        out = response.getWriter();
+                        out.write(response_content);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        out.close();
+                    }
+                }
+            }
+        }
+
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+    }
 }
