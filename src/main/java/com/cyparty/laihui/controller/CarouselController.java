@@ -57,4 +57,5 @@ public class CarouselController {
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
         }
     }
+
 }
