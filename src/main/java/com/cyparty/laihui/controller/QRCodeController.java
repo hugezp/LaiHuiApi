@@ -1,9 +1,16 @@
 package com.cyparty.laihui.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.cyparty.laihui.db.AppDB;
+import com.cyparty.laihui.domain.ErrorCode;
+import com.cyparty.laihui.domain.Popularize;
+import com.cyparty.laihui.utilities.AppJsonUtils;
+import com.cyparty.laihui.utilities.ConfigUtils;
 import com.cyparty.laihui.utilities.OssUtil;
-import com.cyparty.laihui.utilities.ZxingHandler;
+import com.cyparty.laihui.utilities.QRCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,20 +31,56 @@ public class QRCodeController {
     @Autowired
     OssUtil ossUtil;
 
+    @Autowired
+    AppDB appDB;
+
     /**
-     * 查询二维码
+     * 创建二维码
      */
     @ResponseBody
-    @RequestMapping(value = "/qrcode",method = RequestMethod.POST)
-    public ResponseEntity<String> qrcode(HttpServletRequest request){
+    @RequestMapping(value = "/createQRCode", method = RequestMethod.POST)
+    public ResponseEntity<String> createQRCode(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        //设置二维码保存的参数
-        int width = 300, height = 300;
-        String contents = "HelloWorld111";//二维码的内容,根据具体需求做修改
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "").substring(0,8);
-        String qrcodePath = "F:\\qrcode\\123456.png";//二维码保存路径,根据具体需求做修改
-        ZxingHandler.encode2(contents, width, height, qrcodePath);
-        return null;
+        JSONObject result = new JSONObject();
+        String json = "";
+        String content = "";
+        String token = request.getParameter("token");
+        //根据token查出用户id
+        if (token != null && !token.equals("")) {
+            int userId = appDB.getIDByToken(token);
+            if (userId != 0) {
+                //根据id判断推广人类型
+                String where = "where popularize_id = " + userId + " and is_enable = 1 and level = 0";
+                Popularize popularize = appDB.getPopularById(where);
+                if (popularize != null) {
+                    //专业推广
+                    content = ConfigUtils.PROFESSIONAL_PROMOTION + popularize.getPopularize_code();
+                } else {
+                    //全民代理
+                    content = ConfigUtils.NATIONAL_AGENT + token;
+                }
+            } else {
+                result.put("error_code", ErrorCode.getToken_expired());
+                json = AppJsonUtils.returnFailJsonString(result, "无效token");
+                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+            }
+        } else {
+            result.put("error_code", ErrorCode.getParameter_wrong());
+            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
+            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+        }
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+        String pathName = "F://qrcode//" + uuid + ".png";
+        try {
+            QRCodeUtil.create_image(content, pathName);
+        } catch (Exception e) {
+            json = AppJsonUtils.returnFailJsonString(result, "二维码创建失败！");
+            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+        }
+        result.put("pathName", pathName);
+        json = AppJsonUtils.returnSuccessJsonString(result, "创建成功");
+        return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
     }
+
 }
