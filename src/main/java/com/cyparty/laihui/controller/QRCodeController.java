@@ -3,11 +3,8 @@ package com.cyparty.laihui.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.ErrorCode;
-import com.cyparty.laihui.domain.Popularize;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.ConfigUtils;
-import com.cyparty.laihui.utilities.OssUtil;
-import com.cyparty.laihui.utilities.QRCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.UUID;
 
 /**
  * 扫码跳转的链接controller
