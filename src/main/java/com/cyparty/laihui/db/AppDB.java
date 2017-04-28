@@ -85,7 +85,6 @@ public class AppDB {
         List<User> userList = jdbcTemplateObject.query(SQL, new UserMapper());
         return userList;
     }
-
     //得到token对应的id
     public int getIDByToken(String token) {
         String SQL = "SELECT user_id from pc_user_token where token=?";
@@ -497,6 +496,15 @@ public class AppDB {
         List<Popularize> popularizeList = jdbcTemplateObject.query(SQL,new PopularizeMapper());
         return popularizeList;
     }
+
+    /**
+     * 根据id查询推广人类型
+     */
+    public Popularize getPopularById(String where){
+        String SQL = "select * from pc_popularize where popularize_id ="+where;
+        Popularize popularize = jdbcTemplateObject.queryForObject(SQL,new PopularizeMapper());
+        return popularize;
+    }
 //根据推广码获取推广人表的数据
     public List<Popularize> getPopularized(String code){
         String SQL = "select * from pc_popularize where popularize_code ='"+code+"'";
@@ -572,6 +580,5 @@ public class AppDB {
         }
         return is_success;
     }
-
 }
 
