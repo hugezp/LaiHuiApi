@@ -14,14 +14,35 @@ public class CommonRoute {
     public void setId(int id) {
         this.id = id;
     }
+
     //车主ID
     private int user_id;
     //是否可用
     private int is_enable;
+    //是否关闭
+    private int is_switch;
+    //是否默认
+    private int is_default;
     //destinat_city 终点城市  departure_city 起点城市
     // departure_lon 起点经度  departure_lat 起点纬度  destinat_lon终点经度 destinat_lat终点纬度
     //departure_address 起点地址 destinat_address 终点地址
     private String departure_city, departure_address, departure_lon, departure_lat, destinat_city, destinat_address, destinat_lon, destinat_lat;
+
+    public int getIs_default() {
+        return is_default;
+    }
+
+    public void setIs_default(int is_default) {
+        this.is_default = is_default;
+    }
+
+    public int getIs_switch() {
+        return is_switch;
+    }
+
+    public void setIs_switch(int is_switch) {
+        this.is_switch = is_switch;
+    }
 
     public int getUser_id() {
         return user_id;

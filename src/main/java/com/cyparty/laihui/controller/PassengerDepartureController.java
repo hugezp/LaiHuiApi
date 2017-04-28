@@ -323,7 +323,7 @@ public class PassengerDepartureController {
                                     e.printStackTrace();
                                 }
                             }
-                            notify_where = " where departure_address = '"+ boarding_address +"' and destinat_address='"+ breakout_address+ "' and is_enable=1";
+                            notify_where = " where departure_address = '"+ boarding_address +"' and destinat_address='"+ breakout_address+ "' and is_enable=1 and is_switch=1";
                             List<CommonRoute> commonRouteList = appDB.getCommonRoute(notify_where);
                             if (commonRouteList.size()>0){
                                 for (CommonRoute commonRoute : commonRouteList){

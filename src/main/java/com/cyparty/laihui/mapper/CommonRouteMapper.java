@@ -22,6 +22,8 @@ public class CommonRouteMapper implements RowMapper<CommonRoute> {
         commonRoute.setDestinat_lat(rs.getString("destinat_lat"));
         commonRoute.setDestinat_lon(rs.getString("destinat_lon"));
         commonRoute.setIs_enable(rs.getInt("is_enable"));
+        commonRoute.setIs_switch(rs.getInt("is_switch"));
+        commonRoute.setIs_default(rs.getInt("is_default"));
         commonRoute.setId(rs.getInt("id"));
         commonRoute.setUser_id(rs.getInt("user_id"));
 
