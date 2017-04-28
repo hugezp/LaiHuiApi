@@ -572,5 +572,27 @@ public class AppDB {
         }
         return is_success;
     }
+
+    /**
+     * 根据id查询推广人类型
+     */
+    public String getPopularById(String where){
+        String SQL = "select * from pc_popularize "+where;
+        String code = "";
+        List<Popularize> list = jdbcTemplateObject.query(SQL,new PopularizeMapper());
+        if (list.size()>0){
+            code = list.get(0).getPopularize_code();
+        }
+        return code;
+    }
+
+
+    /**
+     * 测试aop日志
+     */
+    public void testLog(String content){
+        String SQL = "insert into test_log(content) values(?)";
+        jdbcTemplateObject.update(SQL,new Object[]{content});
+    }
 }
 
