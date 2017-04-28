@@ -21,24 +21,22 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 /**
- * 用户二维码controller
+ * 扫码跳转的链接controller
  * Created by YangGuang on 2017/4/25.
  */
 @Controller
 @RequestMapping(value = "/api/app", method = RequestMethod.POST)
 public class QRCodeController {
 
-    @Autowired
-    OssUtil ossUtil;
 
     @Autowired
-    AppDB appDB;
+    private AppDB appDB;
 
     /**
-     * 创建二维码
+     * 二维码跳转的链接
      */
     @ResponseBody
-    @RequestMapping(value = "/createQRCode", method = RequestMethod.POST)
+    @RequestMapping(value = "/qrcodeLink", method = RequestMethod.POST)
     public ResponseEntity<String> createQRCode(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
@@ -52,10 +50,10 @@ public class QRCodeController {
             if (userId != 0) {
                 //根据id判断推广人类型
                 String where = "where popularize_id = " + userId + " and is_enable = 1 and level = 0";
-                Popularize popularize = appDB.getPopularById(where);
-                if (popularize != null) {
+                String code = appDB.getPopularById(where);
+                if (code != null && !code.equals("")) {
                     //专业推广
-                    content = ConfigUtils.PROFESSIONAL_PROMOTION + popularize.getPopularize_code();
+                    content = ConfigUtils.PROFESSIONAL_PROMOTION + code;
                 } else {
                     //全民代理
                     content = ConfigUtils.NATIONAL_AGENT + token;
@@ -70,16 +68,8 @@ public class QRCodeController {
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
         }
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-        String pathName = "F://qrcode//" + uuid + ".png";
-        try {
-            QRCodeUtil.create_image(content, pathName);
-        } catch (Exception e) {
-            json = AppJsonUtils.returnFailJsonString(result, "二维码创建失败！");
-            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
-        }
-        result.put("pathName", pathName);
-        json = AppJsonUtils.returnSuccessJsonString(result, "创建成功");
+        result.put("link", content);
+        json = AppJsonUtils.returnSuccessJsonString(result, "查询链接成功");
         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
     }
 
