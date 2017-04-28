@@ -367,8 +367,6 @@ public class NearByOwnerOrPassengerController {
                         json = AppJsonUtils.returnFailJsonString(result, "您的附近暂时还没有乘客出现哦！");
                     }
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
             result.put("error_code", ErrorCode.getParameter_wrong());

@@ -428,10 +428,10 @@ public class AppDB {
         return is_success;
     }
     //添加常用路线
-    public boolean createCommonRoute(int user_id, String departure_city, String departure_address, String departure_lon, String departure_lat, String destinat_city, String destinat_address, String destinat_lon, String destinat_lat, int is_enable) {
+    public boolean createCommonRoute(int user_id, String departure_city, String departure_address, String departure_lon, String departure_lat, String destinat_city, String destinat_address, String destinat_lon, String destinat_lat, int is_enable,int is_default) {
         boolean is_success = true;
-        String SQL = "insert into pc_common_route(user_id,departure_city,departure_address,departure_lon,departure_lat,destinat_city,destinat_address,destinat_lon,destinat_lat,create_time,update_time,is_enable) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{user_id,departure_city,departure_address, departure_lon, departure_lat, destinat_city,destinat_address,destinat_lon,destinat_lat, Utils.getCurrentTime(), Utils.getCurrentTime(),is_enable});
+        String SQL = "insert into pc_common_route(user_id,departure_city,departure_address,departure_lon,departure_lat,destinat_city,destinat_address,destinat_lon,destinat_lat,create_time,update_time,is_enable,is_switch,is_default) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{user_id,departure_city,departure_address, departure_lon, departure_lat, destinat_city,destinat_address,destinat_lon,destinat_lat, Utils.getCurrentTime(), Utils.getCurrentTime(),is_enable,1,is_default});
         if (count<1){
             is_success = false;
        }

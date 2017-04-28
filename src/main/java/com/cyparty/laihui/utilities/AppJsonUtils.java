@@ -1716,7 +1716,7 @@ public class AppJsonUtils {
 
     public static JSONObject commonRoute(AppDB appDB, int user_id, String where) {
         if (where == null) {
-            where = " where user_id=" + user_id + " and is_enable=1  order by CONVERT (create_time USING gbk)COLLATE gbk_chinese_ci desc limit 0,1";
+            where = " where user_id=" + user_id + " and is_enable=1  order by is_default desc";
         }
         List<CommonRoute> commonRouteList = appDB.getCommonRoute(where);
         JSONObject json_result = new JSONObject();
@@ -1733,6 +1733,8 @@ public class AppJsonUtils {
                 jsonObject.put("destinat_address", commonRoute.getDestinat_address());
                 jsonObject.put("destinat_lon", commonRoute.getDestinat_lon());
                 jsonObject.put("destinat_lat", commonRoute.getDestinat_lat());
+                jsonObject.put("is_switch", commonRoute.getIs_switch());
+                jsonObject.put("is_default", commonRoute.getIs_default());
                 array.add(jsonObject);
             }
         }
