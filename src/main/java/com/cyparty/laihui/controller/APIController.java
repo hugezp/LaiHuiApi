@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.Campaign;
 import com.cyparty.laihui.domain.ErrorCode;
+import com.cyparty.laihui.domain.PassengerOrder;
+import com.cyparty.laihui.domain.PassengerPublishInfo;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.OssUtil;
 import com.cyparty.laihui.utilities.TestUtils;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,7 +68,7 @@ public class APIController {
                         String suggestion = request.getParameter("advice");
                         String contact = request.getParameter("email");
                         String source = request.getParameter("source");
-                        String image_oss="";
+                        String image_oss = "";
                         String filePath = Utils.fileImgUpload("screenshot", request);
                         if (filePath != null && !filePath.trim().equals("")) {
                             String image_local = filePath.substring(filePath.indexOf("upload"));
@@ -83,12 +86,12 @@ public class APIController {
                         }
                         if (source != null && source.equals("iOS")) {
                             //iOS用户反馈
-                            appDB.createSuggestion(user_id, suggestion, contact, 1,image_oss);
+                            appDB.createSuggestion(user_id, suggestion, contact, 1, image_oss);
                         } else {
                             //android用户反馈
-                            appDB.createSuggestion(user_id, suggestion, contact, 0,image_oss);
+                            appDB.createSuggestion(user_id, suggestion, contact, 0, image_oss);
                         }
-                        result.put("url",image_oss);
+                        result.put("url", image_oss);
                         json = AppJsonUtils.returnSuccessJsonString(result, "您的建议我们已收到，感谢支持！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
@@ -270,5 +273,56 @@ public class APIController {
         jsonObject.put("msg", "推广人数获取成功！");
 
         return new ResponseEntity<>(jsonObject.toString(), responseHeaders, HttpStatus.OK);
+    }
+
+    /**
+     * 首页搜索
+     */
+    @ResponseBody
+    @RequestMapping(value = "search", method = RequestMethod.POST)
+    public ResponseEntity<String> search(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        List<PassengerPublishInfo> finalList = new ArrayList<PassengerPublishInfo>();//最终返回的list
+        List<PassengerPublishInfo> searchList = new ArrayList<PassengerPublishInfo>();//匹配的list
+        List<PassengerPublishInfo> upList = new ArrayList<PassengerPublishInfo>();//上级list
+        JSONObject result = new JSONObject();
+        String json = "";
+        String page = request.getParameter("page");
+        String size = request.getParameter("size");
+        String content = request.getParameter("content");
+        if (page != null && !page.equals("") && size != null && !size.equals("") && content != null && !content.equals("")) {
+            Integer pageSize = Integer.parseInt(size);
+            Integer pageNo = Integer.parseInt(page);
+            int start = (pageNo - 1) * pageSize;
+            String where = "where departure_address_code = " + content + " and destination_address_code = " + content + " and is_enable = 1 order by create_time desc";
+            searchList = appDB.searchByContent(where);
+            String code = content.substring(0, 4);
+            String upWhere = "where departure_address_code != " + content + " and destination_address_code != " + content +
+                    " and departure_address_code like '" + code + "%' and destination_address_code like '" + code + "%' and is_enable = 1 order by destination_address_code desc";
+            upList = appDB.searchUp(upWhere);
+            for (PassengerPublishInfo passengerOrder : searchList) {
+                finalList.add(passengerOrder);
+            }
+            for (PassengerPublishInfo po : upList) {
+                finalList.add(po);
+            }
+            if (start>finalList.size()){
+                result.put("list", new ArrayList<PassengerPublishInfo>() {
+                });
+            }else {
+                if ((pageNo * pageSize) > finalList.size()) {
+                    result.put("list", finalList.subList(start, finalList.size()));
+                } else {
+                    result.put("list", finalList.subList(start, start + pageSize));
+                }
+            }
+            json = AppJsonUtils.returnSuccessJsonString(result, "搜索成功");
+            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+        } else {
+            result.put("error_code", ErrorCode.getParameter_wrong());
+            json = AppJsonUtils.returnFailJsonString(result, "获取参数有误");
+            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+        }
     }
 }

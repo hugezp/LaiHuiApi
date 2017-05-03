@@ -594,5 +594,20 @@ public class AppDB {
         String SQL = "insert into test_log(content) values(?)";
         jdbcTemplateObject.update(SQL,new Object[]{content});
     }
+
+    /**
+     * 首页搜索,根据关键字查询
+     */
+    public List<PassengerPublishInfo> searchByContent(String where){
+        String SQL = "select * from pc_passenger_publish_info " + where;
+        List<PassengerPublishInfo> list = jdbcTemplateObject.query(SQL,new PassengerInfoMapper());
+        return list;
+    }
+
+    public List<PassengerPublishInfo> searchUp(String where){
+        String SQL = "select * from pc_passenger_publish_info " + where;
+        List<PassengerPublishInfo> list = jdbcTemplateObject.query(SQL,new PassengerInfoMapper());
+        return list;
+    }
 }
 
