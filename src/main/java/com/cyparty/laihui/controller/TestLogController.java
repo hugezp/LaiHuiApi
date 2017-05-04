@@ -19,7 +19,6 @@ public class TestLogController {
     private AppDB appDB;
 
     @RequestMapping(value = "/testLog",method= RequestMethod.POST)
-    @AutoLog(operationType="add操作:",operationName="添加用户")
     @ResponseBody
     public String test(){
         appDB.testLog("HelloWorld");

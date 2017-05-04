@@ -1,15 +1,12 @@
 package com.cyparty.laihui.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.Campaign;
+import com.cyparty.laihui.domain.DriverPublishInfo;
 import com.cyparty.laihui.domain.ErrorCode;
-import com.cyparty.laihui.domain.PassengerOrder;
-import com.cyparty.laihui.domain.PassengerPublishInfo;
-import com.cyparty.laihui.utilities.AppJsonUtils;
-import com.cyparty.laihui.utilities.OssUtil;
-import com.cyparty.laihui.utilities.TestUtils;
-import com.cyparty.laihui.utilities.Utils;
+import com.cyparty.laihui.domain.UserTravelCardInfo;
+import com.cyparty.laihui.utilities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -276,52 +273,127 @@ public class APIController {
     }
 
     /**
-     * 首页搜索
+     * 首页搜索,乘客搜车主
      */
     @ResponseBody
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public ResponseEntity<String> search(HttpServletRequest request) {
+        JSONObject result_json = new JSONObject();
+        JSONArray dataArray = new JSONArray();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        List<PassengerPublishInfo> finalList = new ArrayList<PassengerPublishInfo>();//最终返回的list
-        List<PassengerPublishInfo> searchList = new ArrayList<PassengerPublishInfo>();//匹配的list
-        List<PassengerPublishInfo> upList = new ArrayList<PassengerPublishInfo>();//上级list
-        JSONObject result = new JSONObject();
+        List<DriverPublishInfo> finalList = new ArrayList<DriverPublishInfo>();//最终返回的list
+        List<DriverPublishInfo> searchList = new ArrayList<DriverPublishInfo>();//匹配的list
+        List<DriverPublishInfo> upList = new ArrayList<DriverPublishInfo>();//上级list
+        List<DriverPublishInfo> tempList = new ArrayList<DriverPublishInfo>();//临时list
+        List<DriverPublishInfo> tempList1 = new ArrayList<DriverPublishInfo>();//临时list
         String json = "";
         String page = request.getParameter("page");
         String size = request.getParameter("size");
         String content = request.getParameter("content");
-        if (page != null && !page.equals("") && size != null && !size.equals("") && content != null && !content.equals("")) {
+        String word = request.getParameter("word");
+        if (page != null && !page.equals("") && size != null && !size.equals("") && content != null && !content.equals("") && word != null && !word.equals("")) {
             Integer pageSize = Integer.parseInt(size);
             Integer pageNo = Integer.parseInt(page);
             int start = (pageNo - 1) * pageSize;
-            String where = "where departure_address_code = " + content + " and destination_address_code = " + content + " and is_enable = 1 order by create_time desc";
-            searchList = appDB.searchByContent(where);
+            int end = pageSize;
             String code = content.substring(0, 4);
-            String upWhere = "where departure_address_code != " + content + " and destination_address_code != " + content +
-                    " and departure_address_code like '" + code + "%' and destination_address_code like '" + code + "%' and is_enable = 1 order by destination_address_code desc";
-            upList = appDB.searchUp(upWhere);
-            for (PassengerPublishInfo passengerOrder : searchList) {
-                finalList.add(passengerOrder);
+            String where = "where p.departure_address_code like '" + code + "%' and p.destination_address_code like '" + code +
+                    "%' and p.is_enable = 1 order by p.create_time desc limit " + start + "," + end;
+            searchList = appDB.searchByContent(where);
+            for (DriverPublishInfo passengerPublishInfo : searchList) {
+                if (passengerPublishInfo.getBreakout_point().contains(word)) {
+                    tempList.add(passengerPublishInfo);
+                    continue;
+                }
+                if (passengerPublishInfo.getBoarding_point().contains(word)) {
+                    tempList.add(passengerPublishInfo);
+                    continue;
+                }
+                if (passengerPublishInfo.getDestination_address_code() == Integer.parseInt(content)) {
+                    tempList1.add(passengerPublishInfo);
+                    continue;
+                }
+                if (passengerPublishInfo.getDeparture_address_code() == Integer.parseInt(content)) {
+                    tempList1.add(passengerPublishInfo);
+                    continue;
+                }
+                upList.add(passengerPublishInfo);
             }
-            for (PassengerPublishInfo po : upList) {
-                finalList.add(po);
-            }
-            if (start>finalList.size()){
-                result.put("list", new ArrayList<PassengerPublishInfo>() {
-                });
-            }else {
-                if ((pageNo * pageSize) > finalList.size()) {
-                    result.put("list", finalList.subList(start, finalList.size()));
-                } else {
-                    result.put("list", finalList.subList(start, start + pageSize));
+            if (tempList.size() > 0) {
+                for (DriverPublishInfo ppi : tempList) {
+                    finalList.add(ppi);
                 }
             }
-            json = AppJsonUtils.returnSuccessJsonString(result, "搜索成功");
-            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+            if (tempList1.size() > 0) {
+                for (DriverPublishInfo po : tempList1) {
+                    finalList.add(po);
+                }
+            }
+            if (upList.size() > 0) {
+                for (DriverPublishInfo bean : upList) {
+                    finalList.add(bean);
+                }
+            }
+            if (finalList.size() > 0) {
+                for (int i = 0;i<finalList.size();i++){
+                    if (finalList.get(i).getCurrent_seats() == 0) {
+                        finalList.remove(i);
+                        i--;
+                        continue;
+                    }
+                }
+                for (DriverPublishInfo dpiBean : finalList) {
+                    JSONObject result = new JSONObject();
+                    result.put("mobile",dpiBean.getMobile());
+                    result.put("car_id",dpiBean.getR_id());
+                    result.put("price",dpiBean.getPrice());
+                    result.put("departure_time", DateUtils.getProcessdTime(dpiBean.getStart_time()));
+                    result.put("create_time", DateUtils.getProcessdTime(dpiBean.getCreate_time()));
+                    result.put("i_province",  net.sf.json.JSONObject.fromObject(dpiBean.getBoarding_point()).get("province"));
+                    result.put("i_city", net.sf.json.JSONObject.fromObject(dpiBean.getBoarding_point()).get("city"));
+                    String id = net.sf.json.JSONObject.fromObject(dpiBean.getBoarding_point()).get("id").toString();
+                    if (id == null) {
+                        result.put("is_mobile_user", "");
+                    } else {
+                        result.put("is_mobile_user", id);
+                    }
+                    result.put("i_name", net.sf.json.JSONObject.fromObject(dpiBean.getBoarding_point()).get("name"));
+                    result.put("o_province", net.sf.json.JSONObject.fromObject(dpiBean.getBreakout_point()).get("province"));
+                    result.put("o_city", net.sf.json.JSONObject.fromObject(dpiBean.getBreakout_point()).get("city"));
+                    result.put("o_name", net.sf.json.JSONObject.fromObject(dpiBean.getBreakout_point()).get("name"));
+                    result.put("ini_seats", dpiBean.getInit_seats());
+                    result.put("current_seats", dpiBean.getCurrent_seats());
+                    if (dpiBean.getFlag() == 0) {
+                        result.put("car_color", dpiBean.getCar_color());
+                        result.put("car_type", dpiBean.getCar_type());
+                    } else {
+                        //车辆品牌类型
+
+                        List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(dpiBean.getUser_id());
+                        if (travelCardInfos.size() > 0) {
+                            UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                            travelCardInfo.getCar_license_number();
+                            result.put("car_color", travelCardInfo.getCar_color());
+                            result.put("car_type", travelCardInfo.getCar_type());
+                        }
+                        //车牌号
+                    }
+                    result.put("name", dpiBean.getUser_name());
+                    result.put("user_avatar", dpiBean.getUser_avatar());
+                    result.put("remark", dpiBean.getRemark());
+                    dataArray.add(result);
+                }
+                result_json.put("search_data", dataArray);
+                json = AppJsonUtils.returnSuccessJsonString(result_json, "搜索成功");
+                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+            } else {
+                json = AppJsonUtils.returnSuccessJsonString(result_json, "暂无数据");
+                return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+            }
         } else {
-            result.put("error_code", ErrorCode.getParameter_wrong());
-            json = AppJsonUtils.returnFailJsonString(result, "获取参数有误");
+            result_json.put("error_code", ErrorCode.getParameter_wrong());
+            json = AppJsonUtils.returnFailJsonString(result_json, "获取参数有误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
         }
     }

@@ -19,6 +19,7 @@ public class PassengerInfoMapper implements RowMapper<PassengerPublishInfo> {
         order.set_id(resultSet.getInt("_id"));
         order.setUser_id(resultSet.getInt("user_id"));
         order.setPrice(resultSet.getDouble("price"));
+        order.setMobile(resultSet.getString("mobile"));
         order.setBoarding_point(Utils.checkNull(resultSet.getString("boarding_point")));
         order.setBreakout_point(Utils.checkNull(resultSet.getString("breakout_point")));
         order.setDescription(Utils.checkNull(resultSet.getString("description")));

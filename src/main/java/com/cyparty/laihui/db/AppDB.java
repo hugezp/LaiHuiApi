@@ -30,9 +30,9 @@ public class AppDB {
         this.jdbcTemplateObject = new JdbcTemplate(dataSource);
     }
 
-    public void procedureUpdateUser(String transaction_name, String mobile, int status, String name, String idsn, int id, String token, String ip,int source,String ip_location,int p_id) {
+    public void procedureUpdateUser(String transaction_name, String mobile, int status, String name, String idsn, int id, String token, String ip, int source, String ip_location, int p_id) {
         String SQL = "call " + transaction_name;
-        SQL = SQL + "('" + mobile + "'," + status + ",'" + name + "','" + idsn + "'" + "," + id + ",'" + token + "','" + ip + "',"+source+",'"+ip_location+"',"+p_id+")";
+        SQL = SQL + "('" + mobile + "'," + status + ",'" + name + "','" + idsn + "'" + "," + id + ",'" + token + "','" + ip + "'," + source + ",'" + ip_location + "'," + p_id + ")";
         jdbcTemplateObject.execute(SQL);
     }
 
@@ -81,18 +81,19 @@ public class AppDB {
 
     //创建用户
     public List<User> getUserList(String where) {
-        String SQL = "SELECT * FROM pc_user "+where ;
+        String SQL = "SELECT * FROM pc_user " + where;
         List<User> userList = jdbcTemplateObject.query(SQL, new UserMapper());
         return userList;
     }
-//TO
+
+    //TO
     //得到token对应的id
     public int getIDByToken(String token) {
         String SQL = "SELECT user_id from pc_user_token where token=?";
-        List<UserToken> userTokenList =jdbcTemplateObject.query(SQL,new Object[]{token}, new UserIDMapper());
-        int id=0;
-        if(userTokenList.size()>0){
-            id=userTokenList.get(0).getUser_id();
+        List<UserToken> userTokenList = jdbcTemplateObject.query(SQL, new Object[]{token}, new UserIDMapper());
+        int id = 0;
+        if (userTokenList.size() > 0) {
+            id = userTokenList.get(0).getUser_id();
         }
         return id;
     }
@@ -102,6 +103,7 @@ public class AppDB {
         List<CarOwnerInfo> carOwnerInfoList = jdbcTemplateObject.query(SQL, new CarOwnerMapper());
         return carOwnerInfoList;
     }
+
     public List<CarOwnerInfo> getCarOwnerInfo(String where) {
         String SQL = "SELECT * FROM pc_car_owner_info a left join pc_user b on a.user_id=b._id " + where;
         List<CarOwnerInfo> carOwnerInfoList = jdbcTemplateObject.query(SQL, new CarOwnerMapper());
@@ -115,7 +117,7 @@ public class AppDB {
         return carTypeDataList;
     }
 
-    public int createPCHDeparture(final DepartureInfo departureInfo,final int source) {
+    public int createPCHDeparture(final DepartureInfo departureInfo, final int source) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int autoIncId = 0;
 
@@ -128,13 +130,13 @@ public class AppDB {
             ps.setString(4, Utils.getCurrentTime());
             ps.setInt(5, 1);
             ps.setInt(6, departureInfo.getUser_id());
-            ps.setString(7,departureInfo.getBoarding_point());
-            ps.setString(8,departureInfo.getBreakout_point());
-            ps.setInt(9,departureInfo.getDeparture_city_code());
-            ps.setInt(10,departureInfo.getDestination_city_code());
-            ps.setInt(11,departureInfo.getDeparture_address_code());
-            ps.setInt(12,departureInfo.getDestination_address_code());
-            ps.setInt(13,source);
+            ps.setString(7, departureInfo.getBoarding_point());
+            ps.setString(8, departureInfo.getBreakout_point());
+            ps.setInt(9, departureInfo.getDeparture_city_code());
+            ps.setInt(10, departureInfo.getDestination_city_code());
+            ps.setInt(11, departureInfo.getDeparture_address_code());
+            ps.setInt(12, departureInfo.getDestination_address_code());
+            ps.setInt(13, source);
             ps.setInt(14, departureInfo.getCurrent_seats());
             ps.setString(15, departureInfo.getRemark());
             return ps;
@@ -217,34 +219,33 @@ public class AppDB {
      * APP调整接口
      */
     public List<DepartureInfo> getAppDriverDpartureInfo(String where) {
-        String SQL = "select * from pc_driver_publish_info a  left join pc_user b on a.mobile=b.user_mobile "+ where ;
+        String SQL = "select * from pc_driver_publish_info a  left join pc_user b on a.mobile=b.user_mobile " + where;
         List<DepartureInfo> appDriverDepartureInfoMapperList = jdbcTemplateObject.query(SQL, new APPDriverDepartureInfoMapper());
         return appDriverDepartureInfoMapperList;
     }
+
     /**
      * 获取附近车主列表
      * select * from pc_passenger_publish_info  p LEFT JOIN pc_user  u ON p.user_id=u._id LEFT JOIN pc_car_owner_info c ON p.user_id = c.user_id
      */
     public List<DriverAndCar> getOwenrList(String where) {
-        String SQL = "select a.*,b.car_color,b.car_type ,c.* from pc_driver_publish_info a,pc_car_owner_info b ,pc_user c where  a.user_id=b.user_id and a.user_id =c._id  "+ where ;
+        String SQL = "select a.*,b.car_color,b.car_type ,c.* from pc_driver_publish_info a,pc_car_owner_info b ,pc_user c where  a.user_id=b.user_id and a.user_id =c._id  " + where;
         List<DriverAndCar> NearByOwenrList = jdbcTemplateObject.query(SQL, new APPDriverAndCarMapper());
         return NearByOwenrList;
     }
+
     public List<DriverAndCar> getOwenrList1(String where) {
-        String SQL = "select p.*,u.*,c.car_color,c.car_type  from pc_driver_publish_info  p LEFT JOIN pc_user  u ON p.user_id=u._id LEFT JOIN pc_car_owner_info c ON p.user_id = c.user_id "+ where ;
+        String SQL = "select p.*,u.*,c.car_color,c.car_type  from pc_driver_publish_info  p LEFT JOIN pc_user  u ON p.user_id=u._id LEFT JOIN pc_car_owner_info c ON p.user_id = c.user_id " + where;
         List<DriverAndCar> NearByOwenrList = jdbcTemplateObject.query(SQL, new APPDriverAndCarMapper());
         return NearByOwenrList;
     }
-
-
-
 
 
     //创建乘客发车单
     public boolean createPassengerDeparture(PassengerOrder passengerOrder) {
         boolean is_success = true;
         String SQL = "insert into pc_passenger_publish_info(user_id,departure_time,booking_seats,boarding_point,breakout_point,description,create_time,is_enable,departure_city_code,destination_city_code,departure_address_code,destination_address_code,order_status,price,source,trade_no,remark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{passengerOrder.getUser_id(), passengerOrder.getStart_time(), passengerOrder.getSeats(), passengerOrder.getBoarding_point(), passengerOrder.getBreakout_point(), passengerOrder.getDescription(),  Utils.getCurrentTime(),1,passengerOrder.getDeparture_city_code(),passengerOrder.getDestination_city_code(),passengerOrder.getDeparture_address_code(),passengerOrder.getDestination_address_code(),0,passengerOrder.getPay_money(),passengerOrder.getSource(),passengerOrder.getPay_num(),passengerOrder.getRemark()});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{passengerOrder.getUser_id(), passengerOrder.getStart_time(), passengerOrder.getSeats(), passengerOrder.getBoarding_point(), passengerOrder.getBreakout_point(), passengerOrder.getDescription(), Utils.getCurrentTime(), 1, passengerOrder.getDeparture_city_code(), passengerOrder.getDestination_city_code(), passengerOrder.getDeparture_address_code(), passengerOrder.getDestination_address_code(), 0, passengerOrder.getPay_money(), passengerOrder.getSource(), passengerOrder.getPay_num(), passengerOrder.getRemark()});
         if (count < 1) {
             is_success = false;
         }
@@ -258,12 +259,11 @@ public class AppDB {
     }
 
 
-
     //创建乘客订单
-    public boolean createPassengerOrder(PassengerOrder passengerOrder,int source) {
+    public boolean createPassengerOrder(PassengerOrder passengerOrder, int source) {
         boolean is_success = true;
         String SQL = "insert into pc_passenger_orders(user_id,order_id,booking_seats,boarding_point,breakout_point,description,create_time,order_status,is_enable,source,departure_city_code,destination_city_code,departure_address_code,destination_address_code) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{passengerOrder.getUser_id(), passengerOrder.getDriver_order_id(),passengerOrder.getSeats(), passengerOrder.getBoarding_point(), passengerOrder.getBreakout_point(),passengerOrder.getDescription(),Utils.getCurrentTime(),0,1,source,passengerOrder.getDeparture_city_code(),passengerOrder.getDestination_city_code(),passengerOrder.getDeparture_address_code(),passengerOrder.getDestination_address_code()});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{passengerOrder.getUser_id(), passengerOrder.getDriver_order_id(), passengerOrder.getSeats(), passengerOrder.getBoarding_point(), passengerOrder.getBreakout_point(), passengerOrder.getDescription(), Utils.getCurrentTime(), 0, 1, source, passengerOrder.getDeparture_city_code(), passengerOrder.getDestination_city_code(), passengerOrder.getDeparture_address_code(), passengerOrder.getDestination_address_code()});
         if (count < 1) {
             is_success = false;
         }
@@ -271,31 +271,32 @@ public class AppDB {
     }
 
     public List<UserHistory> getUserHistory(String where) {
-        String SQL = "SELECT * FROM cyparty_pc.pc_user_role_action   "+where;
+        String SQL = "SELECT * FROM cyparty_pc.pc_user_role_action   " + where;
         List<UserHistory> historyList = jdbcTemplateObject.query(SQL, new UserHistoryMapper());
         return historyList;
     }
 
 
-
     public List<PassengerOrder> getPassengerList1(String where) {
-        String SQL = "SELECT * FROM pc_passenger_publish_info a " + "  left join pc_user b on a.user_id=b._id "+ where ;
+        String SQL = "SELECT * FROM pc_passenger_publish_info a " + "  left join pc_user b on a.user_id=b._id " + where;
         List<PassengerOrder> passengerOrders = jdbcTemplateObject.query(SQL, new PassengerPublishInfoMapper());
         return passengerOrders;
     }
+
     public List<PassengerOrder> getPassengerList(String where) {
-        String SQL = "SELECT * FROM pc_passenger_publish_info a , pc_user b where a.user_id=b._id "+ where ;
+        String SQL = "SELECT * FROM pc_passenger_publish_info a , pc_user b where a.user_id=b._id " + where;
         List<PassengerOrder> passengerOrders = jdbcTemplateObject.query(SQL, new PassengerPublishInfoMapper());
         return passengerOrders;
     }
+
     public List<Carousel> getCarousel(String where) {
-        String SQL = "SELECT * FROM pc_carousel " + where ;
+        String SQL = "SELECT * FROM pc_carousel " + where;
         List<Carousel> carouselList = jdbcTemplateObject.query(SQL, new CarouselMapper());
         return carouselList;
     }
 
     public Carousel getCarouselObj(String where) {
-        String SQL = "SELECT * FROM pc_carousel " + where ;
+        String SQL = "SELECT * FROM pc_carousel " + where;
         Carousel carousel = jdbcTemplateObject.queryForObject(SQL, new CarouselMapper());
         return carousel;
     }
@@ -305,7 +306,7 @@ public class AppDB {
         boolean is_success = true;
 
         String SQL = "insert into pc_dest_ad_detail(dest_name,ad_pic_url,ad_link,ad_weight,ad_updated_time,ad_create_time,ad_status) VALUES (?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{adviertisement.getDest_name(), adviertisement.getAd_pic_url(), adviertisement.getAd_link(),adviertisement.getAd_weight(),Utils.getCurrentTime(), Utils.getCurrentTime(),1});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{adviertisement.getDest_name(), adviertisement.getAd_pic_url(), adviertisement.getAd_link(), adviertisement.getAd_weight(), Utils.getCurrentTime(), Utils.getCurrentTime(), 1});
         if (count < 1) {
             is_success = false;
         }
@@ -314,28 +315,30 @@ public class AppDB {
     }
 
     //创建广告统计
-    public boolean createSuggestion(int id,String  advice,String email,int source,String url) {
+    public boolean createSuggestion(int id, String advice, String email, int source, String url) {
         boolean is_success = true;
 
         String SQL = "insert into pc_user_suggestion(user_id,advice,create_time,contact,source,user_screenshots) VALUES (?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{id, advice,Utils.getCurrentTime(),email,source,url});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{id, advice, Utils.getCurrentTime(), email, source, url});
         if (count < 1) {
             is_success = false;
         }
 
         return is_success;
     }
+
     public List<ApkUpdate> getApkUpdated(String where) {
-        String SQL = "SELECT * FROM pc_apk_updated " + where ;
+        String SQL = "SELECT * FROM pc_apk_updated " + where;
         List<ApkUpdate> apkUpdates = jdbcTemplateObject.query(SQL, new ApkUpdatedMapper());
         return apkUpdates;
     }
 
     public List<DriverGrabInfo> getDriverGrabOrder(String where) {
-        String SQL = "SELECT * FROM (SELECT a._id,passenger_order_id,driver_id,a.create_time,a.status,a.source,user_mobile,user_avatar,user_name FROM copy_cyparty_pc.pc_driver_booking_passenger a left join pc_user b on a.driver_id=b._id "+where+")c left join pc_car_owner_info d on c.driver_id=d.user_id ";
+        String SQL = "SELECT * FROM (SELECT a._id,passenger_order_id,driver_id,a.create_time,a.status,a.source,user_mobile,user_avatar,user_name FROM copy_cyparty_pc.pc_driver_booking_passenger a left join pc_user b on a.driver_id=b._id " + where + ")c left join pc_car_owner_info d on c.driver_id=d.user_id ";
         List<DriverGrabInfo> grabInfos = jdbcTemplateObject.query(SQL, new DriverGrabOrderMapper());
         return grabInfos;
     }
+
     /**
      * 后台支付管理
      */
@@ -345,7 +348,7 @@ public class AppDB {
     public boolean createOrderReview(Order order) {
         boolean is_success = true;
         String SQL = "insert into pc_orders(user_id,order_id,create_time,order_status,order_type,source,is_enable,update_time) VALUES (?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{order.getUser_id(),order.getOrder_id(),order.getCreate_time(),order.getOrder_status(),order.getOrder_type(),order.getSource(),1,order.getCreate_time()});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{order.getUser_id(), order.getOrder_id(), order.getCreate_time(), order.getOrder_status(), order.getOrder_type(), order.getSource(), 1, order.getCreate_time()});
         if (count < 1) {
             is_success = false;
         }
@@ -353,18 +356,18 @@ public class AppDB {
         return is_success;
     }
 
-    public List<Order> getOrderReview(String where,int type) {
+    public List<Order> getOrderReview(String where, int type) {
         String SQL = "SELECT * FROM pc_orders " + where;
-        List<Order> orders =new ArrayList<>();
-        switch (type){
+        List<Order> orders = new ArrayList<>();
+        switch (type) {
             case 0: //不关联表
-                orders=jdbcTemplateObject.query(SQL, new OrderMapper());
+                orders = jdbcTemplateObject.query(SQL, new OrderMapper());
                 break;
             case 1: //关联user表
-                orders=jdbcTemplateObject.query(SQL, new OrderUserMapper());
+                orders = jdbcTemplateObject.query(SQL, new OrderUserMapper());
                 break;
             case 2: //关联乘客出行表
-                orders=jdbcTemplateObject.query(SQL, new PassengerDepartureMapper());
+                orders = jdbcTemplateObject.query(SQL, new PassengerDepartureMapper());
                 break;
             default:
                 break;
@@ -372,10 +375,11 @@ public class AppDB {
 
         return orders;
     }
+
     public boolean createPayNotify(AlipayNotify alipayNotify, int source) {
         boolean is_success = true;
         String SQL = "insert into pc_alipay_log(buyer_email,buyer_id,seller_id,seller_email,price,trade_status,out_trade_no,trade_no,notify_type,notify_time,receipt_amount,buyer_pay_amount,point_amount,notify_id,pay_source) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{alipayNotify.getBuyer_email(), alipayNotify.getBuyer_id(), alipayNotify.getSeller_id(), alipayNotify.getSeller_email(), alipayNotify.getPrice(), alipayNotify.getTrade_status(),  alipayNotify.getOut_trade_no(),   alipayNotify.getTrade_no(), alipayNotify.getNotify_type(),  alipayNotify.getNotify_time(), alipayNotify.getReceipt_amount(), alipayNotify.getBuyer_pay_amount(), alipayNotify.getPoint_amount(), alipayNotify.getNotify_id(),source});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{alipayNotify.getBuyer_email(), alipayNotify.getBuyer_id(), alipayNotify.getSeller_id(), alipayNotify.getSeller_email(), alipayNotify.getPrice(), alipayNotify.getTrade_status(), alipayNotify.getOut_trade_no(), alipayNotify.getTrade_no(), alipayNotify.getNotify_type(), alipayNotify.getNotify_time(), alipayNotify.getReceipt_amount(), alipayNotify.getBuyer_pay_amount(), alipayNotify.getPoint_amount(), alipayNotify.getNotify_id(), source});
         if (count < 1) {
             is_success = false;
         }
@@ -387,7 +391,7 @@ public class AppDB {
         List<AlipayNotify> alipayNotifyList = jdbcTemplateObject.query(SQL, new RowMapper<AlipayNotify>() {
             @Override
             public AlipayNotify mapRow(ResultSet resultSet, int i) throws SQLException {
-                AlipayNotify alipayNotify=new AlipayNotify();
+                AlipayNotify alipayNotify = new AlipayNotify();
                 alipayNotify.setOut_trade_no(resultSet.getString("out_trade_no"));
                 alipayNotify.setTrade_status(resultSet.getString("trade_status"));
                 return alipayNotify;
@@ -400,18 +404,20 @@ public class AppDB {
     public boolean createPayLog(PayLog pay) {
         boolean is_success = true;
         String SQL = "insert into pay_cash_log(order_id,user_id,p_id,driver_id,cash,create_time,action_type,pay_type,order_status,departure_time,is_complete) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{pay.getOrder_id(), pay.getUser_id(), pay.getP_id(), pay.getDriver_id(),pay.getCash(), Utils.getCurrentTime(),pay.getAction_type(),pay.getPay_type(),pay.getOrder_status(),pay.getDeparture_time(),0});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{pay.getOrder_id(), pay.getUser_id(), pay.getP_id(), pay.getDriver_id(), pay.getCash(), Utils.getCurrentTime(), pay.getAction_type(), pay.getPay_type(), pay.getOrder_status(), pay.getDeparture_time(), 0});
         if (count < 1) {
             is_success = false;
         }
         return is_success;
     }
+
     //得到支付信息
     public List<PayLog> getPayLog(String where) {
-        String SQL = "SELECT * FROM pay_cash_log " + where ;
+        String SQL = "SELECT * FROM pay_cash_log " + where;
         List<PayLog> payLogList = jdbcTemplateObject.query(SQL, new PayLogMapper());
         return payLogList;
     }
+
     public List<Campaign> getCampaign(String where) {
         String SQL = "SELECT * FROM pc_campaign " + where;
         List<Campaign> campaignList = jdbcTemplateObject.query(SQL, new CampaignMapper());
@@ -421,136 +427,147 @@ public class AppDB {
     public boolean createPayBack(PayBack pay) {
         boolean is_success = true;
         String SQL = "insert into pc_application_pay_back(order_id,user_id,pay_type,pay_account,pay_reason,create_time,pay_status) VALUES (?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{pay.getOrder_id(), pay.getUser_id(), pay.getPay_type(), pay.getPay_account(),pay.getPay_reason(), Utils.getCurrentTime(),0});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{pay.getOrder_id(), pay.getUser_id(), pay.getPay_type(), pay.getPay_account(), pay.getPay_reason(), Utils.getCurrentTime(), 0});
         if (count < 1) {
             is_success = false;
         }
         return is_success;
     }
+
     //添加常用路线
-    public boolean createCommonRoute(int user_id, String departure_city, String departure_address, String departure_lon, String departure_lat, String destinat_city, String destinat_address, String destinat_lon, String destinat_lat, int is_enable,int is_default) {
+    public boolean createCommonRoute(int user_id, String departure_city, String departure_address, String departure_lon, String departure_lat, String destinat_city, String destinat_address, String destinat_lon, String destinat_lat, int is_enable, int is_default) {
         boolean is_success = true;
         String SQL = "insert into pc_common_route(user_id,departure_city,departure_address,departure_lon,departure_lat,destinat_city,destinat_address,destinat_lon,destinat_lat,create_time,update_time,is_enable,is_switch,is_default) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{user_id,departure_city,departure_address, departure_lon, departure_lat, destinat_city,destinat_address,destinat_lon,destinat_lat, Utils.getCurrentTime(), Utils.getCurrentTime(),is_enable,1,is_default});
-        if (count<1){
+        int count = jdbcTemplateObject.update(SQL, new Object[]{user_id, departure_city, departure_address, departure_lon, departure_lat, destinat_city, destinat_address, destinat_lon, destinat_lat, Utils.getCurrentTime(), Utils.getCurrentTime(), is_enable, 1, is_default});
+        if (count < 1) {
             is_success = false;
-       }
-       return is_success;
+        }
+        return is_success;
     }
 
-    public  List<CommonRoute> getCommonRoute(String where){
-        String SQL = "select * from pc_common_route "+where;
+    public List<CommonRoute> getCommonRoute(String where) {
+        String SQL = "select * from pc_common_route " + where;
         List<CommonRoute> commonRouteList = jdbcTemplateObject.query(SQL, new CommonRouteMapper());
         return commonRouteList;
     }
 
     public List<InviteIimit> getinviteIimit(String where) {
-        String SQL = "select * from pc_invite_limit "+where;
+        String SQL = "select * from pc_invite_limit " + where;
         List<InviteIimit> inviteIimitList = jdbcTemplateObject.query(SQL, new InviteIimitMapper());
         return inviteIimitList;
     }
 
-    public boolean createInviteIimit(int user_id,int driver_id,String confirm_time) {
+    public boolean createInviteIimit(int user_id, int driver_id, String confirm_time) {
         boolean is_success = true;
         String SQL = "insert into pc_invite_limit(passenger_id,driver_id,invite_time) VALUES (?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{user_id,driver_id,confirm_time});
-        if (count<1){
-            is_success = false;
-        }
-        return is_success;
-    }
-    //将推送消息存入数据库
-    public boolean createPush(int order_id,int push_id,int receive_id,int push_type,String alert,int type,String sound ,String data,int status,String user_name,String link_url){
-        boolean is_success = true;
-        String SQL = "insert into pc_push_notification (order_id,push_id,receive_id,push_type,alert,type,sound,data,time,status,is_enable,user_name,link_url) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        int count=jdbcTemplateObject.update(SQL, new Object[]{order_id,push_id,receive_id,push_type,alert,type,sound,data,Utils.getCurrentTime(),status,1,user_name,link_url});
-        if (count<1){
+        int count = jdbcTemplateObject.update(SQL, new Object[]{user_id, driver_id, confirm_time});
+        if (count < 1) {
             is_success = false;
         }
         return is_success;
     }
 
-    public List<PushNotification> getPushList(String where){
-        String SQL = "select * from pc_push_notification "+where;
-        List<PushNotification> pushList = jdbcTemplateObject.query(SQL,new PushNotificationMapper());
+    //将推送消息存入数据库
+    public boolean createPush(int order_id, int push_id, int receive_id, int push_type, String alert, int type, String sound, String data, int status, String user_name, String link_url) {
+        boolean is_success = true;
+        String SQL = "insert into pc_push_notification (order_id,push_id,receive_id,push_type,alert,type,sound,data,time,status,is_enable,user_name,link_url) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{order_id, push_id, receive_id, push_type, alert, type, sound, data, Utils.getCurrentTime(), status, 1, user_name, link_url});
+        if (count < 1) {
+            is_success = false;
+        }
+        return is_success;
+    }
+
+    public List<PushNotification> getPushList(String where) {
+        String SQL = "select * from pc_push_notification " + where;
+        List<PushNotification> pushList = jdbcTemplateObject.query(SQL, new PushNotificationMapper());
         return pushList;
     }
-//保存推广信息
-    public boolean createPopularizing(String popularize_code,String popularizing_mobile){
+
+    //保存推广信息
+    public boolean createPopularizing(String popularize_code, String popularizing_mobile) {
         boolean is_success = true;
         String SQL = "insert into pc_popularizing (popularize_code,popularizing_mobile,create_time) VALUES(?,?,?)";
-        int count=jdbcTemplateObject.update(SQL, new Object[]{popularize_code,popularizing_mobile,Utils.getCurrentTime()});
-        if (count<1){
+        int count = jdbcTemplateObject.update(SQL, new Object[]{popularize_code, popularizing_mobile, Utils.getCurrentTime()});
+        if (count < 1) {
             is_success = false;
         }
         return is_success;
     }
-//查询推广是否有重复手机号
-    public List<Popularizing> getPopularize(String mobile){
-        String SQL = "select * from pc_popularizing where popularizing_mobile ='"+mobile+"'";
+
+    //查询推广是否有重复手机号
+    public List<Popularizing> getPopularize(String mobile) {
+        String SQL = "select * from pc_popularizing where popularizing_mobile ='" + mobile + "'";
         List<Popularizing> popularizes = jdbcTemplateObject.query(SQL, new PopularizingMapper());
-        return  popularizes;
+        return popularizes;
     }
-//查询获取当前推广员的推广码
-    public List<Popularize> getPopular(int user_id){
-        String SQL = "select * from pc_popularize where popularize_id ="+user_id;
-        List<Popularize> popularizeList = jdbcTemplateObject.query(SQL,new PopularizeMapper());
+
+    //查询获取当前推广员的推广码
+    public List<Popularize> getPopular(int user_id) {
+        String SQL = "select * from pc_popularize where popularize_id =" + user_id;
+        List<Popularize> popularizeList = jdbcTemplateObject.query(SQL, new PopularizeMapper());
         return popularizeList;
     }
-//根据推广码获取推广人表的数据
-    public List<Popularize> getPopularized(String code){
-        String SQL = "select * from pc_popularize where popularize_code ='"+code+"'";
-        List<Popularize> popularizeList = jdbcTemplateObject.query(SQL,new PopularizeMapper());
+
+    //根据推广码获取推广人表的数据
+    public List<Popularize> getPopularized(String code) {
+        String SQL = "select * from pc_popularize where popularize_code ='" + code + "'";
+        List<Popularize> popularizeList = jdbcTemplateObject.query(SQL, new PopularizeMapper());
         return popularizeList;
     }
+
     //生成推广系统推广码
-    public boolean createPopularize(int popularize_id,int popularize_parent_id,String popularize_parents_id,int p_id,String popularize_code,int is_enable,int level){
+    public boolean createPopularize(int popularize_id, int popularize_parent_id, String popularize_parents_id, int p_id, String popularize_code, int is_enable, int level) {
         boolean is_success = true;
         String SQL = "insert into pc_popularize (popularize_id,popularize_parent_id,popularize_parents_id,p_id,popularize_code,create_time,update_time,is_enable,level) VALUES(?,?,?,?,?,?,?,?,?)";
-        int count=jdbcTemplateObject.update(SQL, new Object[]{popularize_id,popularize_parent_id,popularize_parents_id,p_id,popularize_code,Utils.getCurrentTime(),Utils.getCurrentTime(),is_enable,level});
-        if (count<1){
+        int count = jdbcTemplateObject.update(SQL, new Object[]{popularize_id, popularize_parent_id, popularize_parents_id, p_id, popularize_code, Utils.getCurrentTime(), Utils.getCurrentTime(), is_enable, level});
+        if (count < 1) {
             is_success = false;
         }
         return is_success;
     }
+
     //添加车主驾证认证
-    public boolean createDriverLicense(int user_id,String driver_name,String driver_license_number,String first_issue_date,String allow_car_type,String effective_date_start,String effective_date_end,String driver_license_photo,String is_enable){
+    public boolean createDriverLicense(int user_id, String driver_name, String driver_license_number, String first_issue_date, String allow_car_type, String effective_date_start, String effective_date_end, String driver_license_photo, String is_enable) {
         boolean is_success = true;
         String SQL = "insert into pc_user_driver_license_info (user_id,driver_name,driver_license_number,first_issue_date,allow_car_type,effective_date_start,effective_date_end,create_time,driver_license_photo,is_enable) VALUES(?,?,?,?,?,?,?,?,?,?)";
-        int count=jdbcTemplateObject.update(SQL, new Object[]{user_id,driver_name,driver_license_number,first_issue_date,allow_car_type,effective_date_start,effective_date_end,Utils.getCurrentTime(),driver_license_photo,is_enable});
-        if (count<1){
+        int count = jdbcTemplateObject.update(SQL, new Object[]{user_id, driver_name, driver_license_number, first_issue_date, allow_car_type, effective_date_start, effective_date_end, Utils.getCurrentTime(), driver_license_photo, is_enable});
+        if (count < 1) {
             is_success = false;
         }
         return is_success;
     }
+
     //添加车主行驶证认证
-    public boolean createTravelCard(int user_id,String car_license_number,String car_color,String car_type,String registration_date,String vehicle_owner_name,String travel_license_photo,String is_enable){
+    public boolean createTravelCard(int user_id, String car_license_number, String car_color, String car_type, String registration_date, String vehicle_owner_name, String travel_license_photo, String is_enable) {
         boolean is_success = true;
         String SQL = "insert into pc_user_travel_card_info (user_id,car_license_number,car_color,car_type,registration_date,vehicle_owner_name,create_time,travel_license_photo,is_enable) VALUES(?,?,?,?,?,?,?,?,?)";
-        int count=jdbcTemplateObject.update(SQL, new Object[]{user_id,car_license_number,car_color,car_type,registration_date,vehicle_owner_name,Utils.getCurrentTime(),travel_license_photo,is_enable});
-        if (count<1){
+        int count = jdbcTemplateObject.update(SQL, new Object[]{user_id, car_license_number, car_color, car_type, registration_date, vehicle_owner_name, Utils.getCurrentTime(), travel_license_photo, is_enable});
+        if (count < 1) {
             is_success = false;
         }
         return is_success;
     }
+
     //查询车主驾证认证状态
-    public List<UserDriverLicenseInfo> getDriverLicense(int user_id){
-        String SQL = "select * from pc_user_driver_license_info where user_id ="+user_id;
-        List<UserDriverLicenseInfo> driverLicenseInfos = jdbcTemplateObject.query(SQL,new UserDriverLicenseInfoMapper());
+    public List<UserDriverLicenseInfo> getDriverLicense(int user_id) {
+        String SQL = "select * from pc_user_driver_license_info where user_id =" + user_id;
+        List<UserDriverLicenseInfo> driverLicenseInfos = jdbcTemplateObject.query(SQL, new UserDriverLicenseInfoMapper());
         return driverLicenseInfos;
     }
+
     //查询车主行驶证认证状态
-    public List<UserTravelCardInfo> getTravelCard(int user_id){
-        String SQL = "select * from pc_user_travel_card_info where user_id ="+user_id;
-        List<UserTravelCardInfo> userTravelCardInfos = jdbcTemplateObject.query(SQL,new UserTravelCardInfoMapper());
+    public List<UserTravelCardInfo> getTravelCard(int user_id) {
+        String SQL = "select * from pc_user_travel_card_info where user_id =" + user_id;
+        List<UserTravelCardInfo> userTravelCardInfos = jdbcTemplateObject.query(SQL, new UserTravelCardInfoMapper());
         return userTravelCardInfos;
     }
 
     public boolean createMerchantJion(String business_name, String business_mobile, String address, String cooperation_way, String cooperation_description) {
         boolean is_success = true;
         String SQL = "insert into pc_merchant_join (business_name,business_mobile,address,cooperation_way,cooperation_description,create_time) VALUES(?,?,?,?,?,?)";
-        int count=jdbcTemplateObject.update(SQL, new Object[]{business_name,business_mobile,address,cooperation_way,cooperation_description,Utils.getCurrentTime()});
-        if (count<1){
+        int count = jdbcTemplateObject.update(SQL, new Object[]{business_name, business_mobile, address, cooperation_way, cooperation_description, Utils.getCurrentTime()});
+        if (count < 1) {
             is_success = false;
         }
         return is_success;
@@ -558,7 +575,7 @@ public class AppDB {
 
     public List<Business> getMerchantJion(String where) {
         String SQL = "select business_name,business_mobile from pc_merchant_join " + where;
-        List<Business> businessesList = jdbcTemplateObject.query(SQL,new BusinessMapper());
+        List<Business> businessesList = jdbcTemplateObject.query(SQL, new BusinessMapper());
         return businessesList;
     }
 
@@ -576,11 +593,11 @@ public class AppDB {
     /**
      * 根据id查询推广人类型
      */
-    public String getPopularById(String where){
-        String SQL = "select * from pc_popularize "+where;
+    public String getPopularById(String where) {
+        String SQL = "select * from pc_popularize " + where;
         String code = "";
-        List<Popularize> list = jdbcTemplateObject.query(SQL,new PopularizeMapper());
-        if (list.size()>0){
+        List<Popularize> list = jdbcTemplateObject.query(SQL, new PopularizeMapper());
+        if (list.size() > 0) {
             code = list.get(0).getPopularize_code();
         }
         return code;
@@ -590,23 +607,17 @@ public class AppDB {
     /**
      * 测试aop日志
      */
-    public void testLog(String content){
+    public void testLog(String content) {
         String SQL = "insert into test_log(content) values(?)";
-        jdbcTemplateObject.update(SQL,new Object[]{content});
+        jdbcTemplateObject.update(SQL, new Object[]{content});
     }
 
     /**
      * 首页搜索,根据关键字查询
      */
-    public List<PassengerPublishInfo> searchByContent(String where){
-        String SQL = "select * from pc_passenger_publish_info " + where;
-        List<PassengerPublishInfo> list = jdbcTemplateObject.query(SQL,new PassengerInfoMapper());
-        return list;
-    }
-
-    public List<PassengerPublishInfo> searchUp(String where){
-        String SQL = "select * from pc_passenger_publish_info " + where;
-        List<PassengerPublishInfo> list = jdbcTemplateObject.query(SQL,new PassengerInfoMapper());
+    public List<DriverPublishInfo> searchByContent(String where) {
+        String SQL = "select p.*,u.*,c.car_color,c.car_type  from pc_driver_publish_info  p LEFT JOIN pc_user  u ON p.user_id=u._id LEFT JOIN pc_car_owner_info c ON p.user_id = c.user_id " + where;
+        List<DriverPublishInfo> list = jdbcTemplateObject.query(SQL, new DriverInfoMapper());
         return list;
     }
 }

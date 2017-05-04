@@ -17,12 +17,21 @@ public class PassengerPublishInfo {
     private int booking_seats;//预定座位
     private String description;//描述
     private String create_time;//创建时间
-    private double price;
+    private double price;//价格
+    private String mobile;//手机号
 //    private String name;
 //    private String idsn;
 //    private String name;
 //    private String idsn;
 
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
     public double getPrice() {
         return price;
