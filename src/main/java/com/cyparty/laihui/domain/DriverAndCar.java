@@ -30,7 +30,7 @@ public class DriverAndCar {
 
     //手机号
     //金额
-    private int price;
+    private double price;
     //起点县
     String departure_county;
 
@@ -190,11 +190,11 @@ public class DriverAndCar {
         this.mobile = mobile;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

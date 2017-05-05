@@ -24,6 +24,7 @@ public class APPDriverAndCarMapper implements RowMapper<DriverAndCar> {
         departure.setInit_seats(resultSet.getInt("init_seats"));
         departure.setMobile(Utils.checkNull(resultSet.getString("mobile")));
         departure.setCurrent_seats(resultSet.getInt("current_seats"));
+        departure.setPrice(resultSet.getDouble("price"));
         //新增备注字段
         departure.setRemark(Utils.checkNull(resultSet.getString("remark")));
         /*departure.setPoints(Utils.checkNull(resultSet.getString("points")));

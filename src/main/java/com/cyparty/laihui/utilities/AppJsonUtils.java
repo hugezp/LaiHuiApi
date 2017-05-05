@@ -304,7 +304,7 @@ public class AppJsonUtils {
             dataObject.put("booking_count",booking_count);*/
             driverObject.put("mobile", departure.getMobile());
             driverObject.put("source", departure.getSource());
-
+            driverObject.put("price", departure.getPrice());
             where = " where user_id=" + departure.getUser_id();
             List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo(where);
             List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departure.getUser_id());
@@ -450,6 +450,7 @@ public class AppJsonUtils {
             if (departure_timestamp > yester_timestamp) {
                 mobile_available = true;
             }
+            jsonObject.put("driver_id", departure.getR_id());
             jsonObject.put("start_time", departure.getStart_time());
             jsonObject.put("boarding_point", JSONObject.parseObject(departure.getBoarding_point()));
             jsonObject.put("breakout_point", JSONObject.parseObject(departure.getBreakout_point()));
@@ -462,6 +463,7 @@ public class AppJsonUtils {
             jsonObject.put("create_time", departure.getCreate_time());
             jsonObject.put("points", departure.getPoints());
             jsonObject.put("description", departure.getDescription());
+            jsonObject.put("price", departure.getPrice());
 
             String order_where = " where order_id=" + departure.getR_id() + "  and is_enable=1 and order_type=1 ";//只查询订单类型为订单的
             int booking_count = appDB.getCount("pc_orders", order_where);
@@ -887,7 +889,7 @@ public class AppJsonUtils {
             jsonObject.put("description", order.getDescription());
             jsonObject.put("create_time", order.getCreate_time());
             jsonObject.put("departure_time", order.getDeparture_time());
-            jsonObject.put("price", order.getPrice());
+            //jsonObject.put("price", order.getPrice());
             jsonObject.put("remark", order.getRemark());
             //得到乘客基本信息
             String passenger_where = " where _id=" + order.getUser_id();
@@ -906,8 +908,16 @@ public class AppJsonUtils {
                 List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo(where);
                 where = " where user_id = " + order1.getUser_id() + " and is_enable=1 order by CONVERT (create_time USING gbk)COLLATE gbk_chinese_ci desc limit 1";
                 DepartureInfo departureInfo = appDB.getAppDriverDpartureInfo(where).get(0);
+                userObject.put("driver_id", departureInfo.getR_id());
                 userObject.put("ini_seats", departureInfo.getInit_seats());
                 userObject.put("current_seats", departureInfo.getCurrent_seats());
+                List<InviteIimit> inviteIimit = new ArrayList<>();
+                where = " where passenger_car_id="+order.getOrder_id()+" and driver_car_id="+departureInfo.getR_id();
+                if (appDB.getinviteIimit(where).size()>0&&appDB.getinviteIimit(where).get(0).getPrice()>0){
+                    inviteIimit = appDB.getinviteIimit(where);
+                    jsonObject.put("price", inviteIimit.get(0).getPrice()*order.getBooking_seats());
+                }else
+                jsonObject.put("price", order.getPrice());
                 if (carOwnerInfoList.size() > 0) {
                     CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
                     if (carOwnerInfo.getFlag() == 0) {
@@ -1520,6 +1530,7 @@ public class AppJsonUtils {
                 jsonObject.put("o_name", net.sf.json.JSONObject.fromObject(departureInfo.getBreakout_point()).get("name"));
                 jsonObject.put("ini_seats", departureInfo.getInit_seats());
                 jsonObject.put("current_seats", departureInfo.getCurrent_seats());
+                jsonObject.put("price", departureInfo.getPrice());
                 if (departureInfo.getFlag() == 0) {
                     jsonObject.put("car_color", departureInfo.getCar_color());
                     jsonObject.put("car_type", departureInfo.getCar_type());
@@ -1674,7 +1685,7 @@ public class AppJsonUtils {
                     jsonObject.put("id", departureInfo.getR_id());
                     jsonObject.put("current_seats", departureInfo.getCurrent_seats());
                     jsonObject.put("mobile", departureInfo.getMobile());
-                    jsonObject.put("price", 12.5);
+                    jsonObject.put("price", departureInfo.getPrice());
                     jsonObject.put("remark", departureInfo.getRemark());
                     jsonObject.put("create_time", DateUtils.getTimesToNow(departureInfo.getCreate_time()));
                     jsonObject.put("boarding_point", JSONObject.parseObject(departureInfo.getBoarding_point()));

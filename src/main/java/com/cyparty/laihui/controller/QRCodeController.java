@@ -29,7 +29,7 @@ public class QRCodeController {
     private AppDB appDB;
 
     /**
-     * 二维码跳转的链接
+     * 二维码跳转的链接1
      */
     @ResponseBody
     @RequestMapping(value = "/qrcodeLink", method = RequestMethod.POST)

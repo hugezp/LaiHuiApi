@@ -99,16 +99,20 @@ public class CommonRouteController {
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             //逻辑上的删除，将其设为不可用
             case "delete":
+                boolean is_success2 = true;
                 //常用路线记录id
                 id = Integer.parseInt(request.getParameter("id"));
                 where = " where id="+id+" and is_default=1";
                 int count = appDB.getCommonRoute(where).size();
                 if (count>0){
+                    where = " where user_id=" + user_id + " and is_enable=1";
+                    if (appDB.getCommonRoute(where).size()>1){
+                        where = " set is_default=1 where user_id="+user_id+" and is_enable=1 and is_default=0 limit 1";
+                        is_success2 = appDB.update("pc_common_route", where);
+                    }
                     where = " set is_enable=0 where id=" + id;
                     is_success = appDB.update("pc_common_route", where);
-                    where = " set is_default=1 where user_id="+user_id+" and is_enable=1 limit 1";
-                    boolean is_success2 = appDB.update("pc_common_route", where);
-                    if (is_success&&is_success2) {
+                     if (is_success&&is_success2) {
                         json = AppJsonUtils.returnSuccessJsonString(result, "删除成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
