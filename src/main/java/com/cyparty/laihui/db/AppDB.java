@@ -612,5 +612,14 @@ public class AppDB {
         String SQL = "insert into test_log(content) values(?)";
         jdbcTemplateObject.update(SQL, new Object[]{content});
     }
+
+    /**
+     * 首页搜索,根据关键字查询
+     */
+    public List<DriverPublishInfo> searchByContent(String where) {
+        String SQL = "select p.*,u.*,c.car_color,c.car_type  from pc_driver_publish_info  p LEFT JOIN pc_user  u ON p.user_id=u._id LEFT JOIN pc_car_owner_info c ON p.user_id = c.user_id " + where;
+        List<DriverPublishInfo> list = jdbcTemplateObject.query(SQL, new DriverInfoMapper());
+        return list;
+    }
 }
 
