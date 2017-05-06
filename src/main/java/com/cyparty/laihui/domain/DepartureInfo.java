@@ -20,7 +20,7 @@ public class DepartureInfo {
     private String points;
     private String description;//描述
     private String mobile;//手机号
-    private int price;//金额
+    private double price;//金额
     private String remark;
     private int source;
 
@@ -40,10 +40,10 @@ public class DepartureInfo {
     String user_avatar;//头像
 
 
-    private int departure_city_code=0;
-    private int destination_city_code=0;
-    private int departure_address_code=0;
-    private int destination_address_code=0;
+    private int departure_city_code = 0;
+    private int destination_city_code = 0;
+    private int departure_address_code = 0;
+    private int destination_address_code = 0;
 
     public int getR_id() {
         return r_id;
@@ -149,11 +149,11 @@ public class DepartureInfo {
         this.mobile = mobile;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -221,7 +221,11 @@ public class DepartureInfo {
         this.destination_address_code = destination_address_code;
     }
 
-    public  String getRemark(){return  remark;}
+    public String getRemark() {
+        return remark;
+    }
 
-    public void setRemark (String remark){this.remark = remark; }
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

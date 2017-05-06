@@ -19,7 +19,6 @@ public class UserMapper implements RowMapper<User> {
 
         user.setUser_mobile(resultSet.getString("user_mobile"));
         user.setUser_name(Utils.checkNull(resultSet.getString("user_name")));
-        user.setUser_qrcode(Utils.checkNull(resultSet.getString("user_qrcode")));
         user.setAvatar(Utils.checkNull(resultSet.getString("user_avatar")));
         String idsn= Utils.checkNull(resultSet.getString("user_idsn"));
         String name= Utils.checkNull(resultSet.getString("user_name"));

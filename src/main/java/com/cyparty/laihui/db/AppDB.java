@@ -122,7 +122,7 @@ public class AppDB {
         int autoIncId = 0;
 
         jdbcTemplateObject.update(con -> {
-            String sql = "insert into pc_driver_publish_info(mobile,departure_time,init_seats,create_time,is_enable,user_id,boarding_point,breakout_point,departure_city_code,destination_city_code,departure_address_code,destination_address_code,source,current_seats,remark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "insert into pc_driver_publish_info(mobile,departure_time,init_seats,create_time,is_enable,user_id,boarding_point,breakout_point,departure_city_code,destination_city_code,departure_address_code,destination_address_code,source,current_seats,remark,price) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, departureInfo.getMobile());
             ps.setString(2, departureInfo.getStart_time());
@@ -139,6 +139,7 @@ public class AppDB {
             ps.setInt(13, source);
             ps.setInt(14, departureInfo.getCurrent_seats());
             ps.setString(15, departureInfo.getRemark());
+            ps.setDouble(16, departureInfo.getPrice());
             return ps;
         }, keyHolder);
 
@@ -457,10 +458,10 @@ public class AppDB {
         return inviteIimitList;
     }
 
-    public boolean createInviteIimit(int user_id, int driver_id, String confirm_time) {
+    public boolean createInviteIimit(int passenage_id, int user_id, int driver_user_id, String confirm_time, double price, int driver_id) {
         boolean is_success = true;
-        String SQL = "insert into pc_invite_limit(passenger_id,driver_id,invite_time) VALUES (?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{user_id, driver_id, confirm_time});
+        String SQL = "insert into pc_invite_limit(passenger_car_id,passenger_id,driver_id,invite_time,price,driver_car_id) VALUES (?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{passenage_id, user_id, driver_user_id, confirm_time, price, driver_id});
         if (count < 1) {
             is_success = false;
         }

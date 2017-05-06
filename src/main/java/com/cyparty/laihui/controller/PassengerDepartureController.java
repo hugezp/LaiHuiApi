@@ -273,6 +273,7 @@ public class PassengerDepartureController {
                                 result.put("boarding_point", boarding_point);
                                 result.put("breakout_point", breakout_point);
                                 result.put("departure_time", start_time);
+                                result.put("price", order.getPay_num());
                                 json = AppJsonUtils.returnSuccessJsonString(result, "乘客行程单创建成功！");
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                             }
@@ -579,12 +580,17 @@ public class PassengerDepartureController {
 
                 //乘客邀请车主抢单
                 case "invite_driver":
-                    String where = " where user_id = " + user_id + " and order_type=0 and order_status=0 and is_enable=1";
+                    int flag = 1;
+                    String where = " where user_id = " + user_id + " and order_type=0 and order_status<4 and is_enable=1";
                     List<Order> orderList1 = appDB.getOrderReview(where, 0);
                     if (orderList1.size() == 0) {
+                        //乘客没有创建车单标记
+                        flag = 0;
+                        result.put("flag",flag);
                         json = AppJsonUtils.returnFailJsonString(result, "请您创建行程后再邀请车主");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
+                    result.put("flag",flag);
                     boolean is_enable = false;
                     if (user_id > 0) {
                         //获取系统现在时间
@@ -593,13 +599,12 @@ public class PassengerDepartureController {
                         Order passenger = appDB.getOrderReview(where, 0).get(0);
                         //获取车主手机号
                         String driver_mobile = request.getParameter("driver_mobile");
-                        //获取车主id
+                        //获取车主车单id
                         int driver_id = Integer.parseInt(request.getParameter("driver_id"));
                         where = " where a._id =" + driver_id;
                         int driver_user_id = appDB.getAppDriverDpartureInfo(where).get(0).getUser_id();
                         //乘客车单id
                         int grab_id = passenger.getOrder_id();
-
                         String content = "乘客" + user.getUser_nick_name() + "在" + confirm_time + "邀请您抢单！";
                         JSONObject passengerData = new JSONObject();
                         passengerData.put("user_avatar", passenger.getUser_avatar());
@@ -611,22 +616,28 @@ public class PassengerDepartureController {
                         passengerData.put("create_time", passenger.getCreate_time());
                         passengerData.put("mobile", passenger.getUser_mobile());
                         passengerData.put("order_status", passenger.getOrder_status());
-
+                        passengerData.put("price", passenger.getPrice());
                         PCCount driverPCCount = AppJsonUtils.getPCCount(appDB, passenger.getUser_id());
                         passengerData.put("pc_count", driverPCCount.getTotal());
-                        where = " where passenger_id=" + user_id + " and driver_id=" + driver_user_id;
+                        where = " where passenger_car_id=" + grab_id + " and driver_car_id=" + driver_id;
                         //获取邀请记录
                         List<InviteIimit> inviteIimit = appDB.getinviteIimit(where);
                         if (inviteIimit.size() > 0) {
                             //查询上次邀请距离这次邀请的时间
                             if (DateUtils.getTimesToNow1(inviteIimit.get(0).getInvite_time()) > 15) {
-                                where = " set invite_time='" + confirm_time + "'where passenger_id=" + user_id + " and driver_id=" + driver_id;
+                                where = " set invite_time='" + confirm_time + "' where passenger_car_id=" + grab_id + " and driver_car_id=" + driver_id;
                                 appDB.update("pc_invite_limit", where);
                                 is_enable = true;
                             }
                         } else {
                             //添加邀请记录
-                            appDB.createInviteIimit(user_id, driver_user_id, confirm_time);
+                            double price;
+                            try {
+                                price =Double.parseDouble(request.getParameter("price"));
+                            }catch (Exception e){
+                                price = 0.0;
+                            }
+                            appDB.createInviteIimit(grab_id,user_id, driver_user_id, confirm_time,price,driver_id);
                             is_enable = true;
                         }
                         if (is_enable) {

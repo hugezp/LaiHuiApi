@@ -23,6 +23,7 @@ public class APPDriverDepartureInfoMapper implements RowMapper<DepartureInfo> {
         departure.setInit_seats(resultSet.getInt("init_seats"));
         departure.setMobile(Utils.checkNull(resultSet.getString("mobile")));
         departure.setCurrent_seats(resultSet.getInt("current_seats"));
+        departure.setPrice(resultSet.getDouble("price"));
 
         /*departure.setPoints(Utils.checkNull(resultSet.getString("points")));
         departure.setDescription(Utils.checkNull(resultSet.getString("description")));*/

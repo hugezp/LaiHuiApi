@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.cyparty.laihui.db.AppDB;
+import com.cyparty.laihui.domain.InviteIimit;
 import com.cyparty.laihui.domain.PassengerOrder;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.PayConfigUtils;
@@ -45,6 +46,13 @@ public class PayOrderController {
 
     @Autowired
     AppDB appDB;
+
+    /**
+     * 支付接口
+     * @param request
+     * @param response
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/api/app/pay/info", method = RequestMethod.POST)
     public ResponseEntity<String> pay(HttpServletRequest request,HttpServletResponse response) {
@@ -53,18 +61,26 @@ public class PayOrderController {
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
         String json = "";
-        //订单ID
+        //车主车单ID
+        String driver_id=request.getParameter("driver_id");
+        //乘客车单ID
         String order_id=request.getParameter("order_id");
         String pay_type=request.getParameter("pay_type");
         String flag = request.getParameter("flag");
         String body="拼车费用";
         String description="拼车费用";
         PassengerOrder passengerOrder;
+        List<InviteIimit> inviteIimit = new ArrayList<>();
         if(order_id!=null&&!order_id.isEmpty()){
             String where=" where a._id="+order_id+"  and a.is_enable=1 ";
             List<PassengerOrder> passengerOrderList=appDB.getPassengerDepartureInfo(where);
             if(passengerOrderList.size()>0){
                 passengerOrder=passengerOrderList.get(0);
+                where = " where passenger_car_id="+order_id+" and driver_car_id="+driver_id;
+                if (appDB.getinviteIimit(where).size()>0){
+                    inviteIimit = appDB.getinviteIimit(where);
+                }
+
             }else {
                 json=AppJsonUtils.returnFailJsonString(result,"订单已失效！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -79,7 +95,11 @@ public class PayOrderController {
             if (flag!=null&&!flag.isEmpty()){
                 String now_ip=Utils.getIP(request);
                 String nonce_str=Utils.getCharAndNum(32);
-                double inputFee=passengerOrder.getPay_money()*100;
+                double inputFee= 0.0;
+                if (inviteIimit.size()>0){
+                    inputFee=inviteIimit.get(0).getPrice()*100*passengerOrder.getSeats();
+                }else
+                inputFee=passengerOrder.getPay_money()*100;
                 int inputIntFee=(int)inputFee;
                 String total_fee=inputIntFee+"";
                 //total_fee="1";//
@@ -217,7 +237,11 @@ public class PayOrderController {
 
         }else {
             //支付宝支付
-            double total_fee=passengerOrder.getPay_money();
+            double total_fee= 0.0;
+            if (inviteIimit.size()>0){
+                total_fee=inviteIimit.get(0).getPrice();
+            }else
+            total_fee=passengerOrder.getPay_money();
             //total_fee=0.01;
             Map<String, String> keyValues = new HashMap<String, String>();
             String current_time=Utils.getCurrentTime();

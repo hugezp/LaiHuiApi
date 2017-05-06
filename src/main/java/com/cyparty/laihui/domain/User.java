@@ -17,7 +17,6 @@ public class User {
     private String user_idsn;//身份证
     private String reason;//原因
     private String avatar;//头像
-    private String user_qrcode;//二维码
     private String sex;//性别
     private String signature;//个性签名
     private String birthday;//生日
@@ -28,13 +27,6 @@ public class User {
     private int u_flag;//新老用户实名认证
     private String delivery_address;//收货地址
 
-    public String getUser_qrcode() {
-        return user_qrcode;
-    }
-
-    public void setUser_qrcode(String user_qrcode) {
-        this.user_qrcode = user_qrcode;
-    }
 
     public int getFlag() {
         return flag;
