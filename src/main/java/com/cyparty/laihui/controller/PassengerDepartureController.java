@@ -372,6 +372,7 @@ public class PassengerDepartureController {
                 //精确查询（具体到某个乘客）
                 case "show_info":
                     //获取乘客车单ID
+
                     order_id = Integer.parseInt(request.getParameter("order_id"));
                     result = AppJsonUtils.getPassengerDepartureList(appDB, page, size, departure_address_code, destination_address_code, order_id);
                     String data = Utils.getJsonObject(result.toJSONString(), "data");

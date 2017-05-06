@@ -70,16 +70,16 @@ public class PayOrderController {
         String body="拼车费用";
         String description="拼车费用";
         PassengerOrder passengerOrder;
-        List<InviteIimit> inviteIimit = new ArrayList<>();
+        //List<InviteIimit> inviteIimit = new ArrayList<>();
         if(order_id!=null&&!order_id.isEmpty()){
             String where=" where a._id="+order_id+"  and a.is_enable=1 ";
             List<PassengerOrder> passengerOrderList=appDB.getPassengerDepartureInfo(where);
             if(passengerOrderList.size()>0){
                 passengerOrder=passengerOrderList.get(0);
-                where = " where passenger_car_id="+order_id+" and driver_car_id="+driver_id;
-                if (appDB.getinviteIimit(where).size()>0){
-                    inviteIimit = appDB.getinviteIimit(where);
-                }
+//                where = " where passenger_car_id="+order_id+" and driver_car_id="+driver_id;
+//                if (appDB.getinviteIimit(where).size()>0){
+//                    inviteIimit = appDB.getinviteIimit(where);
+//                }
 
             }else {
                 json=AppJsonUtils.returnFailJsonString(result,"订单已失效！");
@@ -96,9 +96,9 @@ public class PayOrderController {
                 String now_ip=Utils.getIP(request);
                 String nonce_str=Utils.getCharAndNum(32);
                 double inputFee= 0.0;
-                if (inviteIimit.size()>0){
-                    inputFee=inviteIimit.get(0).getPrice()*100*passengerOrder.getSeats();
-                }else
+//                if (inviteIimit.size()>0){
+//                    inputFee=inviteIimit.get(0).getPrice()*100*passengerOrder.getSeats();
+//                }else
                 inputFee=passengerOrder.getPay_money()*100;
                 int inputIntFee=(int)inputFee;
                 String total_fee=inputIntFee+"";
@@ -238,9 +238,9 @@ public class PayOrderController {
         }else {
             //支付宝支付
             double total_fee= 0.0;
-            if (inviteIimit.size()>0){
-                total_fee=inviteIimit.get(0).getPrice();
-            }else
+//            if (inviteIimit.size()>0){
+//                total_fee=inviteIimit.get(0).getPrice()*passengerOrder.getSeats();
+//            }else
             total_fee=passengerOrder.getPay_money();
             //total_fee=0.01;
             Map<String, String> keyValues = new HashMap<String, String>();
