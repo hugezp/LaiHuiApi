@@ -15,7 +15,8 @@ public class AjaxOriginUtil {
 
     }
 
-    public static HttpHeaders getHttpHeaders(HttpHeaders responseHeaders) {
+    public static HttpHeaders getHttpHeaders() {
+        HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         responseHeaders.set("Access-Control-Allow-Origin", "*");
         return responseHeaders;
