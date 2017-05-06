@@ -612,7 +612,8 @@ public class AppJsonUtils {
 //                driverObject.put("car_type", carOwnerInfo.getCar_type());
 //                driverObject.put("mobile", carOwnerInfo.getMobile());
 //            }
-            dataObject.put("driver_data", driverObject);
+
+            // dataObject.put("driver_data", driverObject);
             String order_where = " where order_type=0 and order_id=" + departure.get_id();
             List<Order> orderList = appDB.getOrderReview(order_where, 0);
             Order order = new Order();
@@ -629,6 +630,15 @@ public class AppJsonUtils {
             dataObject.put("seats", departure.getSeats());
             dataObject.put("description", departure.getDescription());
             dataObject.put("price", departure.getPay_money());
+            //判断是否是通过车可邀请抢单通道过来的
+//            where = " where a.user_id="+user_id+" and a.is_enable=1 order by a._id";
+//            List<DepartureInfo> departureInfoList = appDB.getAppDriverDpartureInfo(where);
+//            if (departureInfoList.size()>0){
+//                where = " where passenger_car_id="+id+" and driver_car_id="+departureInfoList.get(0).getR_id();
+//                if (appDB.getinviteIimit(where).size()>0){
+//                    dataObject.put("price",appDB.getinviteIimit(where).get(0).getPrice()*departure.getSeats());
+//                }
+//            }
             dataObject.put("create_time", DateUtils.getTimesToNow(departure.getCreate_time()));
             dataObject.put("boarding_point", JSONObject.parseObject(departure.getBoarding_point()));
             dataObject.put("breakout_point", JSONObject.parseObject(departure.getBreakout_point()));
@@ -911,12 +921,12 @@ public class AppJsonUtils {
                 userObject.put("driver_id", departureInfo.getR_id());
                 userObject.put("ini_seats", departureInfo.getInit_seats());
                 userObject.put("current_seats", departureInfo.getCurrent_seats());
-                List<InviteIimit> inviteIimit = new ArrayList<>();
-                where = " where passenger_car_id="+order.getOrder_id()+" and driver_car_id="+departureInfo.getR_id();
-                if (appDB.getinviteIimit(where).size()>0&&appDB.getinviteIimit(where).get(0).getPrice()>0){
-                    inviteIimit = appDB.getinviteIimit(where);
-                    jsonObject.put("price", inviteIimit.get(0).getPrice()*order.getBooking_seats());
-                }else
+//                List<InviteIimit> inviteIimit = new ArrayList<>();
+//                where = " where passenger_car_id="+order.getOrder_id()+" and driver_car_id="+departureInfo.getR_id();
+//                if (appDB.getinviteIimit(where).size()>0&&appDB.getinviteIimit(where).get(0).getPrice()>0){
+//                    inviteIimit = appDB.getinviteIimit(where);
+//                    jsonObject.put("price", inviteIimit.get(0).getPrice()*order.getBooking_seats());
+//                }else
                 jsonObject.put("price", order.getPrice());
                 if (carOwnerInfoList.size() > 0) {
                     CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
@@ -1710,8 +1720,8 @@ public class AppJsonUtils {
     public static JSONObject active(AppDB appDB) {
         String where = " where _id = 1";
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("active", "致用户的一封信");
-        jsonObject.put("url", "http://h5.laihuipinche.com/laihui/illegal/letter");
+        jsonObject.put("active", "邀好友，得奖励");
+        jsonObject.put("url", "https://h5.laihuipinche.com/share_spread");
         return jsonObject;
     }
 

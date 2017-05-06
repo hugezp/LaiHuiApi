@@ -145,7 +145,13 @@ public class DriverDepartureController {
             switch (action) {
                 //车主发布车单
                 case "add":
-                    double price = Double.parseDouble(request.getParameter("price"));
+                    double price = 0.0;
+                    try {
+                        price = Double.parseDouble(request.getParameter("price"));
+                    }catch (Exception e){
+
+                    }
+
                     if (token != null && token.length() == 32) {
                         user_id = appDB.getIDByToken(token);
                     } else {
@@ -461,6 +467,7 @@ public class DriverDepartureController {
                             int total = appDB.getCount("pc_orders", order_where);
                             //规定每天可以预定5次
                             if (total <= ConfigUtils.getDriver_grad_order_counts()) {
+
                                 Order order1 = new Order();
                                 order1.setUser_id(user_id);
                                 order1.setOrder_id(passengerOrder.getOrder_id());
