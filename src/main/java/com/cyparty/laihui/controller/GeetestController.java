@@ -41,6 +41,7 @@ public class GeetestController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
                 GeetestConfig.isnewfailback());
         String resStr = "{}";
@@ -67,6 +68,7 @@ public class GeetestController {
     public ResponseEntity<String> date(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
                 GeetestConfig.isnewfailback());
         String challenge = request.getParameter(GeetestLib.fn_geetest_challenge);

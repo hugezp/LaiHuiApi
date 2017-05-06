@@ -44,6 +44,7 @@ public class NearByOwnerOrPassengerController {
     public ResponseEntity<String> search(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         //附近车主条数
         int count = 0;
@@ -244,6 +245,7 @@ public class NearByOwnerOrPassengerController {
     public ResponseEntity<String> search1(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         String where = null;

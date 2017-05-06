@@ -274,10 +274,10 @@ public class Utils {
 
     public static String sendCodeMessage(String mobile) {
         String rand = SendSMSUtil.randomNum();
-        if (mobile.equals("13298172885")) {
+        if (mobile.equals("18330288097")) {
             return "0603";
         }
-        if (mobile.equals("15738961936")) {
+        if (mobile.equals("17788112947")) {
             return "0603";
         }
         if (mobile.equals("17698909223")) {
