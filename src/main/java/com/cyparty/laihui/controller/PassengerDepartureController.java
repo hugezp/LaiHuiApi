@@ -126,6 +126,7 @@ public class PassengerDepartureController {
     public ResponseEntity<String> booking(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         try {
@@ -406,6 +407,7 @@ public class PassengerDepartureController {
     public ResponseEntity<String> passenger_list(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         int user_id = 0;
@@ -684,6 +686,7 @@ public class PassengerDepartureController {
     public ResponseEntity<String> status(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         int user_id = 0;
@@ -769,6 +772,7 @@ public class PassengerDepartureController {
     public ResponseEntity<String> start(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         String confirm_time = Utils.getCurrentTime();

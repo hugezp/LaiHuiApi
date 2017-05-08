@@ -4,9 +4,11 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
+import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.utilities.Base64Utils;
 import com.cyparty.laihui.utilities.PayConfigUtils;
 import com.cyparty.laihui.utilities.RSAUtils;
+import org.springframework.stereotype.Controller;
 
 import java.io.InputStream;
 import java.security.PrivateKey;
@@ -16,8 +18,12 @@ import java.util.UUID;
 /**
  * Created by Administrator on 2017/4/5.
  */
+@Controller
 public class Test1 {
-    public static void main(String []args) throws Exception {
+    AppDB appDB;
+
+    public static void main(String[]args) {
+
     }
 
 }
