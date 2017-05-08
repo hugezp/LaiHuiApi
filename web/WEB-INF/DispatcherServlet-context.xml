@@ -4,7 +4,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
 
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -13,7 +13,7 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
        http://www.springframework.org/schema/task
-       http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+       http://www.springframework.org/schema/task/spring-task-4.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
     <task:annotation-driven/>
     <task:executor id="executor" pool-size="10" queue-capacity="100"/>
     <mvc:annotation-driven/>
@@ -93,5 +93,11 @@
     <!--<bean id="runTask" class="com.cyparty.laihui.utilities.RunTask">
         <property name="db" ref="AppDB"/>
     </bean>-->
-
+    <!--事物管理-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="appDataSource" />
+    </bean>
+    <!-- 使用annotation注解方式配置事务 -->
+    <!-- 启用注解 --> <context:annotation-config/>
+    <tx:annotation-driven transaction-manager="transactionManager"  />
 </beans>
