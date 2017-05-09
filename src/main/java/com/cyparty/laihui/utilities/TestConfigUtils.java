@@ -10,6 +10,9 @@ public class TestConfigUtils {
             case "13298172885" :
                is_success = true;
                break;
+            case "18538129108" :
+                is_success = true;
+                break;
             case "15639356022" :
                 is_success = true;
                 break;
@@ -20,6 +23,9 @@ public class TestConfigUtils {
                 is_success = true;
                 break;
             case "15516015893" :
+                is_success = true;
+                break;
+            case "15738961936" :
                 is_success = true;
                 break;
         }
