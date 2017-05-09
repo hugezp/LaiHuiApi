@@ -46,6 +46,73 @@ public class PassengerDepartureController {
         return "test";
     }
 
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.OK)
+    @RequestMapping(value = "/distance/prices", produces = "application/json; charset=utf-8")
+    public ResponseEntity getPriceToWeb(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
+        String json ="";
+        String origin_location = request.getParameter("origin_location");
+        String destination_location = request.getParameter("destination_location");
+        String booking_seats = request.getParameter("booking_seats");
+        int person = 1;
+        if (booking_seats != null && !booking_seats.isEmpty()) {
+            try {
+                person = Integer.parseInt(booking_seats);
+            } catch (NumberFormatException e) {
+                person = 1;
+                e.printStackTrace();
+            }
+        }
+        String result = "";
+        JSONObject resultObject = new JSONObject();
+        URL file_url = null;
+        try {
+            String json_url = "http://restapi.amap.com/v3/distance?key=5f128c6b72fb65b81348ca1477f3c3ce&origins=" + origin_location + "&destination=" + destination_location + "&type=1";
+            file_url = new URL(json_url);
+            InputStream content = (InputStream) file_url.getContent();
+            BufferedReader in = new BufferedReader(new InputStreamReader(content, "utf-8"));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result = result + line;
+            }
+        } catch (Exception e) {
+            //System.out.println(e.getMessage());
+        }
+        JSONObject dataObject = JSONObject.parseObject(result);
+        JSONArray dataArray = dataObject.getJSONArray("results");
+        if (dataArray.size() > 0) {
+            JSONObject nowObject = dataArray.getJSONObject(0);
+            int distance = nowObject.getIntValue("distance");
+            int duration = nowObject.getIntValue("duration");
+            //正式
+            double start_price = 0;
+            double  price = distance * 3.3 / 10000f;
+            if (distance<=200000){
+                start_price = 10.0;
+
+            }
+            double last_price = start_price + price*person;
+            //测试
+//            double  price =0.01;
+//            double last_price =0.01;
+
+
+            DecimalFormat df = new DecimalFormat("######0.00");
+            double average = price * 1000f / distance;
+//            resultObject.put("price",0.01);
+//            resultObject.put("total_price",0.01);
+            resultObject.put("price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+            resultObject.put("total_price", new BigDecimal(last_price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+            resultObject.put("cost_time", duration / 60 + "分钟");
+            resultObject.put("distance", distance / 1000);
+            resultObject.put("average", new BigDecimal(df.format(average)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+        }
+        json = AppJsonUtils.returnSuccessJsonString(resultObject, "价格计算成功！");
+        return new ResponseEntity<>(json,responseHeaders, HttpStatus.OK);
+    }
     /**
      * 计算乘客价格模块
      *
@@ -126,6 +193,7 @@ public class PassengerDepartureController {
     public ResponseEntity<String> booking(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         try {
@@ -274,6 +342,7 @@ public class PassengerDepartureController {
                                 result.put("breakout_point", breakout_point);
                                 result.put("departure_time", start_time);
                                 result.put("price", order.getPay_num());
+                                result.put("msg","成功！");
                                 json = AppJsonUtils.returnSuccessJsonString(result, "乘客行程单创建成功！");
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                             }
@@ -406,6 +475,7 @@ public class PassengerDepartureController {
     public ResponseEntity<String> passenger_list(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         int user_id = 0;
@@ -684,6 +754,7 @@ public class PassengerDepartureController {
     public ResponseEntity<String> status(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         int user_id = 0;
