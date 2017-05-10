@@ -1676,7 +1676,7 @@ public class AppJsonUtils {
                             break;
                         case 0:
                             status = 1;
-                            remake = "等待抢单";
+                            remake = "等待处理";
                     }
                     //分属状态值
                     jsonObject.put("status", status);

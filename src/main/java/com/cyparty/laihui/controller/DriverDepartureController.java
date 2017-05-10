@@ -93,6 +93,7 @@ public class DriverDepartureController {
             resultObject.put("average", new BigDecimal(df.format(average)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         }
         return resultObject.toString();
+
     }
 
     /***
