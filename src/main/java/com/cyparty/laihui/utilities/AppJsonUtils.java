@@ -51,10 +51,10 @@ public class AppJsonUtils {
         //弹出广告
         List<Carousel> carouselList = appDB.getCarousel(where);
         List<Carousel> splashScreenList = appDB.getCarousel(flashWhere);
-        if (carouselList.size() == 0 && splashScreenList.size() == 0){
+        if (carouselList.size() == 0 && splashScreenList.size() == 0) {
             return result_json;
         }
-        if (carouselList.size()>0){
+        if (carouselList.size() > 0) {
             for (Carousel carousel : carouselList) {
                 limit = limit + carousel.getSeq();
             }
@@ -67,13 +67,13 @@ public class AppJsonUtils {
                     carouselObject.put("image_title", carousel.getImage_title());
                     carouselObject.put("create_time", carousel.getCreate_time());
                     carouselObject.put("carousel_id", carousel.get_id());
-                    result_json.put("slides",carouselObject);
+                    result_json.put("slides", carouselObject);
                     break;
                 }
                 start = start + carousel.getSeq();
             }
         }
-        if (splashScreenList.size()>0){
+        if (splashScreenList.size() > 0) {
             for (Carousel flash : splashScreenList) {
                 flimit = flimit + flash.getSeq();
             }
@@ -86,7 +86,7 @@ public class AppJsonUtils {
                     flashObject.put("image_title", flash.getImage_title());
                     flashObject.put("create_time", flash.getCreate_time());
                     flashObject.put("carousel_id", flash.get_id());
-                    result_json.put("flash",flashObject);
+                    result_json.put("flash", flashObject);
                     break;
                 }
                 fstart = fstart + flash.getSeq();
@@ -536,14 +536,14 @@ public class AppJsonUtils {
     /**
      * 寻找匹配乘客模块
      */
-    public static JSONObject getPassengerDepartureList(AppDB appDB, int page, int size, int departure_address_code, int destination_address_code, int id,double departure_lon,double departure_lat,double destinat_lon,double destinat_lat) {
+    public static JSONObject getPassengerDepartureList(AppDB appDB, int page, int size, int departure_address_code, int destination_address_code, int id, double departure_lon, double departure_lat, double destinat_lon, double destinat_lat) {
         JSONObject result_json = new JSONObject();
         JSONArray dataArray = new JSONArray();
         String where = " where is_enable=1   ";
         String forword_where = " where is_enable=1  and order_status!=1";
         List<PassengerOrder> passengerOrderList = new ArrayList<>();
         int count = 0;
-        int offset = page*size;
+        int offset = page * size;
         if (id == 0) {
             if (departure_address_code != 0 && destination_address_code != 0) {
                 //精确搜索不分页
@@ -640,14 +640,16 @@ public class AppJsonUtils {
             dataObject.put("create_time", DateUtils.getTimesToNow(departure.getCreate_time()));
             dataObject.put("boarding_point", JSONObject.parseObject(departure.getBoarding_point()));
             dataObject.put("breakout_point", JSONObject.parseObject(departure.getBreakout_point()));
-            double o_departure_lon = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString()).equals("")?"-256.18":JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString());
-            double o_departure_lat = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString()).equals("")?"-256.18":JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString());
-            double o_destinat_lon = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString()).equals("")?"-256.18":JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString());
-            double o_destinat_lat = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString()).equals("")?"-256.18":JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString());
+            double o_departure_lon = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString());
+            double o_departure_lat = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString());
+            double o_destinat_lon = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString());
+            double o_destinat_lat = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString());
             double my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
             double start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);
             double end_point_distance = RangeUtils.getDistance(destinat_lat, destinat_lon, o_destinat_lat, o_destinat_lon);
-            String suitability = RangeUtils.getSuitability(my_distance,start_point_distance,end_point_distance);
+            String suitability = RangeUtils.getSuitability(my_distance, start_point_distance, end_point_distance);
+            dataObject.put("start_point_distance",start_point_distance);
+            dataObject.put("end_point_distance",end_point_distance);
             dataObject.put("suitability", suitability);
             dataObject.put("remark", departure.getRemark());
             dataObject.put("user_data", passengerObject);
@@ -1547,7 +1549,7 @@ public class AppJsonUtils {
                 jsonObject.put("ini_seats", departureInfo.getInit_seats());
                 jsonObject.put("current_seats", departureInfo.getCurrent_seats());
                 jsonObject.put("price", departureInfo.getPrice());
-                jsonObject.put("suitability",departureInfo.getSuitability());
+                jsonObject.put("suitability", departureInfo.getSuitability());
                 if (departureInfo.getFlag() == 0) {
                     jsonObject.put("car_color", departureInfo.getCar_color());
                     jsonObject.put("car_type", departureInfo.getCar_type());
@@ -1594,7 +1596,7 @@ public class AppJsonUtils {
                 jsonObject.put("departure_time", DateUtils.getProcessdTime(passenger.getDeparture_time()));
                 jsonObject.put("create_time", DateUtils.getTimesToNow(passenger.getCreate_time()));
                 jsonObject.put("price", passenger.getPay_money());
-                jsonObject.put("suitability",passenger.getSuitability());
+                jsonObject.put("suitability", passenger.getSuitability());
                 jsonObject.put("boarding_point", passenger.getBoarding_point());
                 jsonObject.put("breakout_point", passenger.getBreakout_point());
                 jsonObject.put("i_province", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("province"));
@@ -1782,7 +1784,7 @@ public class AppJsonUtils {
         List<PushNotification> pushList = appDB.getPushList("where receive_id=" + user_id + " and status=1 and is_enable=1");
         List<PushNotification> pushs = appDB.getPushList("where flag =1 and status=1 and is_enable=1");
         JSONObject jsonObject = new JSONObject();
-        if (pushList.size() > 0||pushs.size()>0) {
+        if (pushList.size() > 0 || pushs.size() > 0) {
             jsonObject.put("is_message", 1);
         } else {
             jsonObject.put("is_message", 0);
@@ -1808,7 +1810,7 @@ public class AppJsonUtils {
 
             }
         }
-        personal_data.put("level",level);
+        personal_data.put("level", level);
         if (user.getAvatar().length() > 0 && !user.getAvatar().equals("null")) {
             personal_data.put("user_avater", user.getAvatar());
         } else {
@@ -1853,27 +1855,28 @@ public class AppJsonUtils {
         } else {
             personal_data.put("user_company", nullString);
         }
-        if(user.getDelivery_address().length()>0 &&!user.getDelivery_address().equals("null")){
-            personal_data.put("deliveryAddress",user.getDelivery_address());
+        if (user.getDelivery_address().length() > 0 && !user.getDelivery_address().equals("null")) {
+            personal_data.put("deliveryAddress", user.getDelivery_address());
         } else {
             personal_data.put("deliveryAddress", nullString);
         }
         return personal_data;
     }
+
     //获取系统消息或者活动消息的方法
-    public static JSONObject getPushList(List<PushNotification> pushList,AppDB appDB,int flag,String msg) {
+    public static JSONObject getPushList(List<PushNotification> pushList, AppDB appDB, int flag, String msg) {
         JSONObject result = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         for (PushNotification push : pushList) {
             JSONObject pushJson = new JSONObject();
-            pushJson.put("title",push.getTitle());
+            pushJson.put("title", push.getTitle());
             pushJson.put("alert", push.getAlert());
             pushJson.put("type", push.getType());
             pushJson.put("time", push.getTime());
             pushJson.put("link_url", push.getLink_url());
             jsonArray.add(pushJson);
         }
-        List<PushNotification> pushs = appDB.getPushList(" where flag="+flag+" and is_enable=1 and status =1");
+        List<PushNotification> pushs = appDB.getPushList(" where flag=" + flag + " and is_enable=1 and status =1");
         if (pushs.size() > 0) {
             for (PushNotification push : pushs) {
                 appDB.update("pc_push_notification", " set status = 0 where _id =" + push.get_id());
@@ -1882,8 +1885,9 @@ public class AppJsonUtils {
         result.put(msg, jsonArray);
         return result;
     }
+
     //车单推送消息返回结果
-    public static JSONObject getPushOrder(List<PushNotification> pushList,AppDB appDB) {
+    public static JSONObject getPushOrder(List<PushNotification> pushList, AppDB appDB) {
         JSONObject result = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         for (PushNotification push : pushList) {
@@ -1898,12 +1902,12 @@ public class AppJsonUtils {
             pushJson.put("data", push.getData());
             pushJson.put("time", push.getTime());
             pushJson.put("status", push.getStatus());
-            List<User> users = appDB.getUserList(" where _id ="+push.getPush_id());
-            if(users.size()>0){
-                pushJson.put("avatar",users.get(0).getAvatar());
+            List<User> users = appDB.getUserList(" where _id =" + push.getPush_id());
+            if (users.size() > 0) {
+                pushJson.put("avatar", users.get(0).getAvatar());
                 pushJson.put("user_name", users.get(0).getUser_nick_name());
-            }else{
-                pushJson.put("avatar","");
+            } else {
+                pushJson.put("avatar", "");
                 pushJson.put("user_name", "");
             }
             jsonArray.add(pushJson);
@@ -1913,45 +1917,45 @@ public class AppJsonUtils {
     }
 
     //车单推送系统消息需要接受者id
-    public static JSONObject getPushAll(AppDB appDB,int flag ,String title,int id) {
+    public static JSONObject getPushAll(AppDB appDB, int flag, String title, int id) {
         JSONObject result = new JSONObject();
         int total = 0;
-        String where = " where flag = "+flag+" and is_enable=1 and receive_id ="+id+" order by time desc limit 1 ";
+        String where = " where flag = " + flag + " and is_enable=1 and receive_id =" + id + " order by time desc limit 1 ";
         List<PushNotification> pushActivity = appDB.getPushList(where);
         if (pushActivity.size() > 0) {
-            total = appDB.getTotalCount("pc_push_notification"," where flag = "+flag+" and is_enable=1 and receive_id ="+id+" and status = 1 ");
+            total = appDB.getTotalCount("pc_push_notification", " where flag = " + flag + " and is_enable=1 and receive_id =" + id + " and status = 1 ");
             PushNotification push = pushActivity.get(0);
-            result.put("title",title);
+            result.put("title", title);
             result.put("content", push.getAlert());
             result.put("time", push.getTime());
-            result.put("total",total);
+            result.put("total", total);
         } else {
-            result.put("title",title);
+            result.put("title", title);
             result.put("content", "");
             result.put("time", "");
-            result.put("total",total);
+            result.put("total", total);
         }
         return result;
     }
 
     //精选活动不需要接收者id,
-    public static JSONObject getPushActivity(AppDB appDB,int flag ,String title) {
+    public static JSONObject getPushActivity(AppDB appDB, int flag, String title) {
         JSONObject result = new JSONObject();
         int total = 0;
-        String where = " where flag = "+flag+" and is_enable=1 order by time desc limit 1 ";
+        String where = " where flag = " + flag + " and is_enable=1 order by time desc limit 1 ";
         List<PushNotification> pushActivity = appDB.getPushList(where);
         if (pushActivity.size() > 0) {
-            total = appDB.getTotalCount("pc_push_notification"," where flag = "+flag+" and is_enable=1 and status = 1");
+            total = appDB.getTotalCount("pc_push_notification", " where flag = " + flag + " and is_enable=1 and status = 1");
             PushNotification push = pushActivity.get(0);
-            result.put("title",title);
+            result.put("title", title);
             result.put("content", push.getAlert());
             result.put("time", push.getTime());
-            result.put("total",total);
+            result.put("total", total);
         } else {
-            result.put("title",title);
+            result.put("title", title);
             result.put("content", "");
             result.put("time", "");
-            result.put("total",total);
+            result.put("total", total);
         }
         return result;
     }
