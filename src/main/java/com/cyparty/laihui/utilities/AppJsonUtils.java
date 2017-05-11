@@ -536,7 +536,7 @@ public class AppJsonUtils {
     /**
      * 寻找匹配乘客模块
      */
-    public static JSONObject getPassengerDepartureList(AppDB appDB, int page, int size, int departure_address_code, int destination_address_code, int id) {
+    public static JSONObject getPassengerDepartureList(AppDB appDB, int page, int size, int departure_address_code, int destination_address_code, int id,double departure_lon,double departure_lat,double destinat_lon,double destinat_lat) {
         JSONObject result_json = new JSONObject();
         JSONArray dataArray = new JSONArray();
         String where = " where is_enable=1   ";
@@ -595,9 +595,8 @@ public class AppJsonUtils {
             passengerObject.put("avatar", departure.getUser_avatar());
             PCCount passengerPCCount = getPCCount(appDB, departure.getUser_id());
             passengerObject.put("pc_count", passengerPCCount.getTotal());
-
-            //           Order diverOrder = appDB.getOrderReview("order_type=2 and order_id="+departure.get_id(),0).get(0);
-
+//            Order diverOrder = appDB.getOrderReview("order_type=2 and order_id="+departure.get_id(),0).get(0);
+//
 //            where =  "and user_id =" + diverOrder.getUser_id();
 //            List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo1(where);
 //            if (carOwnerInfoList.size()>0) {
@@ -641,8 +640,16 @@ public class AppJsonUtils {
             dataObject.put("create_time", DateUtils.getTimesToNow(departure.getCreate_time()));
             dataObject.put("boarding_point", JSONObject.parseObject(departure.getBoarding_point()));
             dataObject.put("breakout_point", JSONObject.parseObject(departure.getBreakout_point()));
+            double o_departure_lon = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString()).equals("")?"-256.18":JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString());
+            double o_departure_lat = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString()).equals("")?"-256.18":JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString());
+            double o_destinat_lon = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString()).equals("")?"-256.18":JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString());
+            double o_destinat_lat = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString()).equals("")?"-256.18":JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString());
+            double my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
+            double start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);
+            double end_point_distance = RangeUtils.getDistance(destinat_lat, destinat_lon, o_destinat_lat, o_destinat_lon);
+            String suitability = RangeUtils.getSuitability(my_distance,start_point_distance,end_point_distance);
+            dataObject.put("suitability", suitability);
             dataObject.put("remark", departure.getRemark());
-
             dataObject.put("user_data", passengerObject);
 
             dataArray.add(dataObject);
