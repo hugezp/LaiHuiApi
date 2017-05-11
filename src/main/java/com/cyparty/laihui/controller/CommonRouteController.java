@@ -226,10 +226,14 @@ public class CommonRouteController {
         String json = "";
         int user_id = 0;
         int count = 0;
-        //经纬度相差度数
+        //我的行程距离
+        double my_distance = 0.0;
+        //起点距离
         double start_point_distance = 0.0;
+        //终点距离
         double end_point_distance = 0.0;
-        double query_distance = 100000;
+        //查询范围
+        double query_distance = 10000;
         String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         try {
             String action = request.getParameter("action");
@@ -354,9 +358,12 @@ public class CommonRouteController {
                         double o_destinat_lon = Double.parseDouble("".equals(jsonObject.get("longitude").toString()) ? "-256.18" : jsonObject.get("longitude").toString());
                         double o_destinat_lat = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "-256.18" : jsonObject.get("latitude").toString());
 
+
                         //通过经纬度获取距离
+                        my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
                         start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);
                         end_point_distance = RangeUtils.getDistance(destinat_lat, destinat_lon, o_destinat_lat, o_destinat_lon);
+                        String suitability = RangeUtils.getSuitability(my_distance,start_point_distance,end_point_distance);
                         if (start_point_distance <= query_distance && end_point_distance <= query_distance) {
                             nearByPassengerList.add(passengerList.get(i));
                         }

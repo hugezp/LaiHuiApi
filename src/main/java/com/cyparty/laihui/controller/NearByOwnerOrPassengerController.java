@@ -323,6 +323,7 @@ public class NearByOwnerOrPassengerController {
                             nearByOwenrList.add(owenrList.get(i));
                         }
                     }
+
                     if (nearByOwenrList.size() != 0) {
                         count = nearByOwenrList.size();
                         result = AppJsonUtils.getNearByOwnerList(nearByOwenrList, page, size, count,appDB);
