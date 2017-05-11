@@ -39,8 +39,8 @@ public class RangeUtils {
     public static String getSuitability(double my_distance,double start_point_distance,double end_point_distance){
         DecimalFormat df   = new DecimalFormat("######0.00");
         double match = (start_point_distance+end_point_distance)/my_distance;
-        double matchs = match<1?match:0;
-        String suitability = df.format(matchs*100) + "%";
+        double matchs = match<1?match:1;
+        String suitability = df.format(100-matchs*100) + "%";
         return suitability;
     }
     public static void main (String[]args){

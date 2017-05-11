@@ -432,13 +432,13 @@ public class PassengerDepartureController {
                             JSONObject boardingObject = JSONObject.parseObject(boarding_point);
                             departure_address_code = boardingObject.getIntValue("adCode");
                             departure_lon = Double.parseDouble((boardingObject.get("longitude").toString()).equals("")?"0.0":boardingObject.get("longitude").toString());
-                            departure_lat = Double.parseDouble((boardingObject.get("latitude").toString()).equals("")?"0.0":boardingObject.get("longitude").toString());
+                            departure_lat = Double.parseDouble((boardingObject.get("latitude").toString()).equals("")?"0.0":boardingObject.get("latitude").toString());
                         }
                         if (breakout_point != null) {
                             JSONObject breakoutObject = JSONObject.parseObject(breakout_point);
                             destination_address_code = breakoutObject.getIntValue("adCode");
                             destinat_lon = Double.parseDouble((breakoutObject.get("longitude").toString()).equals("")?"0.0":breakoutObject.get("longitude").toString());
-                            destinat_lat = Double.parseDouble((breakoutObject.get("latitude").toString()).equals("")?"0.0":breakoutObject.get("longitude").toString());
+                            destinat_lat = Double.parseDouble((breakoutObject.get("latitude").toString()).equals("")?"0.0":breakoutObject.get("latitude").toString());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -663,14 +663,14 @@ public class AppJsonUtils {
             dataObject.put("breakout_point", JSONObject.parseObject(departure.getBreakout_point()));
             double o_departure_lon = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString());
             double o_departure_lat = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString());
-            double o_destinat_lon = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString());
-            double o_destinat_lat = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString());
+            double o_destinat_lon = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("longitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBreakout_point()).get("longitude").toString());
+            double o_destinat_lat = Double.parseDouble((JSONObject.parseObject(departure.getBoarding_point()).get("latitude").toString()).equals("") ? "-256.18" : JSONObject.parseObject(departure.getBreakout_point()).get("latitude").toString());
             double my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
             double start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);
             double end_point_distance = RangeUtils.getDistance(destinat_lat, destinat_lon, o_destinat_lat, o_destinat_lon);
             String suitability = RangeUtils.getSuitability(my_distance, start_point_distance, end_point_distance);
-            dataObject.put("start_point_distance",start_point_distance);
-            dataObject.put("end_point_distance",end_point_distance);
+            dataObject.put("start_point_distance", start_point_distance);
+            dataObject.put("end_point_distance", end_point_distance);
             dataObject.put("suitability", suitability);
             dataObject.put("remark", departure.getRemark());
             dataObject.put("user_data", passengerObject);
@@ -1571,8 +1571,8 @@ public class AppJsonUtils {
                 jsonObject.put("current_seats", departureInfo.getCurrent_seats());
                 jsonObject.put("price", departureInfo.getPrice());
                 jsonObject.put("suitability", departureInfo.getSuitability());
-                jsonObject.put("start_point_distance",departureInfo.getStart_point_distance());
-                jsonObject.put("end_point_distance",departureInfo.getEnd_point_distance());
+                jsonObject.put("start_point_distance", departureInfo.getStart_point_distance());
+                jsonObject.put("end_point_distance", departureInfo.getEnd_point_distance());
                 if (departureInfo.getFlag() == 0) {
                     jsonObject.put("car_color", departureInfo.getCar_color());
                     jsonObject.put("car_type", departureInfo.getCar_type());

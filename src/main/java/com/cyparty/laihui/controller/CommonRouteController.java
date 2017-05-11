@@ -197,8 +197,8 @@ public class CommonRouteController {
                 //默认常用路线设置
             case "default":
                 //将全部常用路线设置为非默认
-                    where = " set is_default=5 where user_id=" + user_id + " and is_enable=1";
-                    boolean is = appDB.update("pc_common_route", where);
+                    where = " set is_default=0 where user_id=" + user_id + " and is_enable=1";
+                    appDB.update("pc_common_route", where);
                     //常用路线记录id
                     id = Integer.parseInt(request.getParameter("id"));
                     where = " set is_default=1 where id=" + id;
