@@ -1,6 +1,8 @@
 package com.cyparty.laihui.utilities;
 
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Administrator on 2017/3/4.
  */
@@ -34,8 +36,15 @@ public class RangeUtils {
         s = s*1000;
         return s;
     }
+    public static String getSuitability(double my_distance,double start_point_distance,double end_point_distance){
+        DecimalFormat df   = new DecimalFormat("######0.00");
+        double match = (start_point_distance+end_point_distance)/my_distance;
+        double matchs = match<1?match:0;
+        String Suitability = df.format(matchs*100) + "%";
+        return Suitability;
+    }
     public static void main (String[]args){
-        System.out.print(getDistance(34.765603,113.622253,34.747542,113.720462));
+        System.out.print(getSuitability(101,2,3));
     }
 }
 
