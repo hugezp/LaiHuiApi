@@ -423,29 +423,34 @@ public class PassengerDepartureController {
                     //根据出发地或者目的地匹配
                     //寻找乘客
                 case "show":
+                    double departure_lon = 0.0;
+                    double departure_lat = 0.0;
+                    double destinat_lon = 0.0;
+                    double destinat_lat = 0.0;
                     try {
                         if (boarding_point != null) {
                             JSONObject boardingObject = JSONObject.parseObject(boarding_point);
                             departure_address_code = boardingObject.getIntValue("adCode");
-                            double departure_lon = Double.parseDouble(boardingObject.get("departure_lon").toString());
-                            double departure_lat = Double.parseDouble(boardingObject.get("latitude").toString());
+                            departure_lon = Double.parseDouble((boardingObject.get("longitude").toString()).equals("")?"0.0":boardingObject.get("longitude").toString());
+                            departure_lat = Double.parseDouble((boardingObject.get("latitude").toString()).equals("")?"0.0":boardingObject.get("longitude").toString());
                         }
                         if (breakout_point != null) {
                             JSONObject breakoutObject = JSONObject.parseObject(breakout_point);
                             destination_address_code = breakoutObject.getIntValue("adCode");
+                            destinat_lon = Double.parseDouble((breakoutObject.get("longitude").toString()).equals("")?"0.0":breakoutObject.get("longitude").toString());
+                            destinat_lat = Double.parseDouble((breakoutObject.get("latitude").toString()).equals("")?"0.0":breakoutObject.get("longitude").toString());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    result = AppJsonUtils.getPassengerDepartureList(appDB, page, size, departure_address_code, destination_address_code, 0);
+                    result = AppJsonUtils.getPassengerDepartureList(appDB, page, size, departure_address_code, destination_address_code, 0,departure_lon,departure_lat,destinat_lon,destinat_lat);
                     json = AppJsonUtils.returnSuccessJsonString(result, "乘客出行信息获取成功");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 //精确查询（具体到某个乘客）
                 case "show_info":
                     //获取乘客车单ID
-
                     order_id = Integer.parseInt(request.getParameter("order_id"));
-                    result = AppJsonUtils.getPassengerDepartureList(appDB, page, size, departure_address_code, destination_address_code, order_id);
+                    result = AppJsonUtils.getPassengerDepartureList(appDB, page, size, departure_address_code, destination_address_code, order_id,0.0,0.0,0.0,0.0);
                     String data = Utils.getJsonObject(result.toJSONString(), "data");
                     if ("[]".equals(data) || null == data) {
                         json = AppJsonUtils.returnFailJsonString(result, "乘客出行信息详情获取失败！");
