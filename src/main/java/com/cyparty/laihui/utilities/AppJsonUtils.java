@@ -1571,6 +1571,8 @@ public class AppJsonUtils {
                 jsonObject.put("current_seats", departureInfo.getCurrent_seats());
                 jsonObject.put("price", departureInfo.getPrice());
                 jsonObject.put("suitability", departureInfo.getSuitability());
+                jsonObject.put("start_point_distance",departureInfo.getStart_point_distance());
+                jsonObject.put("end_point_distance",departureInfo.getEnd_point_distance());
                 if (departureInfo.getFlag() == 0) {
                     jsonObject.put("car_color", departureInfo.getCar_color());
                     jsonObject.put("car_type", departureInfo.getCar_type());

@@ -322,6 +322,8 @@ public class CommonRouteController {
                         String suitability = RangeUtils.getSuitability(my_distance,start_point_distance,end_point_distance);
                         if (start_point_distance <= query_distance && end_point_distance <= query_distance) {
                             owenrList.get(i).setSuitability(suitability);
+                            owenrList.get(i).setStart_point_distance(start_point_distance);
+                            owenrList.get(i).setEnd_point_distance(end_point_distance);
                             nearByOwenrList.add(owenrList.get(i));
                         }
                     }

@@ -51,6 +51,24 @@ public class DriverAndCar {
     //起点地址代码
     private int departure_address_code = 0;
     private int destination_address_code = 0;
+    private double start_point_distance;
+    private double end_point_distance;
+
+    public double getStart_point_distance() {
+        return start_point_distance;
+    }
+
+    public void setStart_point_distance(double start_point_distance) {
+        this.start_point_distance = start_point_distance;
+    }
+
+    public double getEnd_point_distance() {
+        return end_point_distance;
+    }
+
+    public void setEnd_point_distance(double end_point_distance) {
+        this.end_point_distance = end_point_distance;
+    }
 
     public String getSuitability() {
         return suitability;
