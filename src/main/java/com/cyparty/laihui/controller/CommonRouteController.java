@@ -6,6 +6,7 @@ import com.cyparty.laihui.domain.DriverAndCar;
 import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.domain.PassengerOrder;
 import com.cyparty.laihui.utilities.AppJsonUtils;
+import com.cyparty.laihui.utilities.ConfigUtils;
 import com.cyparty.laihui.utilities.RangeUtils;
 import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -233,7 +234,7 @@ public class CommonRouteController {
         //终点距离
         double end_point_distance = 0.0;
         //查询范围
-        double query_distance = 10000;
+        double query_distance = ConfigUtils.getQuery_distance();
         String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         try {
             String action = request.getParameter("action");
@@ -315,9 +316,12 @@ public class CommonRouteController {
                         double o_destinat_lat = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "-256.18" : jsonObject.get("latitude").toString());
 
                         //通过经纬度获取距离
+                        my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
                         start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);
                         end_point_distance = RangeUtils.getDistance(destinat_lat, destinat_lon, o_destinat_lat, o_destinat_lon);
+                        String suitability = RangeUtils.getSuitability(my_distance,start_point_distance,end_point_distance);
                         if (start_point_distance <= query_distance && end_point_distance <= query_distance) {
+                            owenrList.get(i).setSuitability(suitability);
                             nearByOwenrList.add(owenrList.get(i));
                         }
                     }
@@ -365,6 +369,7 @@ public class CommonRouteController {
                         end_point_distance = RangeUtils.getDistance(destinat_lat, destinat_lon, o_destinat_lat, o_destinat_lon);
                         String suitability = RangeUtils.getSuitability(my_distance,start_point_distance,end_point_distance);
                         if (start_point_distance <= query_distance && end_point_distance <= query_distance) {
+                            passengerList.get(i).setSuitability(suitability);
                             nearByPassengerList.add(passengerList.get(i));
                         }
                     }

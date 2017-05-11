@@ -427,6 +427,8 @@ public class PassengerDepartureController {
                         if (boarding_point != null) {
                             JSONObject boardingObject = JSONObject.parseObject(boarding_point);
                             departure_address_code = boardingObject.getIntValue("adCode");
+                            double departure_lon = Double.parseDouble(boardingObject.get("departure_lon").toString());
+                            double departure_lat = Double.parseDouble(boardingObject.get("latitude").toString());
                         }
                         if (breakout_point != null) {
                             JSONObject breakoutObject = JSONObject.parseObject(breakout_point);

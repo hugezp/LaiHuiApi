@@ -7,6 +7,7 @@ import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.domain.PassengerOrder;
 import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
+import com.cyparty.laihui.utilities.ConfigUtils;
 import com.cyparty.laihui.utilities.RangeUtils;
 import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class NearByOwnerOrPassengerController {
         //获取系统时间
         String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         //附近车主（乘客）搜索范围
-        double query_distance = 200000.0;
+        double query_distance = ConfigUtils.getQuery_distance();
         try {
             String action = request.getParameter("action");
             int page = 0;
@@ -255,7 +256,7 @@ public class NearByOwnerOrPassengerController {
         double distance = 0.0;
         String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         //设定附近的定义范围
-        double query_distance = 200000.0;
+        double query_distance = ConfigUtils.getQuery_distance();
         try {
             String action = request.getParameter("action");
             int page = 0;

@@ -40,8 +40,8 @@ public class RangeUtils {
         DecimalFormat df   = new DecimalFormat("######0.00");
         double match = (start_point_distance+end_point_distance)/my_distance;
         double matchs = match<1?match:0;
-        String Suitability = df.format(matchs*100) + "%";
-        return Suitability;
+        String suitability = df.format(matchs*100) + "%";
+        return suitability;
     }
     public static void main (String[]args){
         System.out.print(getSuitability(101,2,3));
