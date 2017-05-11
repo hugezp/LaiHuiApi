@@ -367,6 +367,7 @@ public class DriverDepartureController {
     public ResponseEntity<String> grab_order(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         int user_id = 0;
@@ -832,6 +833,7 @@ public class DriverDepartureController {
     public ResponseEntity<String> status(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         int user_id = 0;
@@ -914,6 +916,7 @@ public class DriverDepartureController {
     public ResponseEntity<String> type(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         int user_id = 0;

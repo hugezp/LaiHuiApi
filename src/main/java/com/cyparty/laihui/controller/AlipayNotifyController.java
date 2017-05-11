@@ -45,6 +45,7 @@ public class AlipayNotifyController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         boolean is_success ;
@@ -241,6 +242,7 @@ public class AlipayNotifyController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         String json = "";
         try {
             PrintWriter out=response.getWriter();
