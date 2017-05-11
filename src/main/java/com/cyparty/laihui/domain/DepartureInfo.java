@@ -23,6 +23,15 @@ public class DepartureInfo {
     private double price;//金额
     private String remark;
     private int source;
+    private String suitability;//匹配度
+
+    public String getSuitability() {
+        return suitability;
+    }
+
+    public void setSuitability(String suitability) {
+        this.suitability = suitability;
+    }
 
     public int getSource() {
         return source;

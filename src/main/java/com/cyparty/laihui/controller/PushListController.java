@@ -172,7 +172,8 @@ public class PushListController {
                     String token = request.getParameter("token");
                     if (null != token && token.length() == 32) {
                         int user_id = appDB.getIDByToken(token);
-                        List<PushNotification> pushList = appDB.getPushList("where receive_id=" + user_id + " and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc");
+                        String where = " where receive_id=" + user_id + " and is_enable=1 order by CONVERT (time USING gbk)COLLATE gbk_chinese_ci desc";
+                        List<PushNotification> pushList = appDB.getPushList(where);
                         if (pushList.size() > 0) {
                             for (PushNotification push : pushList) {
                                 JSONObject pushJson = new JSONObject();
