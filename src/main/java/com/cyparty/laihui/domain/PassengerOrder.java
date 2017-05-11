@@ -25,18 +25,36 @@ public class PassengerOrder {
     private int source;//ios或者Android
     private int pay_status;//支付状态
     private double pay_money;//支付金额
-    private String  pay_privilege;//支付特权
-    private String  pay_num;//支付单号
-    private String  user_name;//用户名
-    private String  user_avatar;//用户头像
-    private String  remark;//备注
-    private int departure_address_code=0;
-    private int departure_city_code=0;
-    private int destination_address_code=0;
-    private int destination_city_code=0;
-    private int order_status=0;
-    private int flag=0;
+    private String pay_privilege;//支付特权
+    private String pay_num;//支付单号
+    private String user_name;//用户名
+    private String user_avatar;//用户头像
+    private String remark;//备注
+    private int departure_address_code = 0;
+    private int departure_city_code = 0;
+    private int destination_address_code = 0;
+    private int destination_city_code = 0;
+    private int order_status = 0;
+    private int flag = 0;
     private String suitability;
+    private double start_point_distance;
+    private double end_point_distance;
+
+    public double getStart_point_distance() {
+        return start_point_distance;
+    }
+
+    public void setStart_point_distance(double start_point_distance) {
+        this.start_point_distance = start_point_distance;
+    }
+
+    public double getEnd_point_distance() {
+        return end_point_distance;
+    }
+
+    public void setEnd_point_distance(double end_point_distance) {
+        this.end_point_distance = end_point_distance;
+    }
 
     public String getSuitability() {
         return suitability;
@@ -207,8 +225,6 @@ public class PassengerOrder {
     }
 
 
-
-
     public String getCreate_time() {
         return create_time;
     }
@@ -273,7 +289,11 @@ public class PassengerOrder {
         this.description = description;
     }
 
-    public String getRemark(){ return remark;}
+    public String getRemark() {
+        return remark;
+    }
 
-    public void setRemark(String remark){this.remark =remark;}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 }

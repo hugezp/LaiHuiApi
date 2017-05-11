@@ -321,6 +321,8 @@ public class AppJsonUtils {
             int booking_count=appDB.getCount("pc_orders",order_where);
             dataObject.put("booking_count",booking_count);*/
             driverObject.put("suitability", suitability);
+            driverObject.put("start_point_distance", start_distance);
+            driverObject.put("end_point_distance", end_distance);
             driverObject.put("mobile", departure.getMobile());
             driverObject.put("source", departure.getSource());
             driverObject.put("price", departure.getPrice());
@@ -1616,6 +1618,8 @@ public class AppJsonUtils {
                 jsonObject.put("create_time", DateUtils.getTimesToNow(passenger.getCreate_time()));
                 jsonObject.put("price", passenger.getPay_money());
                 jsonObject.put("suitability", passenger.getSuitability());
+                jsonObject.put("start_point_distance", passenger.getStart_point_distance());
+                jsonObject.put("end_point_distance", passenger.getEnd_point_distance());
                 jsonObject.put("boarding_point", passenger.getBoarding_point());
                 jsonObject.put("breakout_point", passenger.getBreakout_point());
                 jsonObject.put("i_province", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("province"));

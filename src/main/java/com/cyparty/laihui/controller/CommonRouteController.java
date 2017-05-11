@@ -370,6 +370,8 @@ public class CommonRouteController {
                         String suitability = RangeUtils.getSuitability(my_distance,start_point_distance,end_point_distance);
                         if (start_point_distance <= query_distance && end_point_distance <= query_distance) {
                             passengerList.get(i).setSuitability(suitability);
+                            passengerList.get(i).setStart_point_distance(start_point_distance);
+                            passengerList.get(i).setEnd_point_distance(end_point_distance);
                             nearByPassengerList.add(passengerList.get(i));
                         }
                     }
