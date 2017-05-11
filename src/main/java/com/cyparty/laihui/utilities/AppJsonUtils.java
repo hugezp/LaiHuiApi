@@ -252,7 +252,7 @@ public class AppJsonUtils {
         return return_json;
     }
 
-    public static JSONObject getAPPDriverDepartureList(AppDB appDB, int page, int size, int departure_address_code, int destination_address_code, int user_id) {
+    public static JSONObject getAPPDriverDepartureList(AppDB appDB, int page, int size, int departure_address_code, int destination_address_code, int user_id, double p_start_lat, double p_start_lng, double p_end_lat, double p_end_lng) {
         JSONObject result_json = new JSONObject();
         JSONArray dataArray = new JSONArray();
         String where = " where is_enable=1 ";
@@ -295,13 +295,32 @@ public class AppJsonUtils {
             //where = where + " order by create_time DESC limit 0,50 ";
             departureInfoList = appDB.getAppDriverDpartureInfo(where);
         }
+        //乘客路程距离
+        double my_distance = RangeUtils.getDistance(p_start_lat, p_start_lng, p_end_lat, p_end_lng);
         //
         for (DepartureInfo departure : departureInfoList) {
+            String boarding_point = departure.getBoarding_point();
+            String breakout_point = departure.getBreakout_point();
+            //获取车主起点经纬度
+            net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(boarding_point);
+            double d_start_longitude = Double.parseDouble("".equals(jsonObject.get("longitude").toString()) ? "-256.18" : jsonObject.get("longitude").toString());
+            double d_start_latitude = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "-256.18" : jsonObject.get("latitude").toString());
+            //获取车主终点经纬度
+            net.sf.json.JSONObject jsonObject1 = net.sf.json.JSONObject.fromObject(breakout_point);
+            double d_end_longitude = Double.parseDouble("".equals(jsonObject1.get("longitude").toString()) ? "-256.18" : jsonObject1.get("longitude").toString());
+            double d_end_latitude = Double.parseDouble("".equals(jsonObject1.get("latitude").toString()) ? "-256.18" : jsonObject1.get("latitude").toString());
+            //计算车主与乘客起点的距离
+            double start_distance = RangeUtils.getDistance(p_start_lat, p_start_lng, d_start_latitude, d_start_longitude);
+            //计算车主与乘客终点的距离
+            double end_distance = RangeUtils.getDistance(p_end_lat, p_end_lng, d_end_latitude, d_end_longitude);
+            //计算匹配度
+            String suitability = RangeUtils.getSuitability(my_distance, start_distance, end_distance);
             JSONObject driverObject = new JSONObject();
             JSONObject dataObject = new JSONObject();
            /* String order_where=" where driver_order_id="+departure.getR_id()+" and is_enable=1  and order_type=1 ";
             int booking_count=appDB.getCount("pc_orders",order_where);
             dataObject.put("booking_count",booking_count);*/
+            driverObject.put("suitability", suitability);
             driverObject.put("mobile", departure.getMobile());
             driverObject.put("source", departure.getSource());
             driverObject.put("price", departure.getPrice());
