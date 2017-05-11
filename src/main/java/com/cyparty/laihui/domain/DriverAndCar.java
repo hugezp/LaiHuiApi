@@ -43,6 +43,22 @@ public class DriverAndCar {
     String user_avatar;
     private String remark;
     private int flag;
+    private String suitability;
+    //起点城市代码
+    private int departure_city_code = 0;
+    //终点城市代码
+    private int destination_city_code = 0;
+    //起点地址代码
+    private int departure_address_code = 0;
+    private int destination_address_code = 0;
+
+    public String getSuitability() {
+        return suitability;
+    }
+
+    public void setSuitability(String suitability) {
+        this.suitability = suitability;
+    }
 
     public int getFlag() {
         return flag;
@@ -61,12 +77,6 @@ public class DriverAndCar {
         this.remark = remark;
     }
 
-    //起点城市代码
-    private int departure_city_code = 0;
-    //终点城市代码
-    private int destination_city_code = 0;
-    //起点地址代码
-    private int departure_address_code = 0;
 
     public String getUser_name() {
         return user_name;
@@ -84,7 +94,6 @@ public class DriverAndCar {
         this.user_avatar = user_avatar;
     }
 
-    private int destination_address_code = 0;
 
     public int getR_id() {
         return r_id;

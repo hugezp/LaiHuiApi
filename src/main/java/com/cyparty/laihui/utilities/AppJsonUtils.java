@@ -590,7 +590,6 @@ public class AppJsonUtils {
             } else {
                 passengerObject.put("mobile", departure.getMobile());
             }
-
             passengerObject.put("source", departure.getSource());
             passengerObject.put("name", name);
             passengerObject.put("avatar", departure.getUser_avatar());
@@ -1541,6 +1540,7 @@ public class AppJsonUtils {
                 jsonObject.put("ini_seats", departureInfo.getInit_seats());
                 jsonObject.put("current_seats", departureInfo.getCurrent_seats());
                 jsonObject.put("price", departureInfo.getPrice());
+                jsonObject.put("suitability",departureInfo.getSuitability());
                 if (departureInfo.getFlag() == 0) {
                     jsonObject.put("car_color", departureInfo.getCar_color());
                     jsonObject.put("car_type", departureInfo.getCar_type());
@@ -1587,6 +1587,7 @@ public class AppJsonUtils {
                 jsonObject.put("departure_time", DateUtils.getProcessdTime(passenger.getDeparture_time()));
                 jsonObject.put("create_time", DateUtils.getTimesToNow(passenger.getCreate_time()));
                 jsonObject.put("price", passenger.getPay_money());
+                jsonObject.put("suitability",passenger.getSuitability());
                 jsonObject.put("boarding_point", passenger.getBoarding_point());
                 jsonObject.put("breakout_point", passenger.getBreakout_point());
                 jsonObject.put("i_province", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("province"));

@@ -36,6 +36,15 @@ public class PassengerOrder {
     private int destination_city_code=0;
     private int order_status=0;
     private int flag=0;
+    private String suitability;
+
+    public String getSuitability() {
+        return suitability;
+    }
+
+    public void setSuitability(String suitability) {
+        this.suitability = suitability;
+    }
 
     public int getIs_enable() {
         return is_enable;
