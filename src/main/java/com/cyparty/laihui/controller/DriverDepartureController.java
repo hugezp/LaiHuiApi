@@ -140,15 +140,6 @@ public class DriverDepartureController {
             String boarding_point = request.getParameter("boarding_point");
             String breakout_point = request.getParameter("breakout_point");
 
-            //获取乘客起点经纬度
-            net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(boarding_point);
-            double p_start_longitude = Double.parseDouble("".equals(jsonObject.get("longitude").toString())?"0.0":jsonObject.get("longitude").toString());
-            double p_start_latitude = Double.parseDouble("".equals(jsonObject.get("latitude").toString())?"0.0":jsonObject.get("latitude").toString());
-
-            //获取乘客终点经纬度
-            net.sf.json.JSONObject jsonObject1 = net.sf.json.JSONObject.fromObject(breakout_point);
-            double p_end_longitude = Double.parseDouble("".equals(jsonObject1.get("longitude").toString())?"0.0":jsonObject1.get("longitude").toString());
-            double p_end_latitude = Double.parseDouble("".equals(jsonObject1.get("latitude").toString())?"0.0":jsonObject1.get("latitude").toString());
             int departure_city_code = 0;
             int destination_city_code = 0;
             int departure_address_code = 0;
@@ -318,6 +309,15 @@ public class DriverDepartureController {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    //获取乘客起点经纬度
+                    net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(boarding_point);
+                    double p_start_longitude = Double.parseDouble("".equals(jsonObject.get("longitude").toString())?"0.0":jsonObject.get("longitude").toString());
+                    double p_start_latitude = Double.parseDouble("".equals(jsonObject.get("latitude").toString())?"0.0":jsonObject.get("latitude").toString());
+
+                    //获取乘客终点经纬度
+                    net.sf.json.JSONObject jsonObject1 = net.sf.json.JSONObject.fromObject(breakout_point);
+                    double p_end_longitude = Double.parseDouble("".equals(jsonObject1.get("longitude").toString())?"0.0":jsonObject1.get("longitude").toString());
+                    double p_end_latitude = Double.parseDouble("".equals(jsonObject1.get("latitude").toString())?"0.0":jsonObject1.get("latitude").toString());
                     result = AppJsonUtils.getAPPDriverDepartureList(appDB, page, size, departure_address_code, destination_address_code, 0,p_start_latitude,p_start_longitude,p_end_latitude,p_end_longitude);
                     json = AppJsonUtils.returnSuccessJsonString(result, "全部出车信息获取成功");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -330,7 +330,7 @@ public class DriverDepartureController {
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
                     if (user_id > 0) {
-                        result = AppJsonUtils.getAPPDriverDepartureList(appDB, page, size, departure_address_code, destination_address_code, user_id,p_start_latitude,p_start_longitude,p_end_latitude,p_end_longitude);
+                        result = AppJsonUtils.getAPPDriverDepartureList(appDB, page, size, departure_address_code, destination_address_code, user_id,0,0,0,0);
                         json = AppJsonUtils.returnSuccessJsonString(result, "车单历史获取成功");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
