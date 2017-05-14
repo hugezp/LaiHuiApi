@@ -621,5 +621,23 @@ public class AppDB {
         List<DriverPublishInfo> list = jdbcTemplateObject.query(SQL, new DriverInfoMapper());
         return list;
     }
+
+    /**
+     * 首页跨城城市列表车主
+     */
+    public List<CrossCity> getCrossCityList(String where) {
+        String SQL = "SELECT * FROM pc_driver_publish_info" + where;
+        List<CrossCity> crossCityList = jdbcTemplateObject.query(SQL, new CrossCityMapper());
+        return crossCityList;
+    }
+
+    /**
+     * 首页跨城城市列表乘客
+     */
+    public List<CrossCity> getCrossCityList1(String where) {
+        String SQL = "SELECT * FROM pc_passenger_publish_info" + where;
+        List<CrossCity> crossCityList = jdbcTemplateObject.query(SQL, new CrossCityMapper());
+        return crossCityList;
+    }
 }
 

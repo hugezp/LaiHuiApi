@@ -299,7 +299,7 @@ public class APIController {
             int end = pageSize;
             String code = content.substring(0, 4);
             String where = "where p.departure_address_code like '" + code + "%' and p.destination_address_code like '" + code +
-                    "%' and p.is_enable = 1 order by p.create_time desc limit " + start + "," + end;
+                    "%' and p.is_enable = 1 and p.departure_time >'" + Utils.getCurrentTimeSubOrAddHour(-3) + "' order by p.create_time desc limit " + start + "," + end;
             searchList = appDB.searchByContent(where);
             for (DriverPublishInfo passengerPublishInfo : searchList) {
                 if (passengerPublishInfo.getBreakout_point().contains(word)) {
