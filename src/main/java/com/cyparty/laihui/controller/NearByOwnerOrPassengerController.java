@@ -45,7 +45,6 @@ public class NearByOwnerOrPassengerController {
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
-        String adCode = request.getParameter("adCode").substring(0, 3);
         //附近车主条数
         int count = 0;
         //用户id
@@ -53,6 +52,7 @@ public class NearByOwnerOrPassengerController {
         String json = "";
         String where = null;
         User user = new User();
+        int adCode = 0;
         //获取系统时间
         String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         //附近车主（乘客）搜索范围
@@ -68,6 +68,11 @@ public class NearByOwnerOrPassengerController {
                     page = 0;
                     e.printStackTrace();
                 }
+            }
+            try {
+                adCode = Integer.parseInt(request.getParameter("adCode").substring(0, 4));
+            } catch (Exception e) {
+                adCode = 4101;
             }
             if (request.getParameter("size") != null && !request.getParameter("size").trim().equals("")) {
                 try {
@@ -99,24 +104,20 @@ public class NearByOwnerOrPassengerController {
                 case "nearby_owner":
                     List<CrossCity> crossCityList1 = new ArrayList<CrossCity>();
                     JSONArray jsonArray1 = new JSONArray();
-                    String whereCity1 = " where is_enable =1 and order_status=0 and departure_time >'" + current_time + "' and departure_address_code like '" + Integer.parseInt(adCode) + "%' group by destination_address_code desc";
-                    crossCityList1 = appDB.getCrossCityList1(whereCity1);
+                    String whereCity1 = " where is_enable =1 and user_id != " + user_id + " and departure_time >'" + current_time + "' and departure_address_code like '" + adCode + "%' group by destination_address_code desc";
+                    crossCityList1 = appDB.getCrossCityList(whereCity1);
                     if (crossCityList1.size() > 0) {
                         for (int i = 0; i < crossCityList1.size(); i++) {
-                            if (crossCityList1.get(i).getUser_id() == user_id) {
-                                crossCityList1.remove(i);
-                                i--;
-                                continue;
-                            }
                             String address_board4DB = crossCityList1.get(i).getBreakout_point();
                             net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
                             //车主目的地
                             String city1 = jsonObject.get("city").toString();
                             //车主目的地code
-                            int code1 = crossCityList1.get(i).getDestination_city_code();
+                            String codeString1 = crossCityList1.get(i).getDestination_address_code() + "";
+                            int code1 = Integer.parseInt(codeString1.substring(0, 4));
                             //记录条数
-                            String countWhere = " where destination_city_code = " + code1;
-                            int cityCount1 = appDB.getCount("pc_passenger_publish_info", countWhere);
+                            String countWhere = " where is_enable =1 and user_id != " + user_id + " and departure_time >'" + current_time + "' and left(destination_address_code,4) = " + code1 + " and left(departure_address_code,4) = " + adCode;
+                            int cityCount1 = appDB.getCount("pc_driver_publish_info", countWhere);
                             if (city1.contains("省")) {
                                 city1 = city1.substring(city1.indexOf("省") + 1, city1.indexOf("市"));
                             }
@@ -127,6 +128,14 @@ public class NearByOwnerOrPassengerController {
                             cityJson1.put("city", city1);
                             cityJson1.put("code", code1);
                             cityJson1.put("count", cityCount1);
+                            String city4JSONObject = "";
+                            for (int j = 0; j < jsonArray1.size(); j++) {
+                                String jsonString4Array = jsonArray1.getString(j);
+                                city4JSONObject = JSONObject.parseObject(jsonString4Array).get("city").toString();
+                            }
+                            if (city1.equals(city4JSONObject)) {
+                                continue;
+                            }
                             jsonArray1.add(cityJson1);
                         }
                     }
@@ -141,7 +150,7 @@ public class NearByOwnerOrPassengerController {
                     //乘客附近的车主列表
                     List<DriverAndCar> nearByOwenrList1 = new ArrayList();
                     List<DriverAndCar> nearByOwenrList2 = new ArrayList();
-                    where = " where is_enable =1 and departure_time > '" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit 1000";
+                    where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit 1000";
                     owenrList = appDB.getOwenrList1(where);
                     for (int i = 0; i < owenrList.size(); i++) {
                         //移除本用户的车单
@@ -202,24 +211,20 @@ public class NearByOwnerOrPassengerController {
                 case "nearby_passenger":
                     List<CrossCity> crossCityList = new ArrayList<CrossCity>();
                     JSONArray jsonArray = new JSONArray();
-                    String whereCity = " where is_enable =1 and departure_time >'" + current_time + "' and departure_address_code like '" + Integer.parseInt(adCode) + "%' group by destination_address_code desc";
-                    crossCityList = appDB.getCrossCityList(whereCity);
+                    String whereCity = " where is_enable =1 and user_id != " + user_id + " and order_status=0 and departure_time >'" + current_time + "' and departure_address_code like '" + adCode + "%' group by destination_address_code desc";
+                    crossCityList = appDB.getCrossCityList1(whereCity);
                     if (crossCityList.size() > 0) {
                         for (int i = 0; i < crossCityList.size(); i++) {
-                            if (crossCityList.get(i).getUser_id() == user_id) {
-                                crossCityList.remove(i);
-                                i--;
-                                continue;
-                            }
                             String address_board4DB = crossCityList.get(i).getBreakout_point();
                             net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
                             //车主目的地
                             String city = jsonObject.get("city").toString();
                             //车主目的地code
-                            int code = crossCityList.get(i).getDestination_city_code();
+                            String codeString = crossCityList.get(i).getDestination_city_code() + "";
+                            int code = Integer.parseInt(codeString.substring(0, 4));
                             //记录条数
-                            String countWhere = " where destination_city_code = " + code;
-                            int cityCount = appDB.getCount("pc_driver_publish_info", countWhere);
+                            String countWhere = " where is_enable =1 and user_id != " + user_id + " and order_status=0 and departure_time >'" + current_time + "' and left(destination_city_code,4) = " + code + " and left(departure_address_code,4) = " + adCode;
+                            int cityCount = appDB.getCount("pc_passenger_publish_info", countWhere);
                             if (city.contains("省")) {
                                 city = city.substring(city.indexOf("省") + 1, city.indexOf("市"));
                             }
@@ -230,6 +235,15 @@ public class NearByOwnerOrPassengerController {
                             cityJson.put("city", city);
                             cityJson.put("code", code);
                             cityJson.put("count", cityCount);
+                            String city4JSONObject = "";
+                            for (int j = 0; j < jsonArray.size(); j++) {
+                                String jsonString4Array = jsonArray.getString(j);
+                                city4JSONObject = JSONObject.parseObject(jsonString4Array).get("city").toString();
+
+                            }
+                            if (city.equals(city4JSONObject)) {
+                                continue;
+                            }
                             jsonArray.add(cityJson);
                         }
                     }
@@ -482,10 +496,19 @@ public class NearByOwnerOrPassengerController {
             String token = request.getParameter("token");
             if (token != null && token.length() == 32) {
                 user_id = appDB.getIDByToken(token);
-                int adCode = Integer.parseInt(request.getParameter("adCode"));
+                int originadCode = 0;
+                int destinationadCode = 0;
+                try {
+                    originadCode = Integer.parseInt(request.getParameter("originadCode").substring(0, 4));
+                    destinationadCode = Integer.parseInt(request.getParameter("destinationadCode").substring(0, 4));
+                } catch (Exception e) {
+                    originadCode = 4101;
+                    destinationadCode = 4101;
+                }
+
                 String action = request.getParameter("action");
                 if (action.equals("passenger")) {
-                    String where = " where is_enable =1 and departure_time >'" + current_time + "' and destination_city_code = " + adCode + " order by departure_time desc limit " + page * size + "," + size;
+                    String where = " where is_enable =1 and departure_time >'" + current_time + "' and left(departure_city_code, 4)=" + originadCode + " and left(destination_address_code,4)= " + destinationadCode + " order by departure_time desc limit " + page * size + "," + size;
                     List<DriverAndCar> cityList = appDB.getOwenrList1(where);
                     if (cityList.size() > 0) {
                         for (int i = 0; i < cityList.size(); i++) {
@@ -505,7 +528,7 @@ public class NearByOwnerOrPassengerController {
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
                 } else if (action.equals("owner")) {
-                    String where = " and a.is_enable =1 and a.order_status=0 and a.departure_time >'" + current_time + "' and a.destination_city_code = " + adCode + " order by a.departure_time desc limit " + page * size + "," + size;
+                    String where = " and a.is_enable =1 and a.order_status=0 and a.departure_time >'" + current_time + "'  and left(departure_city_code, 4)=" + originadCode + " and left(destination_city_code,4)= " + destinationadCode + " order by a.departure_time desc limit " + page * size + "," + size;
                     List<PassengerOrder> passengerList = appDB.getPassengerList(where);
                     if (passengerList.size() > 0) {
                         for (int i = 0; i < passengerList.size(); i++) {
@@ -519,12 +542,12 @@ public class NearByOwnerOrPassengerController {
                         result = AppJsonUtils.getNearByPassengerList(passengerList, page, size, count);
                         json = AppJsonUtils.returnSuccessJsonString(result, "乘客列表获取成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                    }else {
+                    } else {
                         result = AppJsonUtils.getNearByPassengerList(passengerList, page, size, count);
                         json = AppJsonUtils.returnFailJsonString(result, "暂无信息！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
-                }else {
+                } else {
                     result.put("error_code", ErrorCode.getParameter_wrong());
                     json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
