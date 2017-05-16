@@ -273,6 +273,154 @@ public class PayOrderController {
         }
 
     }
+    /**
+     * 支付接口
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/api/app/wx_pay", method = RequestMethod.POST)
+    public ResponseEntity<String> WxPaySendData(HttpServletRequest request, HttpServletResponse response) {
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
+        JSONObject result = new JSONObject();
+        String json = "";
+        //乘客车单ID
+        String order_id = request.getParameter("order_id");
+        String pay_type = request.getParameter("pay_type");
+//        String openId = "oTnCRwHGAGy4it3gYh4hpR6t7olk";
+        String code = request.getParameter("code");
+        String openId ="";
+        if(null!=code){
+            openId = PayConfigUtils.getOpenId(code);
+        }
+//        String openId ="oTnCRwK_yv9TvZ0sf_Ch1CTT6plI";
+        String body = "拼车费用";
+        String description = "拼车费用";
+        PassengerOrder passengerOrder;
+        if (order_id != null && !order_id.isEmpty()) {
+            String where = " where a._id=" + order_id + "  and a.is_enable=1 ";
+            List<PassengerOrder> passengerOrderList = appDB.getPassengerDepartureInfo(where);
+            if (passengerOrderList.size() > 0) {
+                passengerOrder = passengerOrderList.get(0);
+            } else {
+                json = AppJsonUtils.returnFailJsonString(result, "订单已失效！");
+                return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+            }
+        } else {
+            json = AppJsonUtils.returnFailJsonString(result, "参数错误！");
+            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+        }
+        if (pay_type != null && !pay_type.isEmpty()) {
+            String now_ip = Utils.getIP(request);
+            String nonce_str = Utils.getCharAndNum(32);
+            double inputFee = 0.1;
+            inputFee = passengerOrder.getPay_money() * 100;
+            int inputIntFee = (int) inputFee;
+            String total_fee = inputIntFee + "";
+            String prepay_id = null;
+            Map<String, String> paraMap = new HashMap<>();
+            paraMap.put("appid", PayConfigUtils.getWx_web_app_id());
+            paraMap.put("attach", description);
+            paraMap.put("body", body);
+            paraMap.put("mch_id", PayConfigUtils.getWx_web_mch_id());
+            paraMap.put("nonce_str", nonce_str);
+            paraMap.put("openid", openId);
+            paraMap.put("out_trade_no", passengerOrder.getPay_num());
+            paraMap.put("spbill_create_ip", now_ip);
+            paraMap.put("total_fee", total_fee);
+            paraMap.put("trade_type", "JSAPI");
+            paraMap.put("notify_url", PayConfigUtils.getWx_pay_web_notify_url());
+            List<String> keys = new ArrayList<>(paraMap.keySet());
+            Collections.sort(keys);
+            StringBuilder authInfo = new StringBuilder();
+            for (int i = 0; i < keys.size() - 1; i++) {
+                String value = paraMap.get(keys.get(i));
+                authInfo.append(keys.get(i) + "=" + value + "&");
+            }
+            authInfo.append(keys.get(keys.size() - 1) + "=" + paraMap.get(keys.get(keys.size() - 1)));
+            String stringA = authInfo.toString() + "&key=" + PayConfigUtils.getWx_web_mch_secret_key();
+            System.out.println(stringA);
+            String sign = Utils.encode("MD5", stringA).toUpperCase();
+            String trade_type = "JSAPI";
+            //封装xml
+            String paras ="<xml>\n" +
+                    "<appid>"+PayConfigUtils.getWx_web_app_id()+"</appid>\n"+
+                    "<mch_id>"+PayConfigUtils.getWx_web_mch_id()+"</mch_id>\n"+
+                    "<nonce_str>"+nonce_str+"</nonce_str>\n"+
+                    "<sign>"+sign+"</sign>\n"+
+                    "<body><![CDATA["+body+"]]></body>\n"+
+                    "<attach>"+description+"</attach>\n"+
+                    "<out_trade_no>"+passengerOrder.getPay_num()+"</out_trade_no>\n"+
+                    "<total_fee>"+total_fee+"</total_fee>\n"+
+                    "<spbill_create_ip>"+now_ip+"</spbill_create_ip>\n"+
+                    "<notify_url>"+PayConfigUtils.getWx_pay_web_notify_url()+"</notify_url>\n"+
+                    "<trade_type>"+trade_type+"</trade_type>\n"+
+                    "<openid>"+openId+"</openid>\n"+
+                    "</xml>";
+            try {
+                String content = senPost(paras);
+                if (content != null) {
+                    prepay_id = Utils.readStringXml(content);
+                }
+                if (prepay_id != null) {
+                    String current_noncestr = Utils.getCharAndNum(32);
+                    String current_sign = null;
+                    long current_timestamp = System.currentTimeMillis() / 1000;
+                    JSONObject signn= new JSONObject();
+                    signn.put("appid", PayConfigUtils.getWx_web_app_id());
+                    signn.put("partnerid", PayConfigUtils.getWx_web_mch_id());
+                    signn.put("prepayid", prepay_id);
+                    signn.put("package", "Sign=WXPay");
+                    signn.put("noncestr", current_noncestr);
+                    signn.put("timestamp", current_timestamp);
+                    //加密算法
+                    String nowStringA = "appid=" + PayConfigUtils.getWx_web_app_id() + "&noncestr=" + current_noncestr + "&package=Sign=WXPay&partnerid=" + PayConfigUtils.getWx_web_mch_id() + "&prepayid=" + prepay_id + "&timestamp=" + current_timestamp + "&key=" + PayConfigUtils.getWx_web_app_secret_key();
+                    current_sign = Utils.encode("MD5", nowStringA).toUpperCase();
+                    signn.put("sign", current_sign);
+
+                    SortedMap<String, String> finalpackage = new TreeMap<String, String>();
+                    String timeStamp =String.valueOf(System.currentTimeMillis() / 1000);
+                    String packages = "prepay_id="+prepay_id;;//订单详情扩展字符串
+                    finalpackage.put("appId", PayConfigUtils.getWx_web_app_id());//公众号appid
+                    finalpackage.put("timeStamp", timeStamp);
+                    finalpackage.put("nonceStr", current_noncestr); //随机数
+                    finalpackage.put("package", packages);
+                    finalpackage.put("signType", "MD5");//签名方式
+                    StringBuilder finals = new StringBuilder();
+                    List<String> likes = new ArrayList<>(finalpackage.keySet());
+                    Collections.sort(likes);
+                    for (int i = 0; i < likes.size() - 1; i++) {
+                        String value = finalpackage.get(likes.get(i));
+                        finals.append(likes.get(i) + "=" + value + "&");
+                    }
+                    finals.append(likes.get(likes.size() - 1) + "=" + finalpackage.get(likes.get(likes.size() - 1)));
+                    String stringB = finals.toString() + "&key=" + PayConfigUtils.getWx_web_mch_secret_key();
+                    System.out.println(stringB);
+                    String finalsign = Utils.encode("MD5", stringB).toUpperCase();
+//                        result.put("openid",openId);
+//                        result.put("prepayid", prepay_id);
+                    result.put("appId", PayConfigUtils.getWx_web_app_id());
+                    result.put("timeStamp", current_timestamp);
+                    result.put("nonceStr", current_noncestr);
+                    result.put("packages", packages);
+                    result.put("paySign", finalsign);
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+
+            return new ResponseEntity<>(result.toString(), responseHeaders, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(result.toString(), responseHeaders, HttpStatus.BAD_REQUEST);
+    }
 
     @ResponseBody
     @RequestMapping(value = "/pay/result", method = RequestMethod.POST)

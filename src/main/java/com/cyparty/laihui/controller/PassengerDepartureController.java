@@ -337,7 +337,9 @@ public class PassengerDepartureController {
                                 order1.setRemark(remark);
                                 appDB.createOrderReview(order1);
                                 //乘客车单ID
+                                List<Order> orders =appDB.getOrderReview(" where order_id ="+id,0);
                                 result.put("car_id", id);
+                                result.put("order_id",orders.get(0).get_id());
                                 result.put("boarding_point", boarding_point);
                                 result.put("breakout_point", breakout_point);
                                 result.put("departure_time", start_time);

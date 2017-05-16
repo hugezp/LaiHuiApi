@@ -1,5 +1,8 @@
 package com.cyparty.laihui.utilities;
 
+
+import net.sf.json.JSONObject;
+
 /**
  * Created by zhu on 2016/12/27.
  */
@@ -17,6 +20,11 @@ public class PayConfigUtils {
     private final static String wx_laihui_app_id = "wx60adfb5f380811b7";//公众号id
     private final static String wx_laihui_mch_id = "1463727102";//商户号
     private final static String wx_laihui_app_secret_key = "2bfca107a5dac789f2fdhg1ca5ee7695";
+    private final static String wx_web_app_id = "wxd6d79c4ca0fef838";//公众号id
+    private final static String wx_web_mch_id = "1439584802";//商户号
+    private final static String wx_web_app_secret_key = "bace843875970ae9a941dcb6dbe16e6d";
+    private final static String wx_web_mch_secret_key = "bace843875970ae9a941dcb6dbe16edd";
+    private final static String wx_pay_web_notify_url ="https://api.laihuipinche.com/wx_pays/notify";
     //锦程百贷微信支付配置
     private final static String wx_app_id="wx6527ab831ef9f8f0";//公众号id
     private final static String wx_mch_id="1409441702";//商户号
@@ -78,8 +86,35 @@ public class PayConfigUtils {
     public static String getWx_laihui_app_secret_key() {
         return wx_laihui_app_secret_key;
     }
-
+    public static String getWx_web_mch_secret_key() {
+        return wx_web_mch_secret_key;
+    }
+    public static String getWx_pay_web_notify_url() {
+        return wx_pay_web_notify_url;
+    }
+    public static String getWx_web_app_secret_key() {
+        return wx_web_app_secret_key;
+    }
+    public static String getWx_web_app_id() {
+        return wx_web_app_id;
+    }
+    public static String getWx_web_mch_id() {
+        return wx_web_mch_id;
+    }
     public static String getWx_pay_laihui_notify_url() {
         return wx_pay_laihui_notify_url;
+    }
+    public static  String getOpenId(String code){
+        String openId ="";
+        String URL="";
+        if(null!=code){
+            URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+getWx_laihui_app_id()+"&secret="+getWx_laihui_app_secret_key()+"&code="+code+"&grant_type=authorization_code";
+            JSONObject result = CommonUtil.httpsRequest(URL, "GET", null);
+            if (null != result) {
+                openId = result.getString("openid");
+//                access_token = result.getString("access_token");
+            }
+        }
+        return openId;
     }
 }
