@@ -591,7 +591,7 @@ public class DriverDepartureController {
                     }
                     result.put("error_code", ErrorCode.getParameter_wrong());
                     json = AppJsonUtils.returnFailJsonString(result, "参数有误！");
-                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                    return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
                 //车主结束行程
                 case "driver_confirm":
                     if (user_id > 0) {
@@ -702,7 +702,7 @@ public class DriverDepartureController {
                             }
                             result.put("error_code", ErrorCode.getBooking_order_is_not_existing());
                             json = AppJsonUtils.returnFailJsonString(result, "参数错误！");
-                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
                         } else {
                             result.put("error_code", ErrorCode.getParameter_wrong());
                             json = AppJsonUtils.returnFailJsonString(result, "乘客已取消该订单或者订单已失效！");
