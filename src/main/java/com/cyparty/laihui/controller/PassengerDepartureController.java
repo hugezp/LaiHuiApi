@@ -414,12 +414,12 @@ public class PassengerDepartureController {
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
                             json = AppJsonUtils.returnFailJsonString(result, "推送发送失败！");
-                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+                            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                     } else {
                         result.put("error_code", ErrorCode.getToken_expired());
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
-                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
+                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
 
                     //根据出发地或者目的地匹配

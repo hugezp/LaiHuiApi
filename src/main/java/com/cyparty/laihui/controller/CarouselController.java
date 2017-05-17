@@ -50,11 +50,11 @@ public class CarouselController {
                     return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
-            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
-            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
     }
 
