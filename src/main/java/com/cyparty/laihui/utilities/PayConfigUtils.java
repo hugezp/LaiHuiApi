@@ -108,7 +108,7 @@ public class PayConfigUtils {
         String openId ="";
         String URL="";
         if(null!=code){
-            URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+getWx_laihui_app_id()+"&secret="+getWx_laihui_app_secret_key()+"&code="+code+"&grant_type=authorization_code";
+            URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+getWx_web_app_id()+"&secret="+getWx_web_app_secret_key()+"&code="+code+"&grant_type=authorization_code";
             JSONObject result = CommonUtil.httpsRequest(URL, "GET", null);
             if (null != result) {
                 openId = result.getString("openid");
