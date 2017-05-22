@@ -505,7 +505,7 @@ public class AppDB {
 
     //查询获取当前推广员的推广码
     public List<Popularize> getPopular(int user_id) {
-        String SQL = "select * from pc_popularize where popularize_id =" + user_id;
+        String SQL = "select * from pc_popularize where popularize_id =" + user_id+" and is_enable=1";
         List<Popularize> popularizeList = jdbcTemplateObject.query(SQL, new PopularizeMapper());
         return popularizeList;
     }

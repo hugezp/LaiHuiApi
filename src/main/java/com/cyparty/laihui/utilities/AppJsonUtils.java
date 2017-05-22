@@ -442,7 +442,7 @@ public class AppJsonUtils {
             driverObject.put("name", name);
             driverObject.put("avatar", departure.getUser_avatar());
             driverObject.put("mobile", departure.getMobile());
-
+            driverObject.put("user_id",departure.getUser_id());
             //统计全部拼车次数
            /* String where_count=" where user_id ="+departure.getUser_id()+" and is_enable=1";
             int departure_total =appDB.getCount("pc_driver_publish_info",where_count);//发车次数
