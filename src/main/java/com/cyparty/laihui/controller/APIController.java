@@ -183,6 +183,7 @@ public class APIController {
     public ResponseEntity<String> pop_up_ad(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         try {
@@ -202,10 +203,10 @@ public class APIController {
                 case "show_list":
                     result = AppJsonUtils.getPopUpAdJson(appDB, 1);
                     if (result.isEmpty()) {
-                        json = AppJsonUtils.returnFailJsonString(result, "沒有广告");
+                        json = AppJsonUtils.returnFailJsonString(result, "暂无数据");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        json = AppJsonUtils.returnSuccessJsonString(result, "弹出广告获取成功");
+                        json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
             }

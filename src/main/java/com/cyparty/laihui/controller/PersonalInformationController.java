@@ -32,7 +32,7 @@ import java.util.List;
  */
 @Controller
 @ResponseBody
-@RequestMapping(value = "/api/app",method = RequestMethod.POST)
+@RequestMapping(value = "/api/app", method = RequestMethod.POST)
 public class PersonalInformationController {
 
     @Autowired
@@ -72,7 +72,7 @@ public class PersonalInformationController {
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
         result = AppJsonUtils.getUserInfo(appDB, user_id);
-        result.put("personal_info", AppJsonUtils.getPersonalInfo(appDB,user));
+        result.put("personal_info", AppJsonUtils.getPersonalInfo(appDB, user));
         json = AppJsonUtils.returnSuccessJsonString(result, "个人信息获取成功");
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
@@ -91,17 +91,17 @@ public class PersonalInformationController {
         JSONObject result = new JSONObject();
         String token = null;
         String json = "";
-        String where ="";
-        String  user_name = request.getParameter("user_name");
-        String  user_sex = request.getParameter("user_sex");
-        String  user_signature = request.getParameter("user_signature");
-        String  user_birthday = request.getParameter("user_birthday");
-        String  user_home = request.getParameter("user_home");
-        String  user_live_city = request.getParameter("user_live_city");
-        String  user_company = request.getParameter("user_company");
-        String  delivery_address =request.getParameter("deliveryAddress");
+        String where = "";
+        String user_name = request.getParameter("user_name");
+        String user_sex = request.getParameter("user_sex");
+        String user_signature = request.getParameter("user_signature");
+        String user_birthday = request.getParameter("user_birthday");
+        String user_home = request.getParameter("user_home");
+        String user_live_city = request.getParameter("user_live_city");
+        String user_company = request.getParameter("user_company");
+        String delivery_address = request.getParameter("deliveryAddress");
         Date date = new Date();
-        if (user_birthday!=null){
+        if (user_birthday != null) {
             try {
                 date = new SimpleDateFormat("yyyy-MM-dd").parse(user_birthday);
             } catch (ParseException e) {
@@ -118,40 +118,40 @@ public class PersonalInformationController {
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
-           }else {
+        } else {
             result.put("error_code", ErrorCode.getToken_expired());
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
-        if (user_id>0){
-            if (user_name!=null){
-                where = " set user_name='"+user_name+"'";
-            }else if (user_sex!=null){
-                where = " set sex='"+user_sex+"'";
-            }else if (user_signature!=null){
-                where = " set signature='"+user_signature+"'";
-            }else if (user_birthday!=null){
-                where = " set birthday='"+user_birthday+"'";
-            }else if (user_home!=null){
-                where = " set home='"+user_home+"'";
-            }else if (user_live_city!=null){
-                where = " set live_city='"+user_live_city+"'";
-            }else if (user_company != null){
-                where = " set company='"+user_company+"'";
-            }else if(delivery_address != null){
-                where = " set delivery_address='"+delivery_address+"'";
+        if (user_id > 0) {
+            if (user_name != null) {
+                where = " set user_name='" + user_name + "'";
+            } else if (user_sex != null) {
+                where = " set sex='" + user_sex + "'";
+            } else if (user_signature != null) {
+                where = " set signature='" + user_signature + "'";
+            } else if (user_birthday != null) {
+                where = " set birthday='" + user_birthday + "'";
+            } else if (user_home != null) {
+                where = " set home='" + user_home + "'";
+            } else if (user_live_city != null) {
+                where = " set live_city='" + user_live_city + "'";
+            } else if (user_company != null) {
+                where = " set company='" + user_company + "'";
+            } else if (delivery_address != null) {
+                where = " set delivery_address='" + delivery_address + "'";
             }
-            where = where +" where _id = "+user_id;
-            boolean is_success = appDB.update("pc_user",where);
-            if (is_success){
-                json = AppJsonUtils.returnSuccessJsonString(result,"个人资料修改成功！");
+            where = where + " where _id = " + user_id;
+            boolean is_success = appDB.update("pc_user", where);
+            if (is_success) {
+                json = AppJsonUtils.returnSuccessJsonString(result, "个人资料修改成功！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-            }else {
+            } else {
                 json = AppJsonUtils.returnFailJsonString(result, "个人资料修改失败！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
 
-        }else {
+        } else {
             result.put("error_code", ErrorCode.getToken_expired());
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);

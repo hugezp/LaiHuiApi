@@ -40,7 +40,7 @@ public class JpushClientUtil {
      * @param extrasparam 扩展字段
      * @return 0推送失败，1推送成功
      */
-    public  int sendToRegistrationId( String type,String alias,String notification_title, String msg_title, String msg_content, String extrasparam) {
+    public  static int sendToRegistrationId( String type,String alias,String notification_title, String msg_title, String msg_content, String extrasparam) {
         int result = 0;
         try {
             PushPayload pushPayload= JpushClientUtil.buildPushObject_all_alias_alertWithTitle(type,alias,notification_title,msg_title,msg_content,extrasparam);
@@ -346,7 +346,8 @@ public class JpushClientUtil {
                 .build();
     }
     public static void main(String[] args){
-        if(jpushClientUtil.sendToRegistrationId("11","15516015893","测试数据","aaa","this is a ios Dev test","")==1){
+
+        if(JpushClientUtil.sendToRegistrationId("11","18538191908","测试数据","aaa","this is a ios Dev test","")==1){
             System.out.println("success");
         }
 

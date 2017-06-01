@@ -555,7 +555,7 @@ public class AppJsonUtils {
     }
 
     /**
-     * 寻找匹配乘客模块
+     * 41匹配乘客模块
      */
     public static JSONObject getPassengerDepartureList(AppDB appDB, int page, int size, int departure_address_code, int destination_address_code, int id, double departure_lon, double departure_lat, double destinat_lon, double destinat_lat) {
         JSONObject result_json = new JSONObject();
@@ -1832,7 +1832,6 @@ public class AppJsonUtils {
             if (popularize.getLevel() == 0) {
                 //专业代理员级别 0级最高 5级最低
                 level = 0;
-
             }
         }
         personal_data.put("level", level);

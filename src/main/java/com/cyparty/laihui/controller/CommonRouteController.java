@@ -235,7 +235,7 @@ public class CommonRouteController {
         double end_point_distance = 0.0;
         //查询范围
         double query_distance = ConfigUtils.getQuery_distance();
-        String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
+        String current_time = Utils.getCurrentTimeSubOrAddHour(0);
         try {
             String action = request.getParameter("action");
             int page = 0;
@@ -248,7 +248,7 @@ public class CommonRouteController {
                     e.printStackTrace();
                 }
             }
-            if (request.getParameter("size") != null && !request.getParameter("size").trim().equals("")) {
+             if (request.getParameter("size") != null && !request.getParameter("size").trim().equals("")) {
                 try {
                     size = Integer.parseInt(request.getParameter("size"));
                 } catch (NumberFormatException e) {
@@ -297,7 +297,7 @@ public class CommonRouteController {
                     List<DriverAndCar> owenrList = null;
                     //乘客附近的车主列表
                     List<DriverAndCar> nearByOwenrList = new ArrayList();
-                    String where = " where is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit " + offset + "," + size;
+                    String where = " where is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
                     owenrList = appDB.getOwenrList1(where);
                     for (int i = 0; i < owenrList.size(); i++) {
                         if (owenrList.get(i).getUser_id() == user_id) {
@@ -346,7 +346,7 @@ public class CommonRouteController {
                     List<PassengerOrder> passengerList = null;
                     //乘客附近的车主列表
                     List<PassengerOrder> nearByPassengerList = new ArrayList();
-                    where = " and is_enable =1 and order_status=0 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit " + offset + "," + size;
+                    where = " and is_enable =1 and order_status=0 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
                     passengerList = appDB.getPassengerList(where);
                     for (int i = 0; i < passengerList.size(); i++) {
                         if (passengerList.get(i).getUser_id() == user_id) {
