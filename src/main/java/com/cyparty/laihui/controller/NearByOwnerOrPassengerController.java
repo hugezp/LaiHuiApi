@@ -54,7 +54,7 @@ public class NearByOwnerOrPassengerController {
         User user = new User();
         int adCode = 0;
         //获取系统时间
-        String current_time = Utils.getCurrentTimeSubOrAddHour(0);
+        String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         //附近车主（乘客）搜索范围
         double query_distance = ConfigUtils.getQuery_distance();
         try {
@@ -104,7 +104,7 @@ public class NearByOwnerOrPassengerController {
                 case "nearby_owner":
                     List<CrossCity> crossCityList1 = new ArrayList<CrossCity>();
                     JSONArray jsonArray1 = new JSONArray();
-                    String whereCity1 = " where is_enable =1 and user_id != " + user_id + " and departure_time >'" + current_time + "' and departure_address_code like '" + adCode + "%' group by destination_address_code asc";
+                    String whereCity1 = " where is_enable =1 and user_id != " + user_id + " and departure_time >'" + current_time + "' and departure_address_code like '" + adCode + "%' group by destination_address_code desc";
                     crossCityList1 = appDB.getCrossCityList(whereCity1);
                     if (crossCityList1.size() > 0) {
                         for (int i = 0; i < crossCityList1.size(); i++) {
@@ -150,7 +150,7 @@ public class NearByOwnerOrPassengerController {
                     //乘客附近的车主列表
                     List<DriverAndCar> nearByOwenrList1 = new ArrayList();
                     List<DriverAndCar> nearByOwenrList2 = new ArrayList();
-                    where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1000";
+                    where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit 1000";
                     owenrList = appDB.getOwenrList1(where);
                     for (int i = 0; i < owenrList.size(); i++) {
                         //移除本用户的车单
@@ -173,7 +173,6 @@ public class NearByOwnerOrPassengerController {
                         distance = RangeUtils.getDistance(p_latitude, p_longitude, o_latitude, o_longitude);
                         if (distance <= query_distance) {
                             nearByOwenrList1.add(owenrList.get(i));
-
                         }
                     }
                     if (nearByOwenrList1.size() != 0) {
@@ -189,6 +188,7 @@ public class NearByOwnerOrPassengerController {
                             }
                         }
                         result = AppJsonUtils.getNearByOwnerList(nearByOwenrList2, page, size, count, appDB);
+                        result.put("commonRoute",newCommon(request,user_id));
                         result.put("active", AppJsonUtils.active(appDB));
                         result.put("order", AppJsonUtils.order(appDB, user_id, 0, "passenger"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
@@ -199,6 +199,7 @@ public class NearByOwnerOrPassengerController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近车主获取成功");
                     } else {
                         result = AppJsonUtils.getNearByOwnerList(nearByOwenrList2, page, size, count, appDB);
+                        result.put("commonRoute",newCommon(request,user_id));
                         result.put("active", AppJsonUtils.active(appDB));
                         result.put("order", AppJsonUtils.order(appDB, user_id, 0, "passenger"));
                         result.put("message", AppJsonUtils.isNewMessage(appDB, user_id));
@@ -212,7 +213,7 @@ public class NearByOwnerOrPassengerController {
                 case "nearby_passenger":
                     List<CrossCity> crossCityList = new ArrayList<CrossCity>();
                     JSONArray jsonArray = new JSONArray();
-                    String whereCity = " where is_enable =1 and user_id != " + user_id + " and order_status=0 and departure_time >'" + current_time + "' and departure_address_code like '" + adCode + "%' group by destination_address_code asc";
+                    String whereCity = " where is_enable =1 and user_id != " + user_id + " and order_status=0 and departure_time >'" + current_time + "' and departure_address_code like '" + adCode + "%' group by destination_address_code desc";
                     crossCityList = appDB.getCrossCityList1(whereCity);
                     if (crossCityList.size() > 0) {
                         for (int i = 0; i < crossCityList.size(); i++) {
@@ -256,7 +257,7 @@ public class NearByOwnerOrPassengerController {
                     //乘客附近的车主列表
                     List<PassengerOrder> nearByPassengerList = new ArrayList();
                     List<PassengerOrder> nearByPassengerList2 = new ArrayList();
-                    where = " and is_enable =1 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1000";
+                    where = " and is_enable =1 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit 1000";
                     passengerList = appDB.getPassengerList(where);
                     for (int i = 0; i < passengerList.size(); i++) {
                         if (passengerList.get(i).getUser_id() == user_id) {
@@ -273,7 +274,6 @@ public class NearByOwnerOrPassengerController {
                         distance = RangeUtils.getDistance(o_lat, o_lon, p_lat, p_lon);
                         if (distance <= query_distance) {
                             nearByPassengerList.add(passengerList.get(i));
-
                         }
                     }
                     if (nearByPassengerList.size() != 0) {
@@ -339,7 +339,7 @@ public class NearByOwnerOrPassengerController {
         int user_id = 0;
         //乘客与车主的距离
         double distance = 0.0;
-        String current_time = Utils.getCurrentTimeSubOrAddHour(0);
+        String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         //设定附近的定义范围
         double query_distance = ConfigUtils.getQuery_distance();
         try {
@@ -384,7 +384,7 @@ public class NearByOwnerOrPassengerController {
 
                     //"latitude > '.$lat.'-1 and latitude < '.$lat.'+1 and longitude > '.$lon.'-1 and longitude < '.$lon.'+1 order by ACOS(SIN(('.$lat.' * 3.1415) / 180 ) *SIN((latitude * 3.1415) / 180 ) +COS(('.$lat.' * 3.1415) / 180 ) * COS((latitude * 3.1415) / 180 ) *COS(('.$lon.'* 3.1415) / 180 - (longitude * 3.1415) / 180 ) ) * 6380 asc limit 10';
 
-                    where = " where is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
+                    where = " where is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit " + offset + "," + size;
                     owenrList = appDB.getOwenrList1(where);
                     for (int i = 0; i < owenrList.size(); i++) {
                         if (owenrList.get(i).getUser_id() == user_id) {
@@ -427,9 +427,7 @@ public class NearByOwnerOrPassengerController {
                     List<PassengerOrder> passengerList = null;
                     //乘客附近的车主列表
                     List<PassengerOrder> nearByPassengerList = new ArrayList();
-
-
-                    where = " and is_enable =1 and order_status=0 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
+                    where = " and is_enable =1 and order_status=0 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit " + offset + "," + size;
                     passengerList = appDB.getPassengerList(where);
                     for (int i = 0; i < passengerList.size(); i++) {
                         if (passengerList.get(i).getUser_id() == user_id) {
@@ -477,7 +475,7 @@ public class NearByOwnerOrPassengerController {
         String json = "";
         int user_id = 0;
         int count = 0;
-        String current_time = Utils.getCurrentTimeSubOrAddHour(0);
+        String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         try {
             int page = 0;
             int size = 10;
@@ -512,7 +510,7 @@ public class NearByOwnerOrPassengerController {
 
                 String action = request.getParameter("action");
                 if (action.equals("passenger")) {
-                    String where = " where is_enable =1 and departure_time >'" + current_time + "' and left(departure_city_code, 4)=" + originadCode + " and left(destination_address_code,4)= " + destinationadCode + " order by departure_time asc limit " + page * size + "," + size;
+                    String where = " where is_enable =1 and departure_time >'" + current_time + "' and left(departure_city_code, 4)=" + originadCode + " and left(destination_address_code,4)= " + destinationadCode + " order by departure_time desc limit " + page * size + "," + size;
                     List<DriverAndCar> cityList = appDB.getOwenrList1(where);
                     if (cityList.size() > 0) {
                         for (int i = 0; i < cityList.size(); i++) {
@@ -532,7 +530,7 @@ public class NearByOwnerOrPassengerController {
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
                 } else if (action.equals("owner")) {
-                    String where = " and a.is_enable =1 and a.order_status=0 and a.departure_time >'" + current_time + "'  and left(departure_city_code, 4)=" + originadCode + " and left(destination_city_code,4)= " + destinationadCode + " order by a.departure_time asc limit " + page * size + "," + size;
+                    String where = " and a.is_enable =1 and a.order_status=0 and a.departure_time >'" + current_time + "'  and left(departure_city_code, 4)=" + originadCode + " and left(destination_city_code,4)= " + destinationadCode + " order by a.departure_time desc limit " + page * size + "," + size;
                     List<PassengerOrder> passengerList = appDB.getPassengerList(where);
                     if (passengerList.size() > 0) {
                         for (int i = 0; i < passengerList.size(); i++) {
@@ -567,5 +565,59 @@ public class NearByOwnerOrPassengerController {
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /**
+     * 常用路线匹配最新的一个车主信息
+     */
+    private JSONObject newCommon(HttpServletRequest request,int user_id){
+        JSONObject jsonResult = new JSONObject();
+        String json = "";
+        double query_distance = ConfigUtils.getQuery_distance();
+        String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
+        double departure_lon = Double.parseDouble(request.getParameter("departure_lon"));
+        double departure_lat = Double.parseDouble(request.getParameter("departure_lat"));
+        double destinat_lon = Double.parseDouble(request.getParameter("destinat_lon"));
+        double destinat_lat = Double.parseDouble(request.getParameter("destinat_lat"));
+        //符合要求的车主列表
+        List<DriverAndCar> owenrList = null;
+        //乘客附近的车主列表
+        List<DriverAndCar> nearByOwenrList = new ArrayList();
+        String where = " where is_enable =1 and departure_time>'" + current_time + "' order by create_time desc limit 10";
+        owenrList = appDB.getOwenrList1(where);
+        for (int i = 0; i < owenrList.size(); i++) {
+            if (owenrList.get(i).getUser_id() == user_id) {
+                owenrList.remove(i);
+                i--;
+                continue;
+            }
+            String address_board4DB = owenrList.get(i).getBoarding_point();
+            net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
+            double o_departure_lon = Double.parseDouble("".equals(jsonObject.get("longitude").toString()) ? "-256.18" : jsonObject.get("longitude").toString());
+            double o_departure_lat = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "-256.18" : jsonObject.get("latitude").toString());
+
+            address_board4DB = owenrList.get(i).getBreakout_point();
+            jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
+            double o_destinat_lon = Double.parseDouble("".equals(jsonObject.get("longitude").toString()) ? "-256.18" : jsonObject.get("longitude").toString());
+            double o_destinat_lat = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "-256.18" : jsonObject.get("latitude").toString());
+
+            //通过经纬度获取距离
+            double my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
+            double start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);
+            double end_point_distance = RangeUtils.getDistance(destinat_lat, destinat_lon, o_destinat_lat, o_destinat_lon);
+            String suitability = RangeUtils.getSuitability(my_distance,start_point_distance,end_point_distance);
+            if (start_point_distance <= query_distance && end_point_distance <= query_distance) {
+                owenrList.get(i).setSuitability(suitability);
+                owenrList.get(i).setStart_point_distance(start_point_distance);
+                owenrList.get(i).setEnd_point_distance(end_point_distance);
+                nearByOwenrList.add(owenrList.get(i));
+            }
+        }
+        if (nearByOwenrList.size() != 0) {
+            List<DriverAndCar> nearByOwenrList1 = new ArrayList();
+            nearByOwenrList1.add(nearByOwenrList.get(0));
+            jsonResult = AppJsonUtils.getNearByOwnerList(nearByOwenrList1, 0, 1, 1, appDB);
+        }
+        return jsonResult;
     }
 }
