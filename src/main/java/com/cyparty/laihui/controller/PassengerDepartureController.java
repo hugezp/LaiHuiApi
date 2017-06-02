@@ -95,15 +95,8 @@ public class PassengerDepartureController {
 
             }
             double last_price = start_price + price*person;
-            //测试
-//            double  price =0.01;
-//            double last_price =0.01;
-
-
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
-//            resultObject.put("price",0.01);
-//            resultObject.put("total_price",0.01);
             resultObject.put("price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             resultObject.put("total_price", new BigDecimal(last_price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             resultObject.put("cost_time", duration / 60 + "分钟");
@@ -729,7 +722,7 @@ public class PassengerDepartureController {
                             //将邀请消息推送给车主
                             notifyPush.pinCheNotify("28", driver_mobile, content, grab_id, passengerData, confirm_time);
 
-                            json = AppJsonUtils.returnSuccessJsonString(result, "邀请抢单成功！");
+                            json = AppJsonUtils.returnSuccessJsonString(result, "您已成功邀请车主抢单！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
                             json = AppJsonUtils.returnFailJsonString(result, "邀请过于频繁，请稍后再试！");

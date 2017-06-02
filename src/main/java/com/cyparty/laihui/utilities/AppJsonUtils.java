@@ -1748,15 +1748,22 @@ public class AppJsonUtils {
 
     /**
      * 首页活动
-     *
-     * @param appDB
      * @return 封装的活动信息
      */
     public static JSONObject active(AppDB appDB) {
-        String where = " where _id = 1";
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("active", "邀好友，得奖励");
         jsonObject.put("url", "https://h5.laihuipinche.com/share_spread");
+        return jsonObject;
+    }
+    /**
+     * 首页活动图标数据
+     * @return 封装的活动信息
+     */
+    public static JSONObject activeIcon(AppDB appDB) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("active", "来回拼车");
+        jsonObject.put("url", "https://www.baidu.com");
         return jsonObject;
     }
 

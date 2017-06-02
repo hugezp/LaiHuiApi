@@ -140,7 +140,7 @@ public class GeetestController {
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
         String json = "";
-        result.put("sms_status",1);
+        result.put("sms_status",2);
         json = AppJsonUtils.returnSuccessJsonString(result,"获取状态成功");
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
