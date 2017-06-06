@@ -639,5 +639,11 @@ public class AppDB {
         List<CrossCity> crossCityList = jdbcTemplateObject.query(SQL, new CrossCityMapper());
         return crossCityList;
     }
+    //得到合作商家列表
+    public List<Partner> getPartnerList(String where) {
+        String SQL = "SELECT * From pc_partner" + where;
+        List<Partner> partnerList = jdbcTemplateObject.query(SQL, new PartnerMapper());
+        return partnerList;
+    }
 }
 

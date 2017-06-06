@@ -1475,7 +1475,24 @@ public class AppJsonUtils {
         result_json.put("slides", dataArray);
         return result_json;
     }
-
+    //得到合作方json
+    public static JSONObject getPartner(AppDB appDB) {
+        JSONObject result_json = new JSONObject();
+        JSONArray dataArray = new JSONArray();
+        String where = " where is_enable = 1";
+        int count = appDB.getCount("pc_partner",where);
+        List<Partner> partnerList = appDB.getPartnerList(where);
+        for (Partner partner:partnerList){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("partner_icon",partner.getPartnerIcon());
+            jsonObject.put("partner_icon_url",partner.getPartnerIconUrl());
+            jsonObject.put("partner_url",partner.getPartnerUrl());
+            dataArray.add(jsonObject);
+        }
+        result_json.put("data",dataArray);
+        result_json.put("count",count);
+        return result_json;
+    }
     //得到轮播图json
     public static JSONObject getPopUpAdJson(AppDB appDB, int type) {
         JSONObject result_json = new JSONObject();
@@ -1763,7 +1780,7 @@ public class AppJsonUtils {
     public static JSONObject activeIcon(AppDB appDB) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("active", "来回拼车");
-        jsonObject.put("url", "https://www.baidu.com");
+        jsonObject.put("url", "https://h5.laihuipinche.com/app/pinche_FQA");
         return jsonObject;
     }
 
@@ -1990,4 +2007,6 @@ public class AppJsonUtils {
         }
         return result;
     }
+
+
 }

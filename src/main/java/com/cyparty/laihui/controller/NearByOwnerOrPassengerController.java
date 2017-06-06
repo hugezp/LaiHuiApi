@@ -597,7 +597,7 @@ public class NearByOwnerOrPassengerController {
                 List<DriverAndCar> owenrList = null;
                 //乘客附近的车主列表
                 List<DriverAndCar> nearByOwenrList = new ArrayList();
-                where = " where is_enable =1 and departure_time>'" + current_time + "' order by create_time desc limit 20";
+                where = " where is_enable =1 and departure_time>'" + current_time + "' order by create_time desc limit 200";
                 owenrList = appDB.getOwenrList1(where);
                 for (int i = 0; i < owenrList.size(); i++) {
                     if (owenrList.get(i).getUser_id() == user_id) {
@@ -640,7 +640,7 @@ public class NearByOwnerOrPassengerController {
                 List<PassengerOrder> passengerList = null;
                 //乘客附近的车主列表
                 List<PassengerOrder> nearByPassengerList = new ArrayList();
-                where = " and is_enable =1 and order_status=0 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 20";
+                where = " and is_enable =1 and order_status=0 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 200";
                 passengerList = appDB.getPassengerList(where);
                 for (int i = 0; i < passengerList.size(); i++) {
                     if (passengerList.get(i).getUser_id() == user_id) {
