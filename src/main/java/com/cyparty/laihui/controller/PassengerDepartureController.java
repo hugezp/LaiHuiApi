@@ -230,6 +230,12 @@ public class PassengerDepartureController {
             int departure_city_code = 0;
             int destination_address_code = 0;
             int destination_city_code = 0;
+            String boarding_latitude = "";
+            String boarding_longitude = "";
+            String breakout_latitude = "";
+            String breakout_longitude = "";
+            int departure_code = 0;
+            int destination_code = 0;
             //发布车单
             switch (action) {
                 case "add":
@@ -267,9 +273,15 @@ public class PassengerDepartureController {
                                 JSONObject boardingObject = JSONObject.parseObject(boarding_point);
                                 departure_address_code = boardingObject.getIntValue("adCode");
                                 departure_city_code = Integer.parseInt((departure_address_code + "").substring(0, 4) + "00");
+                                boarding_latitude = boardingObject.getString("latitude");
+                                boarding_longitude = boardingObject.getString("longitude");
+                                departure_code = Integer.parseInt((departure_address_code + "").substring(0, 4));
                                 JSONObject breakoutObject = JSONObject.parseObject(breakout_point);
                                 destination_address_code = breakoutObject.getIntValue("adCode");
                                 destination_city_code = Integer.parseInt((destination_address_code + "").substring(0, 4) + "00");
+                                breakout_latitude = breakoutObject.getString("latitude");
+                                breakout_longitude = breakoutObject.getString("longitude");
+                                destination_code = Integer.parseInt((destination_address_code + "").substring(0, 4));
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 result.put("error_code", ErrorCode.getParameter_wrong());
@@ -292,6 +304,12 @@ public class PassengerDepartureController {
                             order.setDescription(description);
                             order.setOrder_type(0);
                             order.setRemark(remark);
+                            order.setBoarding_latitude(boarding_latitude);
+                            order.setBoarding_longitude(boarding_longitude);
+                            order.setBreakout_latitude(breakout_latitude);
+                            order.setBreakout_longitude(breakout_longitude);
+                            order.setDeparture_code(departure_code);
+                            order.setDestination_code(destination_code);
 
                             String trade_no = Utils.getTimestamp() + Utils.random(2);//15
                             order.setPay_num(trade_no);

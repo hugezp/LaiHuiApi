@@ -298,8 +298,8 @@ public class APIController {
             int start = (pageNo - 1) * pageSize;
             int end = pageSize;
             String code = content.substring(0, 4);
-            String where = "where p.is_enable = 1 and p.departure_time > '"+Utils.getCurrentTimeSubOrAddHour(-3)+"' and (locate('"+code+
-                    "',p.departure_address_code) = 1 or locate('"+code+"',p.destination_address_code) = 1) order by p.create_time desc limit " + start + "," + end;
+            String where = "where p.is_enable = 1 and p.departure_time > '" + Utils.getCurrentTimeSubOrAddHour(-3) + "' and (departure_code = " + code +
+                    " or destination_code = " + code + ") order by p.create_time desc limit " + start + "," + end;
             searchList = appDB.searchByContent(where);
             for (DriverPublishInfo passengerPublishInfo : searchList) {
                 if (passengerPublishInfo.getBreakout_point().contains(word)) {
@@ -336,7 +336,7 @@ public class APIController {
                 }
             }
             if (finalList.size() > 0) {
-                for (int i = 0;i<finalList.size();i++){
+                for (int i = 0; i < finalList.size(); i++) {
                     if (finalList.get(i).getCurrent_seats() == 0) {
                         finalList.remove(i);
                         i--;
@@ -345,12 +345,12 @@ public class APIController {
                 }
                 for (DriverPublishInfo dpiBean : finalList) {
                     JSONObject result = new JSONObject();
-                    result.put("mobile",dpiBean.getMobile());
-                    result.put("car_id",dpiBean.getR_id());
-                    result.put("price",dpiBean.getPrice());
+                    result.put("mobile", dpiBean.getMobile());
+                    result.put("car_id", dpiBean.getR_id());
+                    result.put("price", dpiBean.getPrice());
                     result.put("departure_time", DateUtils.getProcessdTime(dpiBean.getStart_time()));
                     result.put("create_time", DateUtils.getProcessdTime(dpiBean.getCreate_time()));
-                    result.put("i_province",  net.sf.json.JSONObject.fromObject(dpiBean.getBoarding_point()).get("province"));
+                    result.put("i_province", net.sf.json.JSONObject.fromObject(dpiBean.getBoarding_point()).get("province"));
                     result.put("i_city", net.sf.json.JSONObject.fromObject(dpiBean.getBoarding_point()).get("city"));
                     String id = net.sf.json.JSONObject.fromObject(dpiBean.getBoarding_point()).get("id").toString();
                     if (id == null) {
@@ -398,3 +398,4 @@ public class APIController {
         }
     }
 }
+

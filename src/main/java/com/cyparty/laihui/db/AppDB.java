@@ -122,7 +122,7 @@ public class AppDB {
         int autoIncId = 0;
 
         jdbcTemplateObject.update(con -> {
-            String sql = "insert into pc_driver_publish_info(mobile,departure_time,init_seats,create_time,is_enable,user_id,boarding_point,breakout_point,departure_city_code,destination_city_code,departure_address_code,destination_address_code,source,current_seats,remark,price) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "insert into pc_driver_publish_info(mobile,departure_time,init_seats,create_time,is_enable,user_id,boarding_point,breakout_point,departure_city_code,destination_city_code,departure_address_code,destination_address_code,source,current_seats,remark,price,boarding_latitude,boarding_longitude,breakout_latitude,breakout_longitude,departure_code,destination_code) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, departureInfo.getMobile());
             ps.setString(2, departureInfo.getStart_time());
@@ -140,6 +140,12 @@ public class AppDB {
             ps.setInt(14, departureInfo.getCurrent_seats());
             ps.setString(15, departureInfo.getRemark());
             ps.setDouble(16, departureInfo.getPrice());
+            ps.setString(17,departureInfo.getBoarding_latitude());
+            ps.setString(18,departureInfo.getBoarding_longitude());
+            ps.setString(19,departureInfo.getBreakout_latitude());
+            ps.setString(20,departureInfo.getBreakout_longitude());
+            ps.setInt(21,departureInfo.getDeparture_code());
+            ps.setInt(22,departureInfo.getDestination_code());
             return ps;
         }, keyHolder);
 
@@ -241,12 +247,36 @@ public class AppDB {
         return NearByOwenrList;
     }
 
+    public List<DriverAndCar> getOwenrList1(String where,double p_longitude,double p_latitude) {
+        String SQL = "select p.*,ROUND(\n" +
+                "\t\t6378.138 * 2 * ASIN(\n" +
+                "\t\tSQRT(\n" +
+                "\t\tPOW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+p_latitude+" * PI() / 180 - boarding_latitude * PI() / 180\n" +
+                "\t\t) / 2\n" +
+                "\t\t),\n" +
+                "\t\t2\n" +
+                "\t\t) + COS("+p_latitude+" * PI() / 180) *\n" +
+                "\t\tCOS(boarding_latitude * PI() / 180) * POW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+p_longitude+" * PI() / 180 - boarding_longitude * PI() / 180\n" +
+                "\t\t) / 2\n" +
+                "\t\t),\n" +
+                "\t\t2\n" +
+                "\t\t)\n" +
+                "\t\t)\n" +
+                "\t\t) * 1000\n" +
+                "\t\t) AS distance,u.*,c.car_color,c.car_type  from pc_driver_publish_info  p LEFT JOIN pc_user  u ON p.user_id=u._id LEFT JOIN pc_car_owner_info c ON p.user_id = c.user_id " + where;
+        List<DriverAndCar> NearByOwenrList = jdbcTemplateObject.query(SQL, new APPDriverAndCarMapper());
+        return NearByOwenrList;
+    }
 
     //创建乘客发车单
     public boolean createPassengerDeparture(PassengerOrder passengerOrder) {
         boolean is_success = true;
-        String SQL = "insert into pc_passenger_publish_info(user_id,departure_time,booking_seats,boarding_point,breakout_point,description,create_time,is_enable,departure_city_code,destination_city_code,departure_address_code,destination_address_code,order_status,price,source,trade_no,remark) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{passengerOrder.getUser_id(), passengerOrder.getStart_time(), passengerOrder.getSeats(), passengerOrder.getBoarding_point(), passengerOrder.getBreakout_point(), passengerOrder.getDescription(), Utils.getCurrentTime(), 1, passengerOrder.getDeparture_city_code(), passengerOrder.getDestination_city_code(), passengerOrder.getDeparture_address_code(), passengerOrder.getDestination_address_code(), 0, passengerOrder.getPay_money(), passengerOrder.getSource(), passengerOrder.getPay_num(), passengerOrder.getRemark()});
+        String SQL = "insert into pc_passenger_publish_info(user_id,departure_time,booking_seats,boarding_point,breakout_point,description,create_time,is_enable,departure_city_code,destination_city_code,departure_address_code,destination_address_code,order_status,price,source,trade_no,remark,boarding_latitude,boarding_longitude,breakout_latitude,breakout_longitude,departure_code,destination_code) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{passengerOrder.getUser_id(), passengerOrder.getStart_time(), passengerOrder.getSeats(), passengerOrder.getBoarding_point(), passengerOrder.getBreakout_point(), passengerOrder.getDescription(), Utils.getCurrentTime(), 1, passengerOrder.getDeparture_city_code(), passengerOrder.getDestination_city_code(), passengerOrder.getDeparture_address_code(), passengerOrder.getDestination_address_code(), 0, passengerOrder.getPay_money(), passengerOrder.getSource(), passengerOrder.getPay_num(), passengerOrder.getRemark(),passengerOrder.getBoarding_latitude(),passengerOrder.getBoarding_longitude(),passengerOrder.getBreakout_latitude(),passengerOrder.getBreakout_longitude(),passengerOrder.getDeparture_code(),passengerOrder});
         if (count < 1) {
             is_success = false;
         }
@@ -286,6 +316,31 @@ public class AppDB {
 
     public List<PassengerOrder> getPassengerList(String where) {
         String SQL = "SELECT * FROM pc_passenger_publish_info a , pc_user b where a.user_id=b._id " + where;
+        List<PassengerOrder> passengerOrders = jdbcTemplateObject.query(SQL, new PassengerPublishInfoMapper());
+        return passengerOrders;
+    }
+
+    public List<PassengerOrder> getPassengerList(String where,double o_lon,double o_lat) {
+        String SQL = "select a.*,ROUND(\n" +
+                "\t\t6378.138 * 2 * ASIN(\n" +
+                "\t\tSQRT(\n" +
+                "\t\tPOW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+o_lat+" * PI() / 180 - boarding_latitude * PI() / 180\n" +
+                "\t\t) / 2\n" +
+                "\t\t),\n" +
+                "\t\t2\n" +
+                "\t\t) + COS("+o_lat+" * PI() / 180) *\n" +
+                "\t\tCOS(boarding_latitude * PI() / 180) * POW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+o_lon+" * PI() / 180 - boarding_longitude * PI() / 180\n" +
+                "\t\t) / 2\n" +
+                "\t\t),\n" +
+                "\t\t2\n" +
+                "\t\t)\n" +
+                "\t\t)\n" +
+                "\t\t) * 1000\n" +
+                "\t\t) AS distance,b.* from pc_passenger_publish_info a LEFT JOIN pc_user b ON a.user_id=b._id " + where;
         List<PassengerOrder> passengerOrders = jdbcTemplateObject.query(SQL, new PassengerPublishInfoMapper());
         return passengerOrders;
     }

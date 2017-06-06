@@ -277,44 +277,17 @@ public class CommonRouteController {
                     departure_lat = Double.parseDouble(request.getParameter("departure_lat"));
                     destinat_lon = Double.parseDouble(request.getParameter("destinat_lon"));
                     destinat_lat = Double.parseDouble(request.getParameter("destinat_lat"));
-//            String where = " where departure_lon>"+(departure_lon-degree) +
-//                            " and departure_lon<"+(departure_lon+degree)+
-//                            " and departure_lat>"+(departure_lat-degree)+
-//                            " and departure_lat<"+(departure_lat+degree)+
-//                            " and destinat_lon>"+(destinat_lon-degree)+
-//                            " and destinat_lon<"+(destinat_lon+degree)+
-//                            " and destinat_lat>"+(destinat_lat-degree)+
-//                            " and destinat_lat<"+(destinat_lat+degree);
-//                   List<DriverAndCar> ownerList = appDB.getOwenrList1(where);
-//                   if (ownerList.size()>0){
-//                       json = AppJsonUtils.returnSuccessJsonString(result, "获取成功！");
-//                       return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-//                   }else {
-//                       json = AppJsonUtils.returnFailJsonString(result, "暂无数据！");
-//                       return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-//                   }
                     //符合要求的车主列表
                     List<DriverAndCar> owenrList = null;
                     //乘客附近的车主列表
                     List<DriverAndCar> nearByOwenrList = new ArrayList();
-                    String where = " where is_enable =1 and departure_time>'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
-                    owenrList = appDB.getOwenrList1(where);
+                    String where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' and init_seats != 0 having distance <= " + query_distance + " order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit " + offset + "," + size;
+                    owenrList = appDB.getOwenrList1(where,departure_lon,departure_lat);
                     for (int i = 0; i < owenrList.size(); i++) {
-                        if (owenrList.get(i).getUser_id() == user_id) {
-                            owenrList.remove(i);
-                            i--;
-                            continue;
-                        }
-                        String address_board4DB = owenrList.get(i).getBoarding_point();
-                        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
-                        double o_departure_lon = Double.parseDouble("".equals(jsonObject.get("longitude").toString()) ? "-256.18" : jsonObject.get("longitude").toString());
-                        double o_departure_lat = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "-256.18" : jsonObject.get("latitude").toString());
-
-                        address_board4DB = owenrList.get(i).getBreakout_point();
-                        jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
-                        double o_destinat_lon = Double.parseDouble("".equals(jsonObject.get("longitude").toString()) ? "-256.18" : jsonObject.get("longitude").toString());
-                        double o_destinat_lat = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "-256.18" : jsonObject.get("latitude").toString());
-
+                        double o_departure_lon = Double.parseDouble(owenrList.get(i).getBoarding_longitude());
+                        double o_departure_lat = Double.parseDouble(owenrList.get(i).getBoarding_latitude());
+                        double o_destinat_lon = Double.parseDouble(owenrList.get(i).getBreakout_longitude());
+                        double o_destinat_lat = Double.parseDouble(owenrList.get(i).getBreakout_latitude());
                         //通过经纬度获取距离
                         my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
                         start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);
@@ -346,25 +319,13 @@ public class CommonRouteController {
                     List<PassengerOrder> passengerList = null;
                     //乘客附近的车主列表
                     List<PassengerOrder> nearByPassengerList = new ArrayList();
-                    where = " and is_enable =1 and order_status=0 and departure_time >'" + current_time + "' order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
-                    passengerList = appDB.getPassengerList(where);
+                    where = " where is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having distance <= " + query_distance + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci desc limit " + offset + "," + size;
+                    passengerList = appDB.getPassengerList(where,departure_lon,departure_lat);
                     for (int i = 0; i < passengerList.size(); i++) {
-                        if (passengerList.get(i).getUser_id() == user_id) {
-                            passengerList.remove(i);
-                            i--;
-                            continue;
-                        }
-                        String address_board4DB = passengerList.get(i).getBoarding_point();
-                        net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
-                        double o_departure_lon = Double.parseDouble("".equals(jsonObject.get("longitude").toString()) ? "-256.18" : jsonObject.get("longitude").toString());
-                        double o_departure_lat = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "-256.18" : jsonObject.get("latitude").toString());
-
-                        address_board4DB = passengerList.get(i).getBreakout_point();
-                        jsonObject = net.sf.json.JSONObject.fromObject(address_board4DB);
-                        double o_destinat_lon = Double.parseDouble("".equals(jsonObject.get("longitude").toString()) ? "-256.18" : jsonObject.get("longitude").toString());
-                        double o_destinat_lat = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "-256.18" : jsonObject.get("latitude").toString());
-
-
+                        double o_departure_lon = Double.parseDouble(passengerList.get(i).getBoarding_longitude());
+                        double o_departure_lat = Double.parseDouble(passengerList.get(i).getBoarding_latitude());
+                        double o_destinat_lon = Double.parseDouble(passengerList.get(i).getBreakout_longitude());
+                        double o_destinat_lat = Double.parseDouble(passengerList.get(i).getBreakout_latitude());
                         //通过经纬度获取距离
                         my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
                         start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);

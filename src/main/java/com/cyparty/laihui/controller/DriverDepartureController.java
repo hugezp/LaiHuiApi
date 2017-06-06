@@ -144,6 +144,12 @@ public class DriverDepartureController {
             int destination_city_code = 0;
             int departure_address_code = 0;
             int destination_address_code = 0;
+            String boarding_latitude = "";
+            String boarding_longitude = "";
+            String breakout_latitude = "";
+            String breakout_longitude = "";
+            int departure_code = 0;
+            int destination_code = 0;
             switch (action) {
                 //车主发布车单
                 case "add":
@@ -207,9 +213,15 @@ public class DriverDepartureController {
                             JSONObject boardingObject = JSONObject.parseObject(boarding_point);
                             departure_address_code = boardingObject.getIntValue("adCode");
                             departure_city_code = Integer.parseInt((departure_address_code + "").substring(0, 4) + "00");
+                            boarding_latitude = boardingObject.getString("latitude");
+                            boarding_longitude = boardingObject.getString("longitude");
+                            departure_code = Integer.parseInt((departure_address_code + "").substring(0, 4));
                             JSONObject breakoutObject = JSONObject.parseObject(breakout_point);
                             destination_address_code = breakoutObject.getIntValue("adCode");
                             destination_city_code = Integer.parseInt((destination_address_code + "").substring(0, 4) + "00");
+                            breakout_latitude = breakoutObject.getString("latitude");
+                            breakout_longitude = breakoutObject.getString("longitude");
+                            destination_code = Integer.parseInt((destination_address_code + "").substring(0, 4));
                         } catch (Exception e) {
                             e.printStackTrace();
                             result.put("error_code", ErrorCode.getParameter_wrong());
@@ -229,16 +241,15 @@ public class DriverDepartureController {
                         departure.setDestination_address_code(destination_address_code);
                         departure.setPrice(price);
                         departure.setRemark(remark);
+                        departure.setBoarding_latitude(boarding_latitude);
+                        departure.setBoarding_longitude(boarding_longitude);
+                        departure.setBreakout_latitude(breakout_latitude);
+                        departure.setBreakout_longitude(breakout_longitude);
+                        departure.setDeparture_code(departure_code);
+                        departure.setDestination_code(destination_code);
                         //创建出车信息
                         id = appDB.createPCHDeparture(departure, source);
                         if (id > 0) {
-                            //发送通知
-                         /*   //SendSMSUtil.sendSMSToDriver(mobile);
-                            result.put("order_id", id);
-                            result.put("departure_time", start_time);
-                            result.put("boarding_point", boarding_point);
-                            result.put("breakout_point", breakout_point);
-                            result.put("init_seats", init_seats);*/
                             //车主车单id
                             int car_id = appDB.getMaxID("_id", "pc_driver_publish_info");
                             result.put("car_id", car_id);
