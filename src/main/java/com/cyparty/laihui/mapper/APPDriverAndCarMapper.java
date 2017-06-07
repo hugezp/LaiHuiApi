@@ -33,6 +33,12 @@ public class APPDriverAndCarMapper implements RowMapper<DriverAndCar> {
         departure.setIs_enable(resultSet.getInt("is_enable"));
         departure.setBoarding_point(resultSet.getString("boarding_point"));
         departure.setBreakout_point(resultSet.getString("breakout_point"));
+        departure.setBoarding_latitude(resultSet.getString("boarding_latitude"));
+        departure.setBoarding_longitude(resultSet.getString("boarding_longitude"));
+        departure.setBreakout_latitude(resultSet.getString("breakout_latitude"));
+        departure.setBreakout_longitude(resultSet.getString("breakout_longitude"));
+        departure.setDeparture_code(resultSet.getInt("departure_code"));
+        departure.setDestination_code(resultSet.getInt("destination_code"));
 
         departure.setCar_type(resultSet.getString("car_type"));
         departure.setCar_color(resultSet.getString("car_color"));

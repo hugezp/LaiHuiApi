@@ -183,7 +183,6 @@ public class APIController {
     public ResponseEntity<String> pop_up_ad(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         try {
@@ -196,18 +195,17 @@ public class APIController {
                         json = AppJsonUtils.returnFailJsonString(result, "沒有广告");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功");
+                        json = AppJsonUtils.returnSuccessJsonString(result, "弹出广告获取成功");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
 
                 case "show_list":
                     result = AppJsonUtils.getPopUpAdJson(appDB, 1);
-                    result.put("partner", AppJsonUtils.getPartner(appDB));
                     if (result.isEmpty()) {
                         json = AppJsonUtils.returnFailJsonString(result, "沒有广告");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功");
+                        json = AppJsonUtils.returnSuccessJsonString(result, "弹出广告获取成功");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
             }
@@ -300,8 +298,8 @@ public class APIController {
             int start = (pageNo - 1) * pageSize;
             int end = pageSize;
             String code = content.substring(0, 4);
-            String where = "where p.is_enable = 1 and p.departure_time > '" + Utils.getCurrentTimeSubOrAddHour(-3) + "' and (locate('" + code +
-                    "',p.departure_address_code) = 1 or locate('" + code + "',p.destination_address_code) = 1) order by p.create_time desc limit " + start + "," + end;
+            String where = "where p.is_enable = 1 and p.departure_time > '" + Utils.getCurrentTimeSubOrAddHour(-3) + "' and (departure_code = " + code +
+                    " or destination_code = " + code + ") order by p.create_time desc limit " + start + "," + end;
             searchList = appDB.searchByContent(where);
             for (DriverPublishInfo passengerPublishInfo : searchList) {
                 if (passengerPublishInfo.getBreakout_point().contains(word)) {
@@ -400,3 +398,4 @@ public class APIController {
         }
     }
 }
+

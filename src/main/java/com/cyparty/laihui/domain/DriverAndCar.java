@@ -54,6 +54,13 @@ public class DriverAndCar {
     private double start_point_distance;
     private double end_point_distance;
 
+    private String boarding_latitude;//出发地纬度
+    private String boarding_longitude;//出发地经度
+    private String breakout_latitude;//目的地纬度
+    private String breakout_longitude;//目的地经度
+    private int departure_code;//出发地code前四位
+    private int destination_code;//目的地code前四位
+
     public double getStart_point_distance() {
         return start_point_distance;
     }
@@ -303,5 +310,53 @@ public class DriverAndCar {
 
     public void setCar_color(String car_color) {
         this.car_color = car_color;
+    }
+
+    public String getBoarding_latitude() {
+        return boarding_latitude;
+    }
+
+    public void setBoarding_latitude(String boarding_latitude) {
+        this.boarding_latitude = boarding_latitude;
+    }
+
+    public String getBoarding_longitude() {
+        return boarding_longitude;
+    }
+
+    public void setBoarding_longitude(String boarding_longitude) {
+        this.boarding_longitude = boarding_longitude;
+    }
+
+    public String getBreakout_latitude() {
+        return breakout_latitude;
+    }
+
+    public void setBreakout_latitude(String breakout_latitude) {
+        this.breakout_latitude = breakout_latitude;
+    }
+
+    public String getBreakout_longitude() {
+        return breakout_longitude;
+    }
+
+    public void setBreakout_longitude(String breakout_longitude) {
+        this.breakout_longitude = breakout_longitude;
+    }
+
+    public int getDeparture_code() {
+        return departure_code;
+    }
+
+    public void setDeparture_code(int departure_code) {
+        this.departure_code = departure_code;
+    }
+
+    public int getDestination_code() {
+        return destination_code;
+    }
+
+    public void setDestination_code(int destination_code) {
+        this.destination_code = destination_code;
     }
 }
