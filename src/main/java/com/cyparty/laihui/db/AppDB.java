@@ -197,7 +197,6 @@ public class AppDB {
 
     public int getCount(String table, String where) {
         String sql = "SELECT count(*)total FROM  " + table + where;
-        //int count=jdbcTemplateObject.queryForInt(sql);
         Map<String, Object> now = jdbcTemplateObject.queryForMap(sql);
         int total = Integer.parseInt(String.valueOf((long) now.get("total")));
         return total;
@@ -696,9 +695,40 @@ public class AppDB {
     }
     //得到合作商家列表
     public List<Partner> getPartnerList(String where) {
-        String SQL = "SELECT * From pc_partner" + where;
+        String SQL = "SELECT * FROM pc_partner" + where;
         List<Partner> partnerList = jdbcTemplateObject.query(SQL, new PartnerMapper());
         return partnerList;
     }
+    //根据条件获取新闻列表
+    public List<News> getNewsList(String where) {
+        String SQL = "SELECT * FROM pc_news_type AS t  JOIN pc_news AS n ON t.type_id=n.type"+ where;
+        List<News> newsList = jdbcTemplateObject.query(SQL,new NewsMapper());
+        return newsList;
+    }
+    //获取新闻列表（每一个类型查询出一条）
+    public List<News> getNewsList1(String where) {
+        String SQL = "SELECT * FROM (SELECT t.type_id,t.type_name,t.is_enable ,n.* FROM pc_news_type AS t  JOIN pc_news AS n ON t.type_id=n.type WHERE is_enable = 1 ORDER BY create_time DESC) tt GROUP BY type";
+
+        List<News> newsList = jdbcTemplateObject.query(SQL, new RowMapper<News>() {
+            @Override
+            public News mapRow(ResultSet resultSet, int i) throws SQLException {
+                News news = new News();
+                news.setId(resultSet.getInt("_id"));
+                news.setTitle(resultSet.getString("title"));
+                news.setDescription(resultSet.getString("description"));
+                news.setContent(resultSet.getString("content"));
+                news.setCreateTime(resultSet.getString("create_time"));
+                news.setIsDel(resultSet.getInt("isDel"));
+                news.setPublisher(resultSet.getString("publisher"));
+                news.setNewsType(resultSet.getInt("type"));
+                news.setIsEnable(resultSet.getInt("is_enable"));
+                news.setTypeName(resultSet.getString("type_name"));
+                news.setTypeId(resultSet.getInt("type_id"));
+                return news;
+            }
+        });
+        return newsList;
+    }
+
 }
 

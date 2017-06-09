@@ -118,12 +118,12 @@ public class NearByOwnerOrPassengerController {
                             //记录条数
                             String countWhere = " where is_enable =1 and user_id != " + user_id + " and departure_time >'" + current_time + "' and destination_code = " + code1 + " and departure_code = " + adCode;
                             int cityCount1 = appDB.getCount("pc_driver_publish_info", countWhere);
-                            if (city1.contains("省")) {
+                            if (cityCount1==0)
+                                continue;
+                            if (city1.contains("省"))
                                 city1 = city1.substring(city1.indexOf("省") + 1, city1.indexOf("市"));
-                            }
-                            if (city1.contains("市")) {
+                            if (city1.contains("市"))
                                 city1 = city1.replaceAll("市", "");
-                            }
                             JSONObject cityJson1 = new JSONObject();
                             cityJson1.put("city", city1);
                             cityJson1.put("code", code1);
@@ -190,6 +190,9 @@ public class NearByOwnerOrPassengerController {
                             //记录条数
                             String countWhere = " where is_enable =1 and user_id != " + user_id + " and order_status=0 and departure_time >'" + current_time + "' and destination_code = " + code + " and departure_code = " + adCode;
                             int cityCount = appDB.getCount("pc_passenger_publish_info", countWhere);
+                            if (cityCount==0){
+                                continue;
+                            }
                             if (city.contains("省")) {
                                 city = city.substring(city.indexOf("省") + 1, city.indexOf("市"));
                             }

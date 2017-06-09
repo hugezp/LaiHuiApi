@@ -442,7 +442,7 @@ public class AppJsonUtils {
             driverObject.put("name", name);
             driverObject.put("avatar", departure.getUser_avatar());
             driverObject.put("mobile", departure.getMobile());
-            driverObject.put("user_id",departure.getUser_id());
+            driverObject.put("user_id", departure.getUser_id());
             //统计全部拼车次数
            /* String where_count=" where user_id ="+departure.getUser_id()+" and is_enable=1";
             int departure_total =appDB.getCount("pc_driver_publish_info",where_count);//发车次数
@@ -1475,24 +1475,48 @@ public class AppJsonUtils {
         result_json.put("slides", dataArray);
         return result_json;
     }
+
     //得到合作方json
     public static JSONObject getPartner(AppDB appDB) {
         JSONObject result_json = new JSONObject();
         JSONArray dataArray = new JSONArray();
         String where = " where is_enable = 1";
-        int count = appDB.getCount("pc_partner",where);
+        int count = appDB.getCount("pc_partner", where);
         List<Partner> partnerList = appDB.getPartnerList(where);
-        for (Partner partner:partnerList){
+        for (Partner partner : partnerList) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("partner_icon",partner.getPartnerIcon());
-            jsonObject.put("partner_icon_url",partner.getPartnerIconUrl());
-            jsonObject.put("partner_url",partner.getPartnerUrl());
+            jsonObject.put("partner_icon", partner.getPartnerIcon());
+            jsonObject.put("partner_icon_url", partner.getPartnerIconUrl());
+            jsonObject.put("partner_url", partner.getPartnerUrl());
             dataArray.add(jsonObject);
         }
-        result_json.put("data",dataArray);
-        result_json.put("count",count);
+        result_json.put("data", dataArray);
+        result_json.put("count", count);
         return result_json;
     }
+
+    //新闻列表查询数据
+    public static JSONObject getNews(AppDB appDB,String where) {
+        JSONArray dataArray = new JSONArray();
+        JSONObject result_json = new JSONObject();
+        List<News> newsList = appDB.getNewsList(where);
+        for (News news : newsList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("news_id", news.getId());
+            jsonObject.put("title", news.getTitle());
+            jsonObject.put("description", news.getDescription());
+            jsonObject.put("content", news.getContent());
+            jsonObject.put("create_time", news.getCreateTime());
+            jsonObject.put("update_time", news.getUpdateTime());
+            jsonObject.put("publisher", news.getPublisher());
+            dataArray.add(jsonObject);
+        }
+        int count = appDB.getCount("pc_news", where);
+        result_json.put("data", dataArray);
+        result_json.put("count", count);
+        return result_json;
+    }
+
     //得到轮播图json
     public static JSONObject getPopUpAdJson(AppDB appDB, int type) {
         JSONObject result_json = new JSONObject();
@@ -1765,6 +1789,7 @@ public class AppJsonUtils {
 
     /**
      * 首页活动
+     *
      * @return 封装的活动信息
      */
     public static JSONObject active(AppDB appDB) {
@@ -1773,8 +1798,10 @@ public class AppJsonUtils {
         jsonObject.put("url", "https://h5.laihuipinche.com/share_spread");
         return jsonObject;
     }
+
     /**
      * 首页活动图标数据
+     *
      * @return 封装的活动信息
      */
     public static JSONObject activeIcon(AppDB appDB) {

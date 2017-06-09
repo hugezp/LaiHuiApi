@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.DriverPublishInfo;
 import com.cyparty.laihui.domain.ErrorCode;
+import com.cyparty.laihui.domain.News;
 import com.cyparty.laihui.domain.UserTravelCardInfo;
 import com.cyparty.laihui.utilities.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.cyparty.laihui.utilities.weather.GetWeather.getInstance;
 
 /**
  * Created by zhu on 2016/5/11.
@@ -176,7 +180,7 @@ public class APIController {
     }
 
     /***
-     * 弹出广告模块
+     * 发现模块
      */
     @ResponseBody
     @RequestMapping(value = "/pop_up_ad", method = RequestMethod.POST)
@@ -188,6 +192,7 @@ public class APIController {
         String json = "";
         try {
             String action = request.getParameter("action");
+            String cityName = request.getParameter("cityName");
 
             switch (action) {
                 case "show":
@@ -202,7 +207,11 @@ public class APIController {
 
                 case "show_list":
                     result = AppJsonUtils.getPopUpAdJson(appDB, 1);
+                    result.put("weather",getInstance().getweather(cityName));
                     result.put("partner", AppJsonUtils.getPartner(appDB));
+                    String where = "";
+                    List list = appDB.getNewsList1(where);
+                    result.put("news", appDB.getNewsList1(where));
                     if (result.isEmpty()) {
                         json = AppJsonUtils.returnFailJsonString(result, "暂无数据");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -218,6 +227,41 @@ public class APIController {
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
+    }
+
+    //根据新闻ID查找新闻
+    @ResponseBody
+    @RequestMapping(value = "/news", method = RequestMethod.POST)
+    public ModelAndView news(HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("list");
+        try {
+            int newsId = Integer.parseInt(request.getParameter("newsId"));
+            String where = " WHERE  _id = " + newsId;
+            List<News> newsList = appDB.getNewsList(where);
+            mav.addObject("newsList",newsList);
+            mav.addObject("message","数据获取成功！");
+        } catch (Exception e) {
+            mav.addObject("message","数据获取失败！");
+        }
+        return mav;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/news/type", method = RequestMethod.POST)
+    public ModelAndView newsList(HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("List");
+        try {
+            int type_id = Integer.parseInt(request.getParameter("type_id"));
+            String where = " WHERE type_id = " + type_id + " AND is_enable = 1";
+            List<News> newsList = appDB.getNewsList(where);
+            mav.addObject("newsList",newsList);
+            mav.addObject("message","数据获取成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+            mav.addObject("message","数据获取失败！");
+        }
+        return mav;
     }
 
     @ResponseBody
