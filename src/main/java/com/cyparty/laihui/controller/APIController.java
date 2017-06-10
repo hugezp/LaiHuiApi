@@ -208,7 +208,6 @@ public class APIController {
 
                 case "show_list":
                     result = AppJsonUtils.getPopUpAdJson(appDB, 1);
-                    //result.put("weather",getInstance().getweather(cityName));
                     result.put("partner", AppJsonUtils.getPartner(appDB));
                     String where = "";
                     result.put("news", appDB.getNewsList1(where));
@@ -234,36 +233,49 @@ public class APIController {
     //根据新闻ID查找新闻
     @ResponseBody
     @RequestMapping(value = "/news", method = RequestMethod.POST)
-    public ModelAndView news(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("list");
+    public ResponseEntity<String> news(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
+        JSONObject result = new JSONObject();
+        String json = "";
         try {
             int newsId = Integer.parseInt(request.getParameter("newsId"));
             String where = " WHERE  _id = " + newsId;
             List<News> newsList = appDB.getNewsList(where);
-            mav.addObject("newsList",newsList);
-            mav.addObject("message","数据获取成功！");
+            result.put("news",newsList.get(0));
+            json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功");
         } catch (Exception e) {
-            mav.addObject("message","数据获取失败！");
+            e.printStackTrace();
+            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
         }
-        return mav;
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 
-
+    /**
+     * 获取新闻列表
+     * @param request
+     * @return
+     */
     @ResponseBody
-    @RequestMapping(value = "/news/type", method = RequestMethod.POST)
-    public ModelAndView newsList(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("List");
+    @RequestMapping(value = "/news/list", method = RequestMethod.POST)
+    public ResponseEntity<String> newsList(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
+        JSONObject result = new JSONObject();
+        String json = "";
         try {
             int type_id = Integer.parseInt(request.getParameter("type_id"));
             String where = " WHERE type_id = " + type_id + " AND is_enable = 1";
             List<News> newsList = appDB.getNewsList(where);
-            mav.addObject("newsList",newsList);
-            mav.addObject("message","数据获取成功！");
+            result.put("newsList",newsList);
+            json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功");
         } catch (Exception e) {
             e.printStackTrace();
-            mav.addObject("message","数据获取失败！");
+            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
         }
-        return mav;
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 
     @ResponseBody

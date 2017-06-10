@@ -3,7 +3,7 @@ package com.cyparty.laihui.domain;
 import com.alibaba.fastjson.JSONObject;
 
 public class News {
-    //pc_news×Ö¶Î
+    //pc_news
     private Integer id;
 
     private String title;
@@ -24,7 +24,7 @@ public class News {
 
     private String image;
 
-    //pc_new_type±í×Ö¶Î
+    //pc_new_type
     private int typeId;
 
     private String typeName;
