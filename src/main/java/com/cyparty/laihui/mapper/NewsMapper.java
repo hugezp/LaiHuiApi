@@ -1,6 +1,7 @@
 package com.cyparty.laihui.mapper;
 
 import com.cyparty.laihui.domain.News;
+import com.cyparty.laihui.utilities.Utils;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -14,17 +15,18 @@ public class NewsMapper implements RowMapper<News> {
     public News mapRow(ResultSet resultSet, int i) throws SQLException {
         News news = new News();
         news.setId(resultSet.getInt("_id"));
-        news.setTitle(resultSet.getString("title"));
-        news.setDescription(resultSet.getString("description"));
-        news.setContent(resultSet.getString("content"));
-        news.setCreateTime(resultSet.getString("create_time"));
+        news.setTitle(Utils.checkNull(resultSet.getString("title")));
+        news.setDescription(Utils.checkNull(resultSet.getString("description")));
+        news.setContent(Utils.checkNull(resultSet.getString("content")));
+        news.setCreateTime(Utils.checkNull(resultSet.getString("create_time")));
         news.setIsDel(resultSet.getInt("isDel"));
-        news.setPublisher(resultSet.getString("publisher"));
+        news.setPublisher(Utils.checkNull(resultSet.getString("publisher")));
         news.setNewsType(resultSet.getInt("type"));
-        news.setImage(resultSet.getString("image"));
+        news.setImage(Utils.checkNull(resultSet.getString("image")));
         news.setIsEnable(resultSet.getInt("is_enable"));
-        news.setTypeName(resultSet.getString("type_name"));
+        news.setTypeName(Utils.checkNull(resultSet.getString("type_name")));
         news.setTypeId(resultSet.getInt("type_id"));
+        news.setLogo(Utils.checkNull(resultSet.getString("logo")));
         return news;
     }
 }

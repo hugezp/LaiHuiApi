@@ -29,9 +29,9 @@ public class News {
 
     private String typeName;
 
-    public String getTypeName() {
-        return typeName;
-    }
+    private String logo;
+
+
 
     private int isEnable;
 
@@ -120,6 +120,9 @@ public class News {
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
+    public String getTypeName() {
+        return typeName;
+    }
 
     public int getIsEnable() {
         return isEnable;
@@ -135,6 +138,14 @@ public class News {
 
     public void setTypeId(int typeId) {
         this.typeId = typeId;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 
     public JSONObject ModelToJson(){

@@ -192,7 +192,8 @@ public class APIController {
         String json = "";
         try {
             String action = request.getParameter("action");
-            String cityName = request.getParameter("cityName");
+           // String cityName = request.getParameter("cityName");
+
 
             switch (action) {
                 case "show":
@@ -207,11 +208,12 @@ public class APIController {
 
                 case "show_list":
                     result = AppJsonUtils.getPopUpAdJson(appDB, 1);
-                    result.put("weather",getInstance().getweather(cityName));
+                    //result.put("weather",getInstance().getweather(cityName));
                     result.put("partner", AppJsonUtils.getPartner(appDB));
                     String where = "";
-                    List list = appDB.getNewsList1(where);
                     result.put("news", appDB.getNewsList1(where));
+                    where = " WHERE type_id = 7 AND is_enable = 1";
+                    result.put("headlines", appDB.getNewsList(where));
                     if (result.isEmpty()) {
                         json = AppJsonUtils.returnFailJsonString(result, "暂无数据");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);

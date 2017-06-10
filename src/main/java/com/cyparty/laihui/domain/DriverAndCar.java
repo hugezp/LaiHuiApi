@@ -60,6 +60,24 @@ public class DriverAndCar {
     private String breakout_longitude;//目的地经度
     private int departure_code;//出发地code前四位
     private int destination_code;//目的地code前四位
+    private double s_distance;
+    private double e_distance;
+
+    public double getS_distance() {
+        return s_distance;
+    }
+
+    public void setS_distance(double s_distance) {
+        this.s_distance = s_distance;
+    }
+
+    public double getE_distance() {
+        return e_distance;
+    }
+
+    public void setE_distance(double e_distance) {
+        this.e_distance = e_distance;
+    }
 
     public double getStart_point_distance() {
         return start_point_distance;

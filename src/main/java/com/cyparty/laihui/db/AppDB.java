@@ -271,6 +271,37 @@ public class AppDB {
         return NearByOwenrList;
     }
 
+    public List<DriverAndCar> getOwenrList1(String where,double p_longitude,double p_latitude,double destinat_lon,double destinat_lat) {
+        String SQL = "select p.*,ROUND(\n" +
+                "\t\t6378.138 * 2 * ASIN(\n" +
+                "\t\tSQRT(\n" +
+                "\t\tPOW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+p_longitude+" * PI() / 180 - boarding_latitude * PI() / 180) / 2),2) + COS("+p_longitude+" * PI() / 180) *\n" +
+                "\t\tCOS(boarding_latitude * PI() / 180) * POW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+p_latitude+" * PI() / 180 - boarding_longitude * PI() / 180) / 2),2\n" +
+                "\t\t)\n" +
+                "\t\t)\n" +
+                "\t\t) * 1000\n" +
+                "\t\t) AS s_distance,\n" +
+                "ROUND(\n" +
+                "\t\t6378.138 * 2 * ASIN(\n" +
+                "\t\tSQRT(\n" +
+                "\t\tPOW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+destinat_lat+" * PI() / 180 - breakout_latitude * PI() / 180) / 2),2) + COS("+destinat_lat+" * PI() / 180) *\n" +
+                "\t\tCOS(breakout_latitude * PI() / 180) * POW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+destinat_lon+" * PI() / 180 - breakout_longitude * PI() / 180) / 2),2\n" +
+                "\t\t)\n" +
+                "\t\t)\n" +
+                "\t\t) * 1000\n" +
+                "\t\t) AS e_distance,u.*,c.car_color,c.car_type  from pc_driver_publish_info  p LEFT JOIN pc_user  u ON p.user_id=u._id LEFT JOIN pc_car_owner_info c ON p.user_id = c.user_id " + where;
+        List<DriverAndCar> NearByOwenrList = jdbcTemplateObject.query(SQL, new APPDriverAndCarCommonMapper());
+        return NearByOwenrList;
+    }
+
     //创建乘客发车单
     public boolean createPassengerDeparture(PassengerOrder passengerOrder) {
         boolean is_success = true;
@@ -341,6 +372,37 @@ public class AppDB {
                 "\t\t) * 1000\n" +
                 "\t\t) AS distance,b.* from pc_passenger_publish_info a LEFT JOIN pc_user b ON a.user_id=b._id " + where;
         List<PassengerOrder> passengerOrders = jdbcTemplateObject.query(SQL, new PassengerPublishInfoMapper());
+        return passengerOrders;
+    }
+
+    public List<PassengerOrder> getPassengerList(String where,double o_lon,double o_lat,double destinat_lon,double destinat_lat) {
+        String SQL = "select a.*,ROUND(\n" +
+                "\t\t6378.138 * 2 * ASIN(\n" +
+                "\t\tSQRT(\n" +
+                "\t\tPOW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+o_lat+" * PI() / 180 - boarding_latitude * PI() / 180) / 2),2) + COS("+o_lat+" * PI() / 180) *\n" +
+                "\t\tCOS(boarding_latitude * PI() / 180) * POW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+o_lon+" * PI() / 180 - boarding_longitude * PI() / 180) / 2),2\n" +
+                "\t\t)\n" +
+                "\t\t)\n" +
+                "\t\t) * 1000\n" +
+                "\t\t) AS s_distance,\n" +
+                "ROUND(\n" +
+                "\t\t6378.138 * 2 * ASIN(\n" +
+                "\t\tSQRT(\n" +
+                "\t\tPOW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+destinat_lat+" * PI() / 180 - breakout_latitude * PI() / 180) / 2),2) + COS("+destinat_lat+" * PI() / 180) *\n" +
+                "\t\tCOS(breakout_latitude * PI() / 180) * POW(\n" +
+                "\t\tSIN(\n" +
+                "\t\t("+destinat_lon+" * PI() / 180 - breakout_longitude * PI() / 180) / 2),2\n" +
+                "\t\t)\n" +
+                "\t\t)\n" +
+                "\t\t) * 1000\n" +
+                "\t\t) AS e_distance,b.* from pc_passenger_publish_info a LEFT JOIN pc_user b ON a.user_id=b._id " + where;
+        List<PassengerOrder> passengerOrders = jdbcTemplateObject.query(SQL, new PassengerCommonMapper());
         return passengerOrders;
     }
 
@@ -707,23 +769,25 @@ public class AppDB {
     }
     //获取新闻列表（每一个类型查询出一条）
     public List<News> getNewsList1(String where) {
-        String SQL = "SELECT * FROM (SELECT t.type_id,t.type_name,t.is_enable ,n.* FROM pc_news_type AS t  JOIN pc_news AS n ON t.type_id=n.type WHERE is_enable = 1 ORDER BY create_time DESC) tt GROUP BY type";
+        String SQL = "SELECT * FROM (SELECT t.logo,t.type_id,t.type_name,t.is_enable ,n.* FROM pc_news_type AS t  JOIN pc_news AS n ON t.type_id=n.type WHERE is_enable = 1 AND type!=7 ORDER BY create_time DESC) tt GROUP BY type";
 
         List<News> newsList = jdbcTemplateObject.query(SQL, new RowMapper<News>() {
             @Override
             public News mapRow(ResultSet resultSet, int i) throws SQLException {
                 News news = new News();
                 news.setId(resultSet.getInt("_id"));
-                news.setTitle(resultSet.getString("title"));
-                news.setDescription(resultSet.getString("description"));
-                news.setContent(resultSet.getString("content"));
-                news.setCreateTime(resultSet.getString("create_time"));
+                news.setTitle(Utils.checkNull(resultSet.getString("title")));
+                news.setDescription(Utils.checkNull(resultSet.getString("description")));
+                news.setContent(Utils.checkNull(resultSet.getString("content")));
+                news.setCreateTime(Utils.checkNull(resultSet.getString("create_time")));
                 news.setIsDel(resultSet.getInt("isDel"));
-                news.setPublisher(resultSet.getString("publisher"));
+                news.setPublisher(Utils.checkNull(resultSet.getString("publisher")));
                 news.setNewsType(resultSet.getInt("type"));
+                news.setImage(Utils.checkNull(resultSet.getString("image")));
                 news.setIsEnable(resultSet.getInt("is_enable"));
-                news.setTypeName(resultSet.getString("type_name"));
+                news.setTypeName(Utils.checkNull(resultSet.getString("type_name")));
                 news.setTypeId(resultSet.getInt("type_id"));
+                news.setLogo(Utils.checkNull(resultSet.getString("logo")));
                 return news;
             }
         });

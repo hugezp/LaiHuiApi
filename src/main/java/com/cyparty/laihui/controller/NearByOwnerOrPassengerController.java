@@ -438,7 +438,7 @@ public class NearByOwnerOrPassengerController {
     }
 
     /**
-     * 常用路线匹配最新的一个车主信息
+     * 常用路线匹配最新的一个信息
      */
     private JSONObject newCommon(int user_id, String action) {
         JSONObject jsonResult = new JSONObject();
@@ -458,67 +458,34 @@ public class NearByOwnerOrPassengerController {
             //获取经纬度
             case "nearby_owner":
                 //符合要求的车主列表
-                List<DriverAndCar> owenrList = null;
-                //乘客附近的车主列表
-                List<DriverAndCar> nearByOwenrList = new ArrayList();
-                where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' and init_seats != 0 having distance <= " + query_distance + " order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1";
-                owenrList = appDB.getOwenrList1(where,departure_lon,departure_lat);
-                for (int i = 0; i < owenrList.size(); i++) {
-                    double o_departure_lon = Double.parseDouble(owenrList.get(i).getBoarding_longitude());
-                    double o_departure_lat = Double.parseDouble(owenrList.get(i).getBoarding_latitude());
-                    double o_destinat_lon = Double.parseDouble(owenrList.get(i).getBreakout_longitude());
-                    double o_destinat_lat = Double.parseDouble(owenrList.get(i).getBreakout_latitude());
+                where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' and init_seats != 0 having s_distance <= " + query_distance + " and e_distance <= " + query_distance + " order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1";
+                List<DriverAndCar> owenrList = appDB.getOwenrList1(where,departure_lon,departure_lat,destinat_lon,destinat_lat);
+                if (owenrList.size()>0) {
                     //通过经纬度获取距离
                     double my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
-                    double start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);
-                    double end_point_distance = RangeUtils.getDistance(destinat_lat, destinat_lon, o_destinat_lat, o_destinat_lon);
+                    double start_point_distance = owenrList.get(0).getS_distance();
+                    double end_point_distance = owenrList.get(0).getE_distance();
                     String suitability = RangeUtils.getSuitability(my_distance, start_point_distance, end_point_distance);
-                    if (start_point_distance <= query_distance && end_point_distance <= query_distance) {
-                        owenrList.get(i).setSuitability(suitability);
-                        owenrList.get(i).setStart_point_distance(start_point_distance);
-                        owenrList.get(i).setEnd_point_distance(end_point_distance);
-                        nearByOwenrList.add(owenrList.get(i));
-                        if (nearByOwenrList.size() == 1)
-                            break;
-                    }
+                    owenrList.get(0).setSuitability(suitability);
                 }
-                if (nearByOwenrList.size() != 0) {
-                    List<DriverAndCar> nearByOwenrList1 = new ArrayList();
-                    nearByOwenrList1.add(nearByOwenrList.get(0));
-                    jsonResult = AppJsonUtils.getNearByOwnerList(nearByOwenrList1, 0, 1, 1, appDB);
-                }
+                    jsonResult = AppJsonUtils.getNearByOwnerList(owenrList, 0, 1, 1, appDB);
                 break;
             case "nearby_passenger":
-                //符合要求的车主列表
-                List<PassengerOrder> passengerList = null;
-                //乘客附近的车主列表
-                List<PassengerOrder> nearByPassengerList = new ArrayList();
-                where = " where is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having distance <= " + query_distance + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1";
-                passengerList = appDB.getPassengerList(where,departure_lon,departure_lat);
-                for (int i = 0; i < passengerList.size(); i++) {
-                    double o_departure_lon = Double.parseDouble(passengerList.get(i).getBoarding_longitude());
-                    double o_departure_lat = Double.parseDouble(passengerList.get(i).getBoarding_latitude());
-                    double o_destinat_lon = Double.parseDouble(passengerList.get(i).getBreakout_longitude());
-                    double o_destinat_lat = Double.parseDouble(passengerList.get(i).getBreakout_latitude());
+                //符合要求的乘客列表
+                where = " where is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having s_distance <= " + query_distance + " and e_distance <= " + query_distance + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1";
+                List<PassengerOrder> passengerList = appDB.getPassengerList(where,departure_lon,departure_lat,destinat_lon,destinat_lat);
+                if (passengerList.size()>0){
                     //通过经纬度获取距离
                     double my_distance = RangeUtils.getDistance(departure_lat, departure_lon, destinat_lat, destinat_lon);
-                    double start_point_distance = RangeUtils.getDistance(departure_lat, departure_lon, o_departure_lat, o_departure_lon);
-                    double end_point_distance = RangeUtils.getDistance(destinat_lat, destinat_lon, o_destinat_lat, o_destinat_lon);
+                    double start_point_distance = passengerList.get(0).getS_distance();
+                    double end_point_distance = passengerList.get(0).getE_distance();
                     String suitability = RangeUtils.getSuitability(my_distance, start_point_distance, end_point_distance);
-                    if (start_point_distance <= query_distance && end_point_distance <= query_distance) {
-                        passengerList.get(i).setSuitability(suitability);
-                        passengerList.get(i).setStart_point_distance(start_point_distance);
-                        passengerList.get(i).setEnd_point_distance(end_point_distance);
-                        nearByPassengerList.add(passengerList.get(i));
-                        if (nearByPassengerList.size() == 1)
-                            break;
-                    }
+                    passengerList.get(0).setSuitability(suitability);
+                    passengerList.get(0).setStart_point_distance(start_point_distance);
+                    passengerList.get(0).setEnd_point_distance(end_point_distance);
+                    jsonResult = AppJsonUtils.getNearByPassengerList(passengerList, 0, 1, 1);
                 }
-                if (nearByPassengerList.size() != 0) {
-                    List<PassengerOrder> nearByPassengerList1 = new ArrayList();
-                    nearByPassengerList1.add(nearByPassengerList.get(0));
-                    jsonResult = AppJsonUtils.getNearByPassengerList(nearByPassengerList1, 0, 1, 1);
-                }
+
         }
         return jsonResult;
     }
