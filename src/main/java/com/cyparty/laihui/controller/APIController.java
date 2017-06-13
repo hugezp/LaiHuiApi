@@ -211,7 +211,7 @@ public class APIController {
                     result.put("partner", AppJsonUtils.getPartner(appDB));
                     String where = "";
                     result.put("news", appDB.getNewsList1(where));
-                    where = " WHERE type_id = 7 AND is_enable = 1";
+                    where = " WHERE type_id = 7 AND is_enable = 1 AND isDel = 1";
                     result.put("headlines", appDB.getNewsList(where));
                     if (result.isEmpty()) {
                         json = AppJsonUtils.returnFailJsonString(result, "暂无数据");
