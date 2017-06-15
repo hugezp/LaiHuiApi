@@ -224,7 +224,7 @@ public class APIController {
         String json = "";
         try {
             int type_id = Integer.parseInt(request.getParameter("type_id"));
-            String where = " WHERE type_id = " + type_id + " AND is_enable = 1";
+            String where = " WHERE type_id = " + type_id + " AND is_enable = 1 AND isDel=1";
             List<News> newsList = appDB.getNewsList(where);
             result.put("newsList",newsList);
             json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功");
