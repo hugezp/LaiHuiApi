@@ -277,10 +277,10 @@ public class AppDB {
                 "\t\tSQRT(\n" +
                 "\t\tPOW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+p_longitude+" * PI() / 180 - boarding_latitude * PI() / 180) / 2),2) + COS("+p_longitude+" * PI() / 180) *\n" +
+                "\t\t("+p_latitude+" * PI() / 180 - boarding_latitude * PI() / 180) / 2),2) + COS("+p_latitude+" * PI() / 180) *\n" +
                 "\t\tCOS(boarding_latitude * PI() / 180) * POW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+p_latitude+" * PI() / 180 - boarding_longitude * PI() / 180) / 2),2\n" +
+                "\t\t("+p_longitude+" * PI() / 180 - boarding_longitude * PI() / 180) / 2),2\n" +
                 "\t\t)\n" +
                 "\t\t)\n" +
                 "\t\t) * 1000\n" +
@@ -770,7 +770,6 @@ public class AppDB {
     //获取新闻列表（每一个类型查询出一条）
     public List<News> getNewsList1(String where) {
         String SQL = "SELECT * FROM (SELECT t.logo,t.type_id,t.type_name,t.is_enable ,n.* FROM pc_news_type AS t  JOIN pc_news AS n ON t.type_id=n.type WHERE is_enable = 1 AND type!=7 ORDER BY create_time DESC) tt GROUP BY type";
-
         List<News> newsList = jdbcTemplateObject.query(SQL, new RowMapper<News>() {
             @Override
             public News mapRow(ResultSet resultSet, int i) throws SQLException {

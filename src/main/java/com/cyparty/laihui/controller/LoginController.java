@@ -255,6 +255,7 @@ public class LoginController {
                             appDB.createUserToken(token, id);
                         }
                         result.put("token", token);
+
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码正确！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else if (status.equals("466")) {

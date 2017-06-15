@@ -129,13 +129,14 @@ public class APIController {
     }
 
     /***
-     * 轮播图模块
+     * 发现模块
      */
     @ResponseBody
     @RequestMapping(value = "/carousel", method = RequestMethod.POST)
     public ResponseEntity<String> carousel(HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set("Access-Control-Allow-Origin", "*");
         JSONObject result = new JSONObject();
         String json = "";
         try {
@@ -167,7 +168,13 @@ public class APIController {
                     } else {
                         id = 0;
                     }
-                    json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getCarouselJson(appDB, page, size, id), "轮播图信息获取成功");
+                    result = AppJsonUtils.getCarouselJson(appDB, page, size, id);
+                    result.put("partner", AppJsonUtils.getPartner(appDB));
+                    String where = "";
+                    result.put("news", appDB.getNewsList1(where));
+                    where = " WHERE type_id = 7 AND is_enable = 1";
+                    result.put("headlines", appDB.getNewsList(where));
+                    json = AppJsonUtils.returnSuccessJsonString(result, "信息获取成功");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
@@ -179,56 +186,6 @@ public class APIController {
         }
     }
 
-    /***
-     * 发现模块
-     */
-    @ResponseBody
-    @RequestMapping(value = "/pop_up_ad", method = RequestMethod.POST)
-    public ResponseEntity<String> pop_up_ad(HttpServletRequest request) {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        responseHeaders.set("Access-Control-Allow-Origin", "*");
-        JSONObject result = new JSONObject();
-        String json = "";
-        try {
-            String action = request.getParameter("action");
-           // String cityName = request.getParameter("cityName");
-
-
-            switch (action) {
-                case "show":
-                    result = AppJsonUtils.getPopUpAdJson(appDB, 0);
-                    if (result.isEmpty()) {
-                        json = AppJsonUtils.returnFailJsonString(result, "暂无数据");
-                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                    } else {
-                        json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功");
-                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                    }
-
-                case "show_list":
-                    result = AppJsonUtils.getPopUpAdJson(appDB, 1);
-                    result.put("partner", AppJsonUtils.getPartner(appDB));
-                    String where = "";
-                    result.put("news", appDB.getNewsList1(where));
-                    where = " WHERE type_id = 7 AND is_enable = 1";
-                    result.put("headlines", appDB.getNewsList(where));
-                    if (result.isEmpty()) {
-                        json = AppJsonUtils.returnFailJsonString(result, "暂无数据");
-                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                    } else {
-                        json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功");
-                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                    }
-            }
-            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
-            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
-            return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-        }
-    }
 
     //根据新闻ID查找新闻
     @ResponseBody

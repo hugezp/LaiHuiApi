@@ -14,6 +14,8 @@ import java.util.List;
  * Created by zhu on 2016/10/21.
  */
 public class AppJsonUtils {
+    public static final String SLIDES = "slides";
+
     public static String returnFailJsonString(JSONObject result, String error_message) {
         JSONObject item = new JSONObject();
         item.put("message", error_message);
@@ -1472,7 +1474,7 @@ public class AppJsonUtils {
         result_json.put("total", count);
         result_json.put("page", page);
         result_json.put("size", size);
-        result_json.put("slides", dataArray);
+        result_json.put(SLIDES, dataArray);
         return result_json;
     }
 

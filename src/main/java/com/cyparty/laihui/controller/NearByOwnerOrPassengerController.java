@@ -467,6 +467,8 @@ public class NearByOwnerOrPassengerController {
                     double end_point_distance = owenrList.get(0).getE_distance();
                     String suitability = RangeUtils.getSuitability(my_distance, start_point_distance, end_point_distance);
                     owenrList.get(0).setSuitability(suitability);
+                    owenrList.get(0).setStart_point_distance(start_point_distance);
+                    owenrList.get(0).setEnd_point_distance(end_point_distance);
                 }
                     jsonResult = AppJsonUtils.getNearByOwnerList(owenrList, 0, 1, 1, appDB);
                 break;
