@@ -140,12 +140,12 @@ public class AppDB {
             ps.setInt(14, departureInfo.getCurrent_seats());
             ps.setString(15, departureInfo.getRemark());
             ps.setDouble(16, departureInfo.getPrice());
-            ps.setString(17,departureInfo.getBoarding_latitude());
-            ps.setString(18,departureInfo.getBoarding_longitude());
-            ps.setString(19,departureInfo.getBreakout_latitude());
-            ps.setString(20,departureInfo.getBreakout_longitude());
-            ps.setInt(21,departureInfo.getDeparture_code());
-            ps.setInt(22,departureInfo.getDestination_code());
+            ps.setString(17, departureInfo.getBoarding_latitude());
+            ps.setString(18, departureInfo.getBoarding_longitude());
+            ps.setString(19, departureInfo.getBreakout_latitude());
+            ps.setString(20, departureInfo.getBreakout_longitude());
+            ps.setInt(21, departureInfo.getDeparture_code());
+            ps.setInt(22, departureInfo.getDestination_code());
             return ps;
         }, keyHolder);
 
@@ -246,20 +246,20 @@ public class AppDB {
         return NearByOwenrList;
     }
 
-    public List<DriverAndCar> getOwenrList1(String where,double p_longitude,double p_latitude) {
+    public List<DriverAndCar> getOwenrList1(String where, double p_longitude, double p_latitude) {
         String SQL = "select p.*,ROUND(\n" +
                 "\t\t6378.138 * 2 * ASIN(\n" +
                 "\t\tSQRT(\n" +
                 "\t\tPOW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+p_latitude+" * PI() / 180 - boarding_latitude * PI() / 180\n" +
+                "\t\t(" + p_latitude + " * PI() / 180 - boarding_latitude * PI() / 180\n" +
                 "\t\t) / 2\n" +
                 "\t\t),\n" +
                 "\t\t2\n" +
-                "\t\t) + COS("+p_latitude+" * PI() / 180) *\n" +
+                "\t\t) + COS(" + p_latitude + " * PI() / 180) *\n" +
                 "\t\tCOS(boarding_latitude * PI() / 180) * POW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+p_longitude+" * PI() / 180 - boarding_longitude * PI() / 180\n" +
+                "\t\t(" + p_longitude + " * PI() / 180 - boarding_longitude * PI() / 180\n" +
                 "\t\t) / 2\n" +
                 "\t\t),\n" +
                 "\t\t2\n" +
@@ -271,16 +271,16 @@ public class AppDB {
         return NearByOwenrList;
     }
 
-    public List<DriverAndCar> getOwenrList1(String where,double p_longitude,double p_latitude,double destinat_lon,double destinat_lat) {
+    public List<DriverAndCar> getOwenrList1(String where, double p_longitude, double p_latitude, double destinat_lon, double destinat_lat) {
         String SQL = "select p.*,ROUND(\n" +
                 "\t\t6378.138 * 2 * ASIN(\n" +
                 "\t\tSQRT(\n" +
                 "\t\tPOW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+p_latitude+" * PI() / 180 - boarding_latitude * PI() / 180) / 2),2) + COS("+p_latitude+" * PI() / 180) *\n" +
+                "\t\t(" + p_latitude + " * PI() / 180 - boarding_latitude * PI() / 180) / 2),2) + COS(" + p_latitude + " * PI() / 180) *\n" +
                 "\t\tCOS(boarding_latitude * PI() / 180) * POW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+p_longitude+" * PI() / 180 - boarding_longitude * PI() / 180) / 2),2\n" +
+                "\t\t(" + p_longitude + " * PI() / 180 - boarding_longitude * PI() / 180) / 2),2\n" +
                 "\t\t)\n" +
                 "\t\t)\n" +
                 "\t\t) * 1000\n" +
@@ -290,10 +290,10 @@ public class AppDB {
                 "\t\tSQRT(\n" +
                 "\t\tPOW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+destinat_lat+" * PI() / 180 - breakout_latitude * PI() / 180) / 2),2) + COS("+destinat_lat+" * PI() / 180) *\n" +
+                "\t\t(" + destinat_lat + " * PI() / 180 - breakout_latitude * PI() / 180) / 2),2) + COS(" + destinat_lat + " * PI() / 180) *\n" +
                 "\t\tCOS(breakout_latitude * PI() / 180) * POW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+destinat_lon+" * PI() / 180 - breakout_longitude * PI() / 180) / 2),2\n" +
+                "\t\t(" + destinat_lon + " * PI() / 180 - breakout_longitude * PI() / 180) / 2),2\n" +
                 "\t\t)\n" +
                 "\t\t)\n" +
                 "\t\t) * 1000\n" +
@@ -306,7 +306,7 @@ public class AppDB {
     public boolean createPassengerDeparture(PassengerOrder passengerOrder) {
         boolean is_success = true;
         String SQL = "insert into pc_passenger_publish_info(user_id,departure_time,booking_seats,boarding_point,breakout_point,description,create_time,is_enable,departure_city_code,destination_city_code,departure_address_code,destination_address_code,order_status,price,source,trade_no,remark,boarding_latitude,boarding_longitude,breakout_latitude,breakout_longitude,departure_code,destination_code) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{passengerOrder.getUser_id(), passengerOrder.getStart_time(), passengerOrder.getSeats(), passengerOrder.getBoarding_point(), passengerOrder.getBreakout_point(), passengerOrder.getDescription(), Utils.getCurrentTime(), 1, passengerOrder.getDeparture_city_code(), passengerOrder.getDestination_city_code(), passengerOrder.getDeparture_address_code(), passengerOrder.getDestination_address_code(), 0, passengerOrder.getPay_money(), passengerOrder.getSource(), passengerOrder.getPay_num(), passengerOrder.getRemark(),passengerOrder.getBoarding_latitude(),passengerOrder.getBoarding_longitude(),passengerOrder.getBreakout_latitude(),passengerOrder.getBreakout_longitude(),passengerOrder.getDeparture_code(),passengerOrder.getDestination_code()});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{passengerOrder.getUser_id(), passengerOrder.getStart_time(), passengerOrder.getSeats(), passengerOrder.getBoarding_point(), passengerOrder.getBreakout_point(), passengerOrder.getDescription(), Utils.getCurrentTime(), 1, passengerOrder.getDeparture_city_code(), passengerOrder.getDestination_city_code(), passengerOrder.getDeparture_address_code(), passengerOrder.getDestination_address_code(), 0, passengerOrder.getPay_money(), passengerOrder.getSource(), passengerOrder.getPay_num(), passengerOrder.getRemark(), passengerOrder.getBoarding_latitude(), passengerOrder.getBoarding_longitude(), passengerOrder.getBreakout_latitude(), passengerOrder.getBreakout_longitude(), passengerOrder.getDeparture_code(), passengerOrder.getDestination_code()});
         if (count < 1) {
             is_success = false;
         }
@@ -350,20 +350,20 @@ public class AppDB {
         return passengerOrders;
     }
 
-    public List<PassengerOrder> getPassengerList(String where,double o_lon,double o_lat) {
+    public List<PassengerOrder> getPassengerList(String where, double o_lon, double o_lat) {
         String SQL = "select a.*,ROUND(\n" +
                 "\t\t6378.138 * 2 * ASIN(\n" +
                 "\t\tSQRT(\n" +
                 "\t\tPOW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+o_lat+" * PI() / 180 - boarding_latitude * PI() / 180\n" +
+                "\t\t(" + o_lat + " * PI() / 180 - boarding_latitude * PI() / 180\n" +
                 "\t\t) / 2\n" +
                 "\t\t),\n" +
                 "\t\t2\n" +
-                "\t\t) + COS("+o_lat+" * PI() / 180) *\n" +
+                "\t\t) + COS(" + o_lat + " * PI() / 180) *\n" +
                 "\t\tCOS(boarding_latitude * PI() / 180) * POW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+o_lon+" * PI() / 180 - boarding_longitude * PI() / 180\n" +
+                "\t\t(" + o_lon + " * PI() / 180 - boarding_longitude * PI() / 180\n" +
                 "\t\t) / 2\n" +
                 "\t\t),\n" +
                 "\t\t2\n" +
@@ -375,16 +375,16 @@ public class AppDB {
         return passengerOrders;
     }
 
-    public List<PassengerOrder> getPassengerList(String where,double o_lon,double o_lat,double destinat_lon,double destinat_lat) {
+    public List<PassengerOrder> getPassengerList(String where, double o_lon, double o_lat, double destinat_lon, double destinat_lat) {
         String SQL = "select a.*,ROUND(\n" +
                 "\t\t6378.138 * 2 * ASIN(\n" +
                 "\t\tSQRT(\n" +
                 "\t\tPOW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+o_lat+" * PI() / 180 - boarding_latitude * PI() / 180) / 2),2) + COS("+o_lat+" * PI() / 180) *\n" +
+                "\t\t(" + o_lat + " * PI() / 180 - boarding_latitude * PI() / 180) / 2),2) + COS(" + o_lat + " * PI() / 180) *\n" +
                 "\t\tCOS(boarding_latitude * PI() / 180) * POW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+o_lon+" * PI() / 180 - boarding_longitude * PI() / 180) / 2),2\n" +
+                "\t\t(" + o_lon + " * PI() / 180 - boarding_longitude * PI() / 180) / 2),2\n" +
                 "\t\t)\n" +
                 "\t\t)\n" +
                 "\t\t) * 1000\n" +
@@ -394,10 +394,10 @@ public class AppDB {
                 "\t\tSQRT(\n" +
                 "\t\tPOW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+destinat_lat+" * PI() / 180 - breakout_latitude * PI() / 180) / 2),2) + COS("+destinat_lat+" * PI() / 180) *\n" +
+                "\t\t(" + destinat_lat + " * PI() / 180 - breakout_latitude * PI() / 180) / 2),2) + COS(" + destinat_lat + " * PI() / 180) *\n" +
                 "\t\tCOS(breakout_latitude * PI() / 180) * POW(\n" +
                 "\t\tSIN(\n" +
-                "\t\t("+destinat_lon+" * PI() / 180 - breakout_longitude * PI() / 180) / 2),2\n" +
+                "\t\t(" + destinat_lon + " * PI() / 180 - breakout_longitude * PI() / 180) / 2),2\n" +
                 "\t\t)\n" +
                 "\t\t)\n" +
                 "\t\t) * 1000\n" +
@@ -621,7 +621,7 @@ public class AppDB {
 
     //查询获取当前推广员的推广码
     public List<Popularize> getPopular(int user_id) {
-        String SQL = "select * from pc_popularize where popularize_id =" + user_id+" and is_enable=1";
+        String SQL = "select * from pc_popularize where popularize_id =" + user_id + " and is_enable=1";
         List<Popularize> popularizeList = jdbcTemplateObject.query(SQL, new PopularizeMapper());
         return popularizeList;
     }
@@ -755,18 +755,21 @@ public class AppDB {
         List<CrossCity> crossCityList = jdbcTemplateObject.query(SQL, new CrossCityMapper());
         return crossCityList;
     }
+
     //得到合作商家列表
     public List<Partner> getPartnerList(String where) {
         String SQL = "SELECT * FROM pc_partner" + where;
         List<Partner> partnerList = jdbcTemplateObject.query(SQL, new PartnerMapper());
         return partnerList;
     }
+
     //根据条件获取新闻列表
     public List<News> getNewsList(String where) {
-        String SQL = "SELECT * FROM pc_news_type AS t  JOIN pc_news AS n ON t.type_id=n.type"+ where;
-        List<News> newsList = jdbcTemplateObject.query(SQL,new NewsMapper());
+        String SQL = "SELECT * FROM pc_news_type AS t  JOIN pc_news AS n ON t.type_id=n.type" + where;
+        List<News> newsList = jdbcTemplateObject.query(SQL, new NewsMapper());
         return newsList;
     }
+
     //获取新闻列表（每一个类型查询出一条）
     public List<News> getNewsList1(String where) {
         String SQL = "SELECT * FROM (SELECT t.logo,t.type_id,t.type_name,t.is_enable ,n.* FROM pc_news_type AS t  JOIN pc_news AS n ON t.type_id=n.type WHERE is_enable = 1 AND isDel = 1 AND type!=7 ORDER BY create_time DESC) tt GROUP BY type";
@@ -794,8 +797,8 @@ public class AppDB {
     }
 
     public List<ArriveDriver> getArriveList(String where) {
-        String SQL = " SELECT * FROM arrive_driver_relation" +where;
-        List<ArriveDriver> arriveDriverList = jdbcTemplateObject.query(SQL,new ArrvieDriverMapper());
+        String SQL = " SELECT * FROM arrive_driver_relation" + where;
+        List<ArriveDriver> arriveDriverList = jdbcTemplateObject.query(SQL, new ArrvieDriverMapper());
         return arriveDriverList;
     }
 }
