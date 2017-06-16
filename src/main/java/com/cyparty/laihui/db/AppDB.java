@@ -796,6 +796,12 @@ public class AppDB {
         return newsList;
     }
 
+    /**
+     * 查询必达单
+     *
+     * @param where
+     * @return
+     */
     public List<ArriveDriver> getArriveList(String where) {
         String SQL = " SELECT * FROM arrive_driver_relation" + where;
         List<ArriveDriver> arriveDriverList = jdbcTemplateObject.query(SQL, new ArrvieDriverMapper());
