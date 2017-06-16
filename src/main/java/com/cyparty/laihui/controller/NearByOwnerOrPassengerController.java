@@ -106,6 +106,7 @@ public class NearByOwnerOrPassengerController {
                     JSONArray jsonArray1 = new JSONArray();
                     String whereCity1 = " where is_enable =1 and user_id != " + user_id + " and departure_time >'" + current_time + "' and departure_code = " + adCode + " group by destination_address_code asc";
                     crossCityList1 = appDB.getCrossCityList(whereCity1);
+
                     if (crossCityList1.size() > 0) {
                         for (int i = 0; i < crossCityList1.size(); i++) {
                             String address_board4DB = crossCityList1.get(i).getBreakout_point();

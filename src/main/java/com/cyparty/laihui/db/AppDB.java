@@ -818,8 +818,8 @@ public class AppDB {
      */
     public boolean isArrivePassenger(int id) {
         boolean flag = false;
-        String SQL = "SELECT * FROM arrive_driver_relation WHERE is_del = 1 AND passenger_id = " + id;
-        if (jdbcTemplateObject.query(SQL, new ArrvieDriverMapper()).size() > 0)
+        String SQL = "SELECT * FROM pc_passenger_publish_info WHERE is_enable = 1 AND is_arrive = 1 AND user_id = " + id;
+        if (jdbcTemplateObject.query(SQL, new CrossCityMapper()).size() > 0)
             flag = true;
         return flag;
     }
