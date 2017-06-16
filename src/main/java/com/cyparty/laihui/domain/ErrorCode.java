@@ -27,8 +27,8 @@ ErrorCode {
     private static final int order_grabed_unable_cancle = 502; //当前订单不存在
     private static final int order_is_self = 100; //司机不能抢自己的单子
     private static final int invite_time = 601; //邀请过于频繁
-
     private static final int no_data = 408;
+    private static final int error_system = 500;
 
     public static int getInvite_time() {
         return invite_time;
@@ -97,5 +97,9 @@ ErrorCode {
 
     public static int getNo_data() {
         return no_data;
+    }
+
+    public static int getError_system() {
+        return error_system;
     }
 }

@@ -33,12 +33,10 @@ public class ArriveController {
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
         String json = "";
-        int userId = 0;
         try {
             //判断用户标识
             String mobile = request.getParameter("mobile");
             if (request.getParameter("token") != null && request.getParameter("token").length() == 32) {
-                //String token = request.getParameter("token");
                 int page = 0;
                 int size = 10;
                 if (request.getParameter("page") != null && !request.getParameter("page").trim().equals("")) {
