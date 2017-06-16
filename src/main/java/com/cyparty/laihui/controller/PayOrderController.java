@@ -96,9 +96,6 @@ public class PayOrderController {
                 String now_ip = Utils.getIP(request);
                 String nonce_str = Utils.getCharAndNum(32);
                 double inputFee = 0.0;
-//                if (inviteIimit.size()>0){
-//                    inputFee=inviteIimit.get(0).getPrice()*100*passengerOrder.getSeats();
-//                }else
                 inputFee = passengerOrder.getPay_money() * 100;
                 int inputIntFee = (int) inputFee;
                 String total_fee = inputIntFee + "";
