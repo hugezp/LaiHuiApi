@@ -55,8 +55,6 @@ public class NearByOwnerOrPassengerController {
         int adCode = 0;
         //获取系统时间
         String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
-        //附近车主（乘客）搜索范围
-        double query_distance = ConfigUtils.getQuery_distance();
         try {
             String action = request.getParameter("action");
             int page = 0;
@@ -102,6 +100,8 @@ public class NearByOwnerOrPassengerController {
             }
             switch (action) {
                 case "nearby_owner":
+                    //判断是否为发必达单乘客
+                    boolean arrivePassenger = appDB.isArrivePassenger(user_id);
                     List<CrossCity> crossCityList1 = new ArrayList<CrossCity>();
                     JSONArray jsonArray1 = new JSONArray();
                     String whereCity1 = " where is_enable =1 and user_id != " + user_id + " and departure_time >'" + current_time + "' and departure_code = " + adCode + " group by destination_address_code asc";
@@ -158,6 +158,7 @@ public class NearByOwnerOrPassengerController {
                         result.put("user_name", user.getUser_nick_name());
                         result.put("user_mobile", user.getUser_mobile());
                         result.put("cityData", jsonArray1);
+                        result.put("isArrive", arrivePassenger);
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近车主获取成功");
                     } else {
                         result = AppJsonUtils.getNearByOwnerList(owenrList, page, size, owenrList.size(), appDB);
@@ -170,10 +171,14 @@ public class NearByOwnerOrPassengerController {
                         result.put("user_name", user.getUser_nick_name());
                         result.put("user_mobile", user.getUser_mobile());
                         result.put("cityData", jsonArray1);
+                        result.put("isArrive", arrivePassenger);
                         json = AppJsonUtils.returnSuccessJsonString(result, "您的附近暂时还没有车主出现哦");
                     }
                     break;
                 case "nearby_passenger":
+                    //判断车主是否为接受必达单推送的车主
+                    String driverMobile = user.getUser_mobile();
+                    boolean flag = appDB.isArriveDriver(driverMobile);
                     List<CrossCity> crossCityList = new ArrayList<CrossCity>();
                     JSONArray jsonArray = new JSONArray();
                     String whereCity = " where is_enable =1 and user_id != " + user_id + " and order_status=0 and departure_time >'" + current_time + "' and departure_code = '" + adCode + "' group by destination_address_code asc";
@@ -233,6 +238,7 @@ public class NearByOwnerOrPassengerController {
                         result.put("user_name", user.getUser_nick_name());
                         result.put("user_mobile", user.getUser_mobile());
                         result.put("cityData", jsonArray);
+                        result.put("isArrive",flag);
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近乘客获取成功！");
                     } else {
                         result = AppJsonUtils.getNearByPassengerList(passengerList, page, size, passengerList.size());
@@ -246,6 +252,7 @@ public class NearByOwnerOrPassengerController {
                         result.put("user_name", user.getUser_nick_name());
                         result.put("user_mobile", user.getUser_mobile());
                         result.put("cityData", jsonArray);
+                        result.put("isArrive",flag);
                         json = AppJsonUtils.returnSuccessJsonString(result, "您的附近暂时还没有乘客出现哦！");
                     }
             }
@@ -260,7 +267,6 @@ public class NearByOwnerOrPassengerController {
 
     /**
      * 附近乘客（车主）列表模块
-     *
      * @param request
      * @return
      */

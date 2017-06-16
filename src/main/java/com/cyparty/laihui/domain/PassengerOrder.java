@@ -48,6 +48,24 @@ public class PassengerOrder {
     private int destination_code;//目的地code前四位
     private double s_distance;
     private double e_distance;
+    private int isArrive;//是否为必达车单 0正常 1必达
+    private int refuse;//拒绝次数
+
+    public int getIsArrive() {
+        return isArrive;
+    }
+
+    public void setIsArrive(int isArrive) {
+        this.isArrive = isArrive;
+    }
+
+    public int getRefuse() {
+        return refuse;
+    }
+
+    public void setRefuse(int refuse) {
+        this.refuse = refuse;
+    }
 
     public double getS_distance() {
         return s_distance;

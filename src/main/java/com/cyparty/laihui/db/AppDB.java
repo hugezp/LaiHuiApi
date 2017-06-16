@@ -801,5 +801,40 @@ public class AppDB {
         List<ArriveDriver> arriveDriverList = jdbcTemplateObject.query(SQL, new ArrvieDriverMapper());
         return arriveDriverList;
     }
+
+    /**
+     * 是否为必达单车主
+     */
+    public boolean isArriveDriver(String phone) {
+        boolean flag = false;
+        String SQL = "SELECT * FROM arrive_driver_relation WHERE is_del = 1 AND driver_phone = " + phone;
+        if (jdbcTemplateObject.query(SQL, new ArrvieDriverMapper()).size() > 0)
+            flag = true;
+        return flag;
+    }
+
+    /**
+     * 是否为必达单乘客
+     */
+    public boolean isArrivePassenger(int id) {
+        boolean flag = false;
+        String SQL = "SELECT * FROM arrive_driver_relation WHERE is_del = 1 AND passenger_id = " + id;
+        if (jdbcTemplateObject.query(SQL, new ArrvieDriverMapper()).size() > 0)
+            flag = true;
+        return flag;
+    }
+
+    /**
+     * 创建必达单
+     */
+    public boolean createPassengerDepartureArrive(PassengerOrder passengerOrder) {
+        boolean is_success = true;
+        String SQL = "insert into pc_passenger_publish_info(user_id,departure_time,booking_seats,boarding_point,breakout_point,description,create_time,is_enable,departure_city_code,destination_city_code,departure_address_code,destination_address_code,order_status,price,source,trade_no,remark,boarding_latitude,boarding_longitude,breakout_latitude,breakout_longitude,departure_code,destination_code,is_arrive) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{passengerOrder.getUser_id(), passengerOrder.getStart_time(), passengerOrder.getSeats(), passengerOrder.getBoarding_point(), passengerOrder.getBreakout_point(), passengerOrder.getDescription(), Utils.getCurrentTime(), 1, passengerOrder.getDeparture_city_code(), passengerOrder.getDestination_city_code(), passengerOrder.getDeparture_address_code(), passengerOrder.getDestination_address_code(), 0, passengerOrder.getPay_money(), passengerOrder.getSource(), passengerOrder.getPay_num(), passengerOrder.getRemark(), passengerOrder.getBoarding_latitude(), passengerOrder.getBoarding_longitude(), passengerOrder.getBreakout_latitude(), passengerOrder.getBreakout_longitude(), passengerOrder.getDeparture_code(), passengerOrder.getDestination_code(), passengerOrder.getIsArrive()});
+        if (count < 1) {
+            is_success = false;
+        }
+        return is_success;
+    }
 }
 

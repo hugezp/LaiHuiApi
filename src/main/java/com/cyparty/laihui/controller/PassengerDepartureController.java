@@ -249,6 +249,7 @@ public class PassengerDepartureController {
                         e.printStackTrace();
                     }
                     if (user_id > 0) {
+
                         String user_where = " where _id=" + user_id;
                         User user = appDB.getUserList(user_where).get(0);
                         if (user.getIs_validated() == 1) {
@@ -289,7 +290,11 @@ public class PassengerDepartureController {
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                             }
                             PassengerOrder order = new PassengerOrder();
-
+                            String isArrive = request.getParameter("isArrive");
+                            //1是必达单
+                            if (isArrive.equals("1")){
+                                order.setIsArrive(Integer.parseInt(isArrive));
+                            }
                             order.setPay_money(price);
                             order.setSource(source);
                             order.setUser_id(user_id);
@@ -326,7 +331,11 @@ public class PassengerDepartureController {
                                 List<Order> todayOrderList = appDB.getOrderReview(now_where, 0);
                                 if (todayOrderList.size() < ConfigUtils.getDriver_departure_counts()) {
                                     //将车单添加到数据库中
-                                    is_success = appDB.createPassengerDeparture(order);
+                                    if (isArrive.equals("1")){
+                                        is_success = appDB.createPassengerDepartureArrive(order);
+                                    }else {
+                                        is_success = appDB.createPassengerDeparture(order);
+                                    }
                                 } else {
                                     json = AppJsonUtils.returnFailJsonString(result, "每日发布行程次数为" + ConfigUtils.getPassenger_departure_counts() + "次，您今日发布次数已达到上限！");
                                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -355,6 +364,7 @@ public class PassengerDepartureController {
                                 result.put("breakout_point", breakout_point);
                                 result.put("departure_time", start_time);
                                 result.put("price", order.getPay_num());
+                                result.put("isArrive", isArrive);
                                 result.put("msg","成功！");
                                 json = AppJsonUtils.returnSuccessJsonString(result, "乘客行程单创建成功！");
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
