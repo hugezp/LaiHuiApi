@@ -33,11 +33,13 @@ public class ArriveOrderService {
             String token = request.getParameter("token");
             if (token != null && token.length() == 32) {
                 int car_id = Integer.parseInt(request.getParameter("car_id"));
-                String where = " where a.is_enable = 1 and a.order_status = 1 and a._id = " + car_id;
+                String where = " where a.is_enable = 1 and a._id = " + car_id;
                 List<PassengerOrder> passengerOrderList = appDB.getPassengerDepartureInfo(where);
                 if (passengerOrderList.size() > 0) {
                     String update_sql = " set order_status=2 ,update_time='" + confirm_time + "' where order_type = 2 and order_id=" + car_id;
                     appDB.update("pc_orders", update_sql);//司机抢单记录状态
+                    String updateSql = " set order_status = 1 where _id = " + car_id;
+                    appDB.update("pc_passenger_publish_info",updateSql);
                     //推送给车主
                     String uwhere = " where _id =" + appDB.getIDByToken(token);
                     User user = appDB.getUserList(uwhere).get(0);
