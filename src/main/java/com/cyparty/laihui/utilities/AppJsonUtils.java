@@ -651,6 +651,15 @@ public class AppJsonUtils {
             dataObject.put("seats", departure.getSeats());
             dataObject.put("description", departure.getDescription());
             dataObject.put("price", departure.getPay_money());
+            //判断是否是通过车可邀请抢单通道过来的
+//            where = " where a.user_id="+user_id+" and a.is_enable=1 order by a._id";
+//            List<DepartureInfo> departureInfoList = appDB.getAppDriverDpartureInfo(where);
+//            if (departureInfoList.size()>0){
+//                where = " where passenger_car_id="+id+" and driver_car_id="+departureInfoList.get(0).getR_id();
+//                if (appDB.getinviteIimit(where).size()>0){
+//                    dataObject.put("price",appDB.getinviteIimit(where).get(0).getPrice()*departure.getSeats());
+//                }
+//            }
             dataObject.put("create_time", DateUtils.getTimesToNow(departure.getCreate_time()));
             dataObject.put("boarding_point", JSONObject.parseObject(departure.getBoarding_point()));
             dataObject.put("breakout_point", JSONObject.parseObject(departure.getBreakout_point()));
@@ -1709,7 +1718,7 @@ public class AppJsonUtils {
         String remake = "";
         //判断为乘客乘客
         if (judgment.equals("passenger")) {
-            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and a.order_status<=2 and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
+            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and a.order_status<=200 and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
             List<Order> orderList = appDB.getOrderReview(where, 2);
             if (orderList.size() > 0) {
                 for (Order order : orderList) {

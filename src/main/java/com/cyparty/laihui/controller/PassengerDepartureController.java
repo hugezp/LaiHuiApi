@@ -53,7 +53,7 @@ public class PassengerDepartureController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         responseHeaders.set("Access-Control-Allow-Origin", "*");
-        String json = "";
+        String json ="";
         String origin_location = request.getParameter("origin_location");
         String destination_location = request.getParameter("destination_location");
         String booking_seats = request.getParameter("booking_seats");
@@ -89,12 +89,12 @@ public class PassengerDepartureController {
             int duration = nowObject.getIntValue("duration");
             //正式
             double start_price = 0;
-            double price = distance * 3.3 / 10000f;
-            if (distance <= 200000) {
+            double  price = distance * 3.3 / 10000f;
+            if (distance<=200000){
                 start_price = 10.0;
 
             }
-            double last_price = start_price + price * person;
+            double last_price = start_price + price*person;
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
             resultObject.put("price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
@@ -104,9 +104,8 @@ public class PassengerDepartureController {
             resultObject.put("average", new BigDecimal(df.format(average)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         }
         json = AppJsonUtils.returnSuccessJsonString(resultObject, "价格计算成功！");
-        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(json,responseHeaders, HttpStatus.OK);
     }
-
     /**
      * 计算乘客价格模块
      *
@@ -152,12 +151,12 @@ public class PassengerDepartureController {
             int duration = nowObject.getIntValue("duration");
             //正式
             double start_price = 0;
-            double price = distance * 3.3 / 10000f;
-            if (distance <= 200000) {
+            double  price = distance * 3.3 / 10000f;
+            if (distance<=200000){
                 start_price = 10.0;
 
             }
-            double last_price = start_price + price * person;
+            double last_price = start_price + price*person;
             //测试
 //            double  price =0.01;
 //            double last_price =0.01;
@@ -292,9 +291,6 @@ public class PassengerDepartureController {
                             }
                             PassengerOrder order = new PassengerOrder();
                             String isArrive = request.getParameter("isArrive");
-                            if (isArrive == null || isArrive.equals("")) {
-                                isArrive = "0";
-                            }
                             //1是必达单
                             if (isArrive.equals("1")) {
                                 order.setIsArrive(Integer.parseInt(isArrive));
@@ -331,7 +327,12 @@ public class PassengerDepartureController {
                             } else {
                                 //查询今日已发布次数
                                 String now_time = Utils.getCurrentTime().split(" ")[0] + " 00:00:00";
-                                String now_where = " where user_id=" + user_id + " and create_time >='" + now_time + "' and order_type=0 ";
+                                String now_where = "";
+                                if (isArrive.equals("1")){
+                                    now_where = " where user_id=" + user_id + " and create_time >='" + now_time + "' and order_type=200 ";
+                                }else {
+                                    now_where = " where user_id=" + user_id + " and create_time >='" + now_time + "' and order_type=0 ";
+                                }
                                 List<Order> todayOrderList = appDB.getOrderReview(now_where, 0);
                                 if (todayOrderList.size() < ConfigUtils.getDriver_departure_counts()) {
                                     //将车单添加到数据库中
@@ -354,7 +355,11 @@ public class PassengerDepartureController {
                                 order1.setUser_id(user_id);
                                 order1.setOrder_id(id);
                                 order1.setSource(source);
-                                order1.setOrder_status(0);
+                                if (isArrive.equals("1")) {
+                                    order1.setOrder_status(200);
+                                } else {
+                                    order1.setOrder_status(0);
+                                }
                                 order1.setOrder_type(0);
                                 order1.setIs_complete(0);
                                 order1.setCreate_time(confirm_time);
