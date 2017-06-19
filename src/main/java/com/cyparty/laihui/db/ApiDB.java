@@ -16,4 +16,14 @@ public class ApiDB {
         this.dataSource = dataSource;
         this.jdbcTemplateObject = new JdbcTemplate(dataSource);
     }
+
+    public boolean update(String table, String where) {
+        boolean isSuccess = false;
+        String SQL = "UPDATE " + table + where;
+        int count = jdbcTemplateObject.update(SQL);
+        if (count == 1) {
+            isSuccess = true;
+        }
+        return isSuccess;
+    }
 }

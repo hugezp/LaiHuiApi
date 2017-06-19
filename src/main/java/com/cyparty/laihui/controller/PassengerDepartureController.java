@@ -53,7 +53,7 @@ public class PassengerDepartureController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         responseHeaders.set("Access-Control-Allow-Origin", "*");
-        String json ="";
+        String json = "";
         String origin_location = request.getParameter("origin_location");
         String destination_location = request.getParameter("destination_location");
         String booking_seats = request.getParameter("booking_seats");
@@ -89,12 +89,12 @@ public class PassengerDepartureController {
             int duration = nowObject.getIntValue("duration");
             //正式
             double start_price = 0;
-            double  price = distance * 3.3 / 10000f;
-            if (distance<=200000){
+            double price = distance * 3.3 / 10000f;
+            if (distance <= 200000) {
                 start_price = 10.0;
 
             }
-            double last_price = start_price + price*person;
+            double last_price = start_price + price * person;
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
             resultObject.put("price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
@@ -104,8 +104,9 @@ public class PassengerDepartureController {
             resultObject.put("average", new BigDecimal(df.format(average)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         }
         json = AppJsonUtils.returnSuccessJsonString(resultObject, "价格计算成功！");
-        return new ResponseEntity<>(json,responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
+
     /**
      * 计算乘客价格模块
      *
@@ -151,12 +152,12 @@ public class PassengerDepartureController {
             int duration = nowObject.getIntValue("duration");
             //正式
             double start_price = 0;
-            double  price = distance * 3.3 / 10000f;
-            if (distance<=200000){
+            double price = distance * 3.3 / 10000f;
+            if (distance <= 200000) {
                 start_price = 10.0;
 
             }
-            double last_price = start_price + price*person;
+            double last_price = start_price + price * person;
             //测试
 //            double  price =0.01;
 //            double last_price =0.01;
@@ -291,8 +292,11 @@ public class PassengerDepartureController {
                             }
                             PassengerOrder order = new PassengerOrder();
                             String isArrive = request.getParameter("isArrive");
+                            if (isArrive == null || isArrive.equals("")) {
+                                isArrive = "0";
+                            }
                             //1是必达单
-                            if (isArrive.equals("1")){
+                            if (isArrive.equals("1")) {
                                 order.setIsArrive(Integer.parseInt(isArrive));
                             }
                             order.setPay_money(price);
@@ -331,9 +335,9 @@ public class PassengerDepartureController {
                                 List<Order> todayOrderList = appDB.getOrderReview(now_where, 0);
                                 if (todayOrderList.size() < ConfigUtils.getDriver_departure_counts()) {
                                     //将车单添加到数据库中
-                                    if (isArrive.equals("1")){
+                                    if (isArrive.equals("1")) {
                                         is_success = appDB.createPassengerDepartureArrive(order);
-                                    }else {
+                                    } else {
                                         is_success = appDB.createPassengerDeparture(order);
                                     }
                                 } else {
@@ -357,15 +361,15 @@ public class PassengerDepartureController {
                                 order1.setRemark(remark);
                                 appDB.createOrderReview(order1);
                                 //乘客车单ID
-                                List<Order> orders =appDB.getOrderReview(" where order_id ="+id,0);
+                                List<Order> orders = appDB.getOrderReview(" where order_id =" + id, 0);
                                 result.put("car_id", id);
-                                result.put("order_id",orders.get(0).get_id());
+                                result.put("order_id", orders.get(0).get_id());
                                 result.put("boarding_point", boarding_point);
                                 result.put("breakout_point", breakout_point);
                                 result.put("departure_time", start_time);
                                 result.put("price", order.getPay_num());
                                 result.put("isArrive", isArrive);
-                                result.put("msg","成功！");
+                                result.put("msg", "成功！");
                                 json = AppJsonUtils.returnSuccessJsonString(result, "乘客行程单创建成功！");
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                             }
@@ -416,11 +420,11 @@ public class PassengerDepartureController {
                                     e.printStackTrace();
                                 }
                             }
-                            notify_where = " where departure_address = '"+ boarding_address +"' and destinat_address='"+ breakout_address+ "' and is_enable=1 and is_switch=1";
+                            notify_where = " where departure_address = '" + boarding_address + "' and destinat_address='" + breakout_address + "' and is_enable=1 and is_switch=1";
                             List<CommonRoute> commonRouteList = appDB.getCommonRoute(notify_where);
-                            if (commonRouteList.size()>0){
-                                for (CommonRoute commonRoute : commonRouteList){
-                                    notify_where = " where _id = "+ commonRoute.getUser_id();
+                            if (commonRouteList.size() > 0) {
+                                for (CommonRoute commonRoute : commonRouteList) {
+                                    notify_where = " where _id = " + commonRoute.getUser_id();
                                     User user1 = appDB.getUserList(notify_where).get(0);
                                     String content = "顺路乘客" + user.getUser_nick_name() + "发布了 (" + order.getDeparture_time() + ") 从" + boarding_city + boarding_address + "到" + breakout_city + breakout_address + "的出行信息，与您经常驾驶的路线相符，快来抢单吧！";
                                     JSONObject passengerData = AppJsonUtils.getPushObject(appDB, order1, 1);
@@ -454,26 +458,26 @@ public class PassengerDepartureController {
                         if (boarding_point != null) {
                             JSONObject boardingObject = JSONObject.parseObject(boarding_point);
                             departure_address_code = boardingObject.getIntValue("adCode");
-                            departure_lon = Double.parseDouble((boardingObject.get("longitude").toString()).equals("")?"0.0":boardingObject.get("longitude").toString());
-                            departure_lat = Double.parseDouble((boardingObject.get("latitude").toString()).equals("")?"0.0":boardingObject.get("latitude").toString());
+                            departure_lon = Double.parseDouble((boardingObject.get("longitude").toString()).equals("") ? "0.0" : boardingObject.get("longitude").toString());
+                            departure_lat = Double.parseDouble((boardingObject.get("latitude").toString()).equals("") ? "0.0" : boardingObject.get("latitude").toString());
                         }
                         if (breakout_point != null) {
                             JSONObject breakoutObject = JSONObject.parseObject(breakout_point);
                             destination_address_code = breakoutObject.getIntValue("adCode");
-                            destinat_lon = Double.parseDouble((breakoutObject.get("longitude").toString()).equals("")?"0.0":breakoutObject.get("longitude").toString());
-                            destinat_lat = Double.parseDouble((breakoutObject.get("latitude").toString()).equals("")?"0.0":breakoutObject.get("latitude").toString());
+                            destinat_lon = Double.parseDouble((breakoutObject.get("longitude").toString()).equals("") ? "0.0" : breakoutObject.get("longitude").toString());
+                            destinat_lat = Double.parseDouble((breakoutObject.get("latitude").toString()).equals("") ? "0.0" : breakoutObject.get("latitude").toString());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    result = AppJsonUtils.getPassengerDepartureList(appDB, page, size, departure_address_code, destination_address_code, 0,departure_lon,departure_lat,destinat_lon,destinat_lat);
+                    result = AppJsonUtils.getPassengerDepartureList(appDB, page, size, departure_address_code, destination_address_code, 0, departure_lon, departure_lat, destinat_lon, destinat_lat);
                     json = AppJsonUtils.returnSuccessJsonString(result, "乘客出行信息获取成功");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 //精确查询（具体到某个乘客）
                 case "show_info":
                     //获取乘客车单ID
                     order_id = Integer.parseInt(request.getParameter("order_id"));
-                    result = AppJsonUtils.getPassengerDepartureList(appDB, page, size, departure_address_code, destination_address_code, order_id,0.0,0.0,0.0,0.0);
+                    result = AppJsonUtils.getPassengerDepartureList(appDB, page, size, departure_address_code, destination_address_code, order_id, 0.0, 0.0, 0.0, 0.0);
                     String data = Utils.getJsonObject(result.toJSONString(), "data");
                     if ("[]".equals(data) || null == data) {
                         json = AppJsonUtils.returnFailJsonString(result, "乘客出行信息详情获取失败！");
@@ -596,7 +600,7 @@ public class PassengerDepartureController {
                                         int push_id = user_id;
                                         int receive_id = driverList.get(0).getUser_id();
                                         int push_type = 23;
-                                        appDB.createPush(order_id, push_id, receive_id, push_type, content, 23, "23.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
+                                        appDB.createPush(order_id, push_id, receive_id, push_type, content, 23, "23.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
                                         notifyPush.pinCheNotify("23", d_mobile, content, order_id, passengerData, confirm_time);
                                     }
                                     json = AppJsonUtils.returnSuccessJsonString(result, "订单取消成功！");
@@ -626,8 +630,8 @@ public class PassengerDepartureController {
 
                     result = AppJsonUtils.getMyBookingOrderInfo(appDB, order_id);
                     String data = Utils.getJsonObject(result.toJSONString(), "passenger_data");
-                    String data1= Utils.getJsonObject(result.toJSONString(),"driver_data");
-                    if ("{}".equals(data) || null == data || result == null || result.equals("{}")||"{}".equals(data) || null == data) {
+                    String data1 = Utils.getJsonObject(result.toJSONString(), "driver_data");
+                    if ("{}".equals(data) || null == data || result == null || result.equals("{}") || "{}".equals(data) || null == data) {
                         json = AppJsonUtils.returnFailJsonString(result, "乘客订单已失效！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
 
@@ -669,7 +673,7 @@ public class PassengerDepartureController {
                         int push_id = user_id;
                         int receive_id = driverList.get(0).getUser_id();
                         int push_type = 24;
-                        appDB.createPush(grab_id, push_id, receive_id, push_type, content, push_type, "24.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
+                        appDB.createPush(grab_id, push_id, receive_id, push_type, content, push_type, "24.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
                         notifyPush.pinCheNotify("24", d_mobile, content, grab_id, passengerData, confirm_time);
 
                         json = AppJsonUtils.returnSuccessJsonString(result, "确认到达成功！");
@@ -687,11 +691,11 @@ public class PassengerDepartureController {
                     if (orderList1.size() == 0) {
                         //乘客没有创建车单标记
                         flag = 0;
-                        result.put("flag",flag);
+                        result.put("flag", flag);
                         json = AppJsonUtils.returnFailJsonString(result, "请您创建行程后再邀请车主");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
-                    result.put("flag",flag);
+                    result.put("flag", flag);
                     boolean is_enable = false;
                     if (user_id > 0) {
                         //获取系统现在时间
@@ -734,11 +738,11 @@ public class PassengerDepartureController {
                             //添加邀请记录
                             double price;
                             try {
-                                price =Double.parseDouble(request.getParameter("price"));
-                            }catch (Exception e){
+                                price = Double.parseDouble(request.getParameter("price"));
+                            } catch (Exception e) {
                                 price = 0.0;
                             }
-                            appDB.createInviteIimit(grab_id,user_id, driver_user_id, confirm_time,price,driver_id);
+                            appDB.createInviteIimit(grab_id, user_id, driver_user_id, confirm_time, price, driver_id);
                             is_enable = true;
                         }
                         if (is_enable) {
@@ -746,7 +750,7 @@ public class PassengerDepartureController {
                             int push_id = user_id;
                             int receive_id = driver_user_id;
                             int push_type = 28;
-                            appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
+                            appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
                             //将邀请消息推送给车主
                             notifyPush.pinCheNotify("28", driver_mobile, content, grab_id, passengerData, confirm_time);
 
@@ -905,15 +909,15 @@ public class PassengerDepartureController {
                 String content = "乘客" + user.getUser_nick_name() + "在" + confirm_time + "提醒您发车！";
                 JSONObject passengerData = new JSONObject();
                 passengerData.put("order_status", 100);
-                int push_type =27;
-                List<User> drivers = appDB.getUserList(" where user_mobile ='"+driver_mobile+"'");
-                if(drivers.size()>0){
-                    appDB.createPush(id, user_id, drivers.get(0).getUser_id(), push_type, content, push_type, "27.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(),null);
+                int push_type = 27;
+                List<User> drivers = appDB.getUserList(" where user_mobile ='" + driver_mobile + "'");
+                if (drivers.size() > 0) {
+                    appDB.createPush(id, user_id, drivers.get(0).getUser_id(), push_type, content, push_type, "27.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
                     notifyPush.pinCheNotify("27", driver_mobile, content, id, passengerData, confirm_time);
 
                     json = AppJsonUtils.returnSuccessJsonString(result, "提醒发车成功！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-                }else{
+                } else {
                     json = AppJsonUtils.returnFailJsonString(result, "提醒发车失败！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }

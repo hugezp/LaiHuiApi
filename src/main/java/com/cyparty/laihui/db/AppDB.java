@@ -318,7 +318,11 @@ public class AppDB {
         Integer id = jdbcTemplateObject.queryForObject(sql, Integer.class);
         return id.intValue();
     }
-
+    public int getMaxID(String parameter, String table,String where) {
+        String sql = "SELECT Max(" + parameter + ")id FROM  " + table + where;
+        Integer id = jdbcTemplateObject.queryForObject(sql, Integer.class);
+        return id.intValue();
+    }
 
     //创建乘客订单
     public boolean createPassengerOrder(PassengerOrder passengerOrder, int source) {

@@ -7,6 +7,7 @@ import com.cyparty.laihui.domain.ArriveDriver;
 import com.cyparty.laihui.domain.PassengerOrder;
 import com.cyparty.laihui.utilities.DateUtils;
 import com.cyparty.laihui.utilities.Utils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,15 +44,9 @@ public class ArriveService {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("car_id", passenger.get_id());
                 jsonObject.put("mobile", passenger.getMobile());
-
                 jsonObject.put("departure_time", DateUtils.getProcessdTime(passenger.getDeparture_time()));
                 jsonObject.put("create_time", DateUtils.getTimesToNow(passenger.getCreate_time()));
                 jsonObject.put("price", passenger.getPay_money());
-                jsonObject.put("suitability", passenger.getSuitability());
-                jsonObject.put("start_point_distance", passenger.getStart_point_distance());
-                jsonObject.put("end_point_distance", passenger.getEnd_point_distance());
-                jsonObject.put("boarding_point", passenger.getBoarding_point());
-                jsonObject.put("breakout_point", passenger.getBreakout_point());
                 jsonObject.put("i_province", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("province"));
                 //出发城市
                 jsonObject.put("i_city", net.sf.json.JSONObject.fromObject(passenger.getBoarding_point()).get("city"));
@@ -66,8 +61,8 @@ public class ArriveService {
                 } else {
                     jsonObject.put("name", passenger.getUser_name());
                 }
-
                 jsonObject.put("user_avatar", passenger.getUser_avatar());
+                jsonObject.put("user_id", passenger.getUser_id());
                 jsonObject.put("booking_seats", passenger.getSeats());
                 jsonObject.put("remark", passenger.getRemark());
                 jsonArray.add(jsonObject);
