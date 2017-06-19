@@ -172,7 +172,7 @@ public class APIController {
                     result.put("partner", AppJsonUtils.getPartner(appDB));
                     String where = "";
                     result.put("news", appDB.getNewsList1(where));
-                    where = " WHERE type_id = 7 AND is_enable = 1 AND isDel = 1";
+                    where = " WHERE type = 12 AND is_enable = 1 AND isDel = 1";
                     result.put("headlines", appDB.getNewsList(where));
                     json = AppJsonUtils.returnSuccessJsonString(result, "信息获取成功");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -224,7 +224,7 @@ public class APIController {
         String json = "";
         try {
             int type_id = Integer.parseInt(request.getParameter("type_id"));
-            String where = " WHERE type_id = " + type_id + " AND is_enable = 1 AND isDel=1";
+            String where = " WHERE type_id = " + type_id + " AND is_enable = 1 AND type != 12 AND isDel=1";
             List<News> newsList = appDB.getNewsList(where);
             result.put("newsList",newsList);
             json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功");

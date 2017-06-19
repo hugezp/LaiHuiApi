@@ -15,6 +15,7 @@ public class PassengerOrder {
     private int seats;//座位数
     private String boarding_point;//起点
     private String breakout_point;//终点
+    private String trade_no;//订单编号
 
     private String description;//描述
     private String create_time;//创建时间
@@ -50,6 +51,14 @@ public class PassengerOrder {
     private double e_distance;
     private int isArrive;//是否为必达车单 0正常 1必达
     private int refuse;//拒绝次数
+
+    public String getTrade_no() {
+        return trade_no;
+    }
+
+    public void setTrade_no(String trade_no) {
+        this.trade_no = trade_no;
+    }
 
     public int getIsArrive() {
         return isArrive;
