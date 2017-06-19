@@ -46,6 +46,16 @@ public class Order {
     //备注
     private String remark;
 
+    private int isArrive;
+
+    public int getIsArrive() {
+        return isArrive;
+    }
+
+    public void setIsArrive(int isArrive) {
+        this.isArrive = isArrive;
+    }
+
     public String getUpdate_time() {
         return update_time;
     }

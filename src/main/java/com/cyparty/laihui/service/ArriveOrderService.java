@@ -9,8 +9,6 @@ import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.NotifyPush;
 import com.cyparty.laihui.utilities.Utils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +38,7 @@ public class ArriveOrderService {
                 if (passengerOrderList.size() > 0) {
                     String update_sql1 = " set order_status = 200 ,update_time='" + confirm_time + "' where order_type = 2 and order_id=" + car_id;
                     appDB.update("pc_orders", update_sql1);//司机抢单记录状态
-                    String update_sql2 = " set order_status = 200 ,update_time='" + confirm_time + "' where order_type = 0 and order_id=" + car_id;
+                    String update_sql2 = " set order_status = 300 ,update_time='" + confirm_time + "' where order_type = 0 and order_id=" + car_id;
                     appDB.update("pc_orders", update_sql2);//乘客抢单记录状态
                     String updateSql = " set order_status = 1 where _id = " + car_id;
                     appDB.update("pc_passenger_publish_info", updateSql);

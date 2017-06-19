@@ -1,16 +1,9 @@
 package com.cyparty.laihui.controller.willArrive;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.ApiDB;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.ErrorCode;
-import com.cyparty.laihui.domain.Order;
-import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.service.RefuseArriveService;
-import com.cyparty.laihui.utilities.AppJsonUtils;
-import com.cyparty.laihui.utilities.ConfigUtils;
 import com.cyparty.laihui.utilities.NotifyPush;
-import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * Created by pangzhenpeng on 2017/6/17.
