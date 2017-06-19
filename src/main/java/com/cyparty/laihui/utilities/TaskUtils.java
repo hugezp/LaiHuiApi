@@ -112,10 +112,10 @@ public class TaskUtils {
             //处理APP端超时车单
             String driver_where = " where is_enable=1 and departure_time <='" + now_time + "'";
             List<DepartureInfo> departureInfoList = appDB.getAppDriverDpartureInfo(driver_where);
-            for (DepartureInfo departureInfo:departureInfoList){
-                String select_sql = " where user_id="+departureInfo.getUser_id()+" and is_enable=1 and order_status in(0,1,2)";
-                orderList = appDB.getOrderReview(select_sql,0);
-                if (orderList.size()==0){
+            for (DepartureInfo departureInfo : departureInfoList) {
+                String select_sql = " where user_id=" + departureInfo.getUser_id() + " and is_enable=1 and order_status in(0,1,2)";
+                orderList = appDB.getOrderReview(select_sql, 0);
+                if (orderList.size() == 0) {
                     String update_sql = " set is_enable=0 where _id = " + departureInfo.getR_id();
                     appDB.update("pc_driver_publish_info", update_sql);
                     System.out.println("车主车单超时，已成功处理！");
@@ -133,6 +133,22 @@ public class TaskUtils {
             is_success = appDB.update("pc_driver_publish_info", driver_time_over_where);
             if (is_success) {
                 System.out.println("PC端车主车单超时，已成功处理！");
+            }
+            //处理乘客超时必达单
+            uncomplete_where = " a left join pc_passenger_publish_info b on a.order_id=b._id where (a.order_status=200 or a.order_status=100) and order_type=0 and b.departure_time<='" + Utils.getCurrentTime() + "'";
+            orderList = appDB.getOrderReview(uncomplete_where, 2);
+            for (Order order : orderList) {
+                //乘客车单失效，该订单取消
+                String update_sql = " set order_status=5 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=0";
+                appDB.update("pc_orders", update_sql);
+
+                update_sql = " set order_status=5 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=2 and order_status>=0 ";
+                appDB.update("pc_orders", update_sql);
+
+                update_sql = " set is_enable=0 where _id = " + order.getOrder_id();
+                appDB.update("pc_passenger_publish_info", update_sql);
+
+                System.out.println("订单号为：" + order.getOrder_id() + "的乘客必达订单超时，已成功处理！");
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -64,8 +64,8 @@ public class RefuseArriveService {
         User user = new User();
         boolean isSuccess = false;
         try {
-            //订单ID
-            int orderId = Integer.parseInt(request.getParameter("order_id"));
+            //乘客车单ID
+            int passengerCarId = Integer.parseInt(request.getParameter("car_id"));
             if (request.getParameter("token") != null && request.getParameter("token").length() == 32) {
                 int userId = appDB.getIDByToken(request.getParameter("token"));
                 if (userId > 0) {
@@ -77,7 +77,7 @@ public class RefuseArriveService {
                         source = 1;
                     }
                     //判断该单是否已经被抢
-                    String passenger_order_where = " a left join pc_user b on a.user_id=b._id where a._id=" + orderId + " and is_enable=1 and order_status= 200";
+                    String passenger_order_where = " a left join pc_user b on a.user_id=b._id where order_id=" + passengerCarId + " and is_enable=1 and order_status= 200";
                     //检测当前乘客行程是否依旧有效
                     List<Order> passengerOrderList = appDB.getOrderReview(passenger_order_where, 1);
                     if (passengerOrderList.size() > 0) {
@@ -93,7 +93,7 @@ public class RefuseArriveService {
                             order.setUser_id(userId);
                             order.setOrder_id(passengerOrder.getOrder_id());
                             order.setSource(source);
-                            order.setOrder_status(0);
+                            order.setOrder_status(100);
                             order.setOrder_type(2);
                             order.setCreate_time(snatchTime);
                             isSuccess = appDB.createOrderReview(order);
@@ -113,7 +113,9 @@ public class RefuseArriveService {
                             String p_mobile = passengerOrder.getUser_mobile();
                             String driverMobile = user.getUser_mobile();
                             String content = "您的必达车单在" + snatchTime + "被尾号为" + driverMobile.substring(8, 11) + "的司机抢单，请您及时处理！";
-
+                            where = " SET is_del=0 WHERE driver_phone='" + driverMobile + "' and passenger_id = " + passengerOrder.getUser_id();
+                            //修改状态
+                            isSuccess = apiDB.update("arrive_driver_relation", where);
                             //乘客信息，司机信息，乘客订单信息
                             JSONObject driverData = AppJsonUtils.getPushObject(appDB, passengerOrder, 2);
                             driverData.put("order_status", 100);
@@ -128,7 +130,7 @@ public class RefuseArriveService {
                             where = " WHERE order_id = " + passengerOrder.getOrder_id();
                             int now_id = appDB.getMaxID("_id", "pc_orders", where);
                             //司机订单ID
-                            result.put("existing_id", now_id);
+                            result.put("driver_order_id", now_id);
                             json = AppJsonUtils.returnSuccessJsonString(result, "抢单成功！");
                             return json;
                         } else {

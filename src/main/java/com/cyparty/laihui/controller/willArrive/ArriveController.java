@@ -84,6 +84,7 @@ public class ArriveController {
         json = AppJsonUtils.returnSuccessJsonString(result, "数据获取成功!");
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
+
     /**
      * 查看必达单详情
      */
@@ -99,7 +100,7 @@ public class ArriveController {
             if (request.getParameter("token") != null && request.getParameter("token").length() == 32) {
                 //获取乘客车单ID
 
-                result = AppJsonUtils.getPassengerDepartureList(appDB, 0, 0, 0, 0, carId,0.0,0.0,0.0,0.0);
+                result = AppJsonUtils.getPassengerDepartureList(appDB, 0, 0, 0, 0, carId, 0.0, 0.0, 0.0, 0.0);
                 String data = Utils.getJsonObject(result.toJSONString(), "data");
                 if ("[]".equals(data) || null == data) {
                     json = AppJsonUtils.returnFailJsonString(result, "乘客出行信息详情获取失败！");
