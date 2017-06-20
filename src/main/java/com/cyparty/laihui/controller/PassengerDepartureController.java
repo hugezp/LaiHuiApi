@@ -775,7 +775,6 @@ public class PassengerDepartureController {
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
             result.put("error_code", ErrorCode.getParameter_wrong());
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);

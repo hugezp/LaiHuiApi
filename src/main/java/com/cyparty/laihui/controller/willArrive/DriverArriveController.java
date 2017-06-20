@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RequestMapping(value = "/api/app", method = RequestMethod.POST)
 @Controller
-public class ArriveController {
+public class DriverArriveController {
     @Autowired
     AppDB appDB;
 
