@@ -2,6 +2,7 @@ package com.cyparty.laihui.controller.willArrive;
 
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.service.ArriveOrderService;
+import com.cyparty.laihui.service.DriverDefaultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,10 +30,10 @@ public class DriverArriveController {
      */
     @ResponseBody
     @RequestMapping("/driver/default")
-    public ResponseEntity<String> passengerAgree(HttpServletRequest request){
+    public ResponseEntity<String> driverDefault(HttpServletRequest request){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        String json = ArriveOrderService.passengerAgree(appDB,request);
+        String json = DriverDefaultService.driverDefault(appDB,request);
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 }
