@@ -6,6 +6,7 @@ import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.service.ArriveService;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.Utils;
+import com.cyparty.laihui.service.DriverDefaultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -85,12 +86,21 @@ public class DriverArriveController {
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 
+    @ResponseBody
+    @RequestMapping("/driver/default")
+    public ResponseEntity<String> driverDefault (HttpServletRequest request){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        String json = DriverDefaultService.driverDefault(appDB, request);
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+    }
+
     /**
      * 查看必达单详情
      */
     @ResponseBody
     @RequestMapping(value = "/passenger/info")
-    public ResponseEntity<String> info(HttpServletRequest request) {
+    public ResponseEntity<String> info (HttpServletRequest request){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
