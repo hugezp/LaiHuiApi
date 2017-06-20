@@ -37,6 +37,10 @@ public class PassengerPublishInfoMapper implements RowMapper<PassengerOrder> {
         passenger.setBoarding_latitude(resultSet.getString("boarding_latitude"));
         passenger.setBreakout_longitude(resultSet.getString("breakout_longitude"));
         passenger.setBreakout_latitude(resultSet.getString("breakout_latitude"));
+        passenger.setDeparture_city_code(resultSet.getInt("departure_city_code"));
+        passenger.setDestination_city_code(resultSet.getInt("destination_city_code"));
+        passenger.setDeparture_address_code(resultSet.getInt("departure_address_code"));
+        passenger.setDestination_address_code(resultSet.getInt("destination_address_code"));
         passenger.setDeparture_code(resultSet.getInt("departure_code"));
         passenger.setDestination_code(resultSet.getInt("destination_code"));
         passenger.setRefuse(resultSet.getInt("refuse"));
