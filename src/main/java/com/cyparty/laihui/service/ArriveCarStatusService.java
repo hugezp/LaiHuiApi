@@ -88,7 +88,6 @@ public class ArriveCarStatusService {
                     json = AppJsonUtils.returnSuccessJsonString(result, "车主信息获取成功！");
                     return json;
                 } else {
-                    result.put("status", 0);
                     json = AppJsonUtils.returnFailJsonString(result, "暂无订单数据！");
                     return json;
                 }

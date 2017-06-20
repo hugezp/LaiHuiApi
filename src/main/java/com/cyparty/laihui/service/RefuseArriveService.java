@@ -114,7 +114,7 @@ public class RefuseArriveService {
                             String update_sql = " set order_status=100 , update_time='" + Utils.getCurrentTime() + "' where _id=" + passengerOrder.get_id();
                             appDB.update("pc_orders", update_sql);
                             //设置乘客车单状态
-                            update_sql = " set order_status=100 where _id=" + passengerOrder.getOrder_id();
+                            update_sql = " set order_status=1 where _id=" + passengerOrder.getOrder_id();
                             appDB.update("pc_passenger_publish_info", update_sql);
                             //通知乘客
                             String p_mobile = passengerOrder.getUser_mobile();
