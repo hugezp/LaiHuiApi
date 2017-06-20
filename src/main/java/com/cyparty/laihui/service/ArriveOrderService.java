@@ -23,7 +23,7 @@ public class ArriveOrderService {
     /**
      * 乘客同意车主抢单
      */
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false,rollbackFor = Exception.class)
     public static String passengerAgree(AppDB appDB, HttpServletRequest request) {
         JSONObject result = new JSONObject();
         String json = "";
@@ -85,7 +85,7 @@ public class ArriveOrderService {
     /**
      * 乘客拒绝车主抢单
      */
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false,rollbackFor = Exception.class)
     public static String passengerRefuse(AppDB appDB, HttpServletRequest request) {
         JSONObject result = new JSONObject();
         String json = "";
@@ -110,7 +110,7 @@ public class ArriveOrderService {
                     String update_sql2 = " set order_status=0,refuse = " + (refuse + 1) + " where _id=" + car_id;
                     appDB.update("pc_passenger_publish_info", update_sql2);//乘客车单状态
                     String update_sql3 = " set is_del = 0 where order_no = '" + tradeNo + "' and driver_phone = '" + d_mobile + "'";
-                    appDB.update("arrive_driver_relation",update_sql3);//该车主标记为普通车主
+                    appDB.update("arrive_driver_relation", update_sql3);//该车主标记为普通车主
                     String update_sql4 = " set order_status=200 ,update_time='" + confirm_time + "' where order_type = 0 and order_id=" + car_id;
                     appDB.update("pc_orders", update_sql4);//司机抢单记录状态
                     if (refuse == 2) {
@@ -119,14 +119,14 @@ public class ArriveOrderService {
                         String updateSql1 = " set is_del = 0 where order_no = " + tradeNo;
                         appDB.update("arrive_driver_relation", updateSql1);
                         String updateSql2 = " set order_status = -1 where order_type = 0 and order_id=" + car_id;
-                        appDB.update("pc_orders",updateSql2);
+                        appDB.update("pc_orders", updateSql2);
                     }
                     //推送给车主
                     String uwhere = " where _id =" + appDB.getIDByToken(token);
                     User user = appDB.getUserList(uwhere).get(0);
                     String content = "乘客" + user.getUser_nick_name() + "在" + confirm_time + "拒绝了您的抢单！";
                     //乘客信息，司机信息，乘客订单信息
-                    String where_order = " a left join pc_passenger_publish_info b on a.order_id=b._id where b._id=" + car_id + " and b.is_enable=1 and b.order_status=1 and departure_time>='" + Utils.getCurrentTime() + "'";
+                    String where_order = " a left join pc_passenger_publish_info b on a.order_id=b._id where b._id=" + car_id + " and b.is_enable=1 and b.order_status=0 and departure_time>='" + Utils.getCurrentTime() + "'";
                     List<Order> orderList = appDB.getOrderReview(where_order, 2);
                     Order passengerOrder = orderList.get(0);
                     JSONObject passengerData = AppJsonUtils.getPushObject(appDB, passengerOrder, 1);
@@ -140,7 +140,7 @@ public class ArriveOrderService {
                     return json;
                 } else {
                     result.put("error_code", ErrorCode.getBooking_order_is_not_existing());
-                    json = AppJsonUtils.returnFailJsonString(result, "该订单已失效或未被抢单！");
+                    json = AppJsonUtils.returnFailJsonString(result, "请勿重复拒绝！");
                     return json;
 
                 }
