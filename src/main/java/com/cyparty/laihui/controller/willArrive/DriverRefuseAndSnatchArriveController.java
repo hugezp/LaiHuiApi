@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 @RequestMapping(value = "/api/app")
-public class RefuseArriveController {
+public class DriverRefuseAndSnatchArriveController {
 
     @Autowired
     private ApiDB apiDB;

@@ -728,6 +728,7 @@ public class AppJsonUtils {
         int status = 0;
         //状态备注
         String remark = "";
+        int isArrive = 0;
         for (Order order : orderList) {
             JSONObject jsonObject = new JSONObject();
             JSONObject userObject = new JSONObject();
@@ -777,11 +778,29 @@ public class AppJsonUtils {
                 case 6:
                     status = 3;
                     remark = "退款成功";
+                    break;
+                case 100:
+                    status = 11;
+                    isArrive = 1;
+                    remark = "司机抢单";
+                    break;
+                case 200:
+                    status = 0;
+                    isArrive = 1;
+                    remark = "已支付,等待抢单";
+                    break;
+
+                case 300:
+                    status = 2;
+                    isArrive = 1;
+                    remark = "等待发车";
+                    break;
             }
             //乘客订单状态
             jsonObject.put("status", status);
             //乘客订单状态备注
             jsonObject.put("remark", remark);
+            jsonObject.put("isArrive", isArrive);
             //得到乘客基本信息
             String passenger_where = " where _id=" + order.getUser_id();
             User passenger = appDB.getUserList(passenger_where).get(0);
@@ -1014,6 +1033,7 @@ public class AppJsonUtils {
         int offset = page * size;
         int status = 0;
         String remark = "";
+        int isArrive = 0;
         where = where + " order by a.create_time DESC limit " + offset + "," + size;
         List<Order> orderList = appDB.getOrderReview(where, 2);
         for (Order order : orderList) {
@@ -1064,11 +1084,23 @@ public class AppJsonUtils {
                 case -1:
                     status = 2;
                     remark = "已发车";
+                    break;
+                case 100:
+                    status = 1;
+                    isArrive = 1;
+                    remark = "抢单成功,待乘客确认";
+                    break;
+                case 200:
+                    status = 1;
+                    isArrive = 1;
+                    remark = "乘客支付成功";
+                    break;
             }
             //乘客订单状态
             jsonObject.put("status", status);
             //乘客订单状态备注
             jsonObject.put("remark", remark);
+            jsonObject.put("isArrive", isArrive);
 
             //得到乘客基本信息
             where = " where _id=" + order.getUser_id();
@@ -1122,6 +1154,7 @@ public class AppJsonUtils {
         int offset = page * size;
         int status = 0;
         String remake = "";
+        int isArrive = 0;
         where = where + " order by a.create_time DESC limit " + offset + "," + size;
         List<Order> orderList = appDB.getOrderReview(where, 2);
         for (Order order : orderList) {
@@ -1168,16 +1201,20 @@ public class AppJsonUtils {
                     status = 5;
                     remake = "申请退款";
                     break;
-                case 200:
-                    status = 0;
-                    remake = "已支付,等待抢单";
-                    break;
                 case 100:
                     status = 11;
+                    isArrive = 1;
                     remake = "司机抢单";
                     break;
+                case 200:
+                    status = 0;
+                    isArrive = 1;
+                    remake = "已支付,等待抢单";
+                    break;
+
                 case 300:
                     status = 2;
+                    isArrive = 1;
                     remake = "等待发车";
                     break;
             }
@@ -1185,7 +1222,7 @@ public class AppJsonUtils {
             jsonObject.put("status", status);
             //车单状态备注
             jsonObject.put("remake", remake);
-
+            jsonObject.put("isArrive", isArrive);
             //得到乘客基本信息
             where = " where _id=" + order.getUser_id();
             List<User> passengers = appDB.getUserList(where);
@@ -1254,12 +1291,12 @@ public class AppJsonUtils {
                     remake = "已发车";
                     break;
                 case 100:
-                    isArrive=1;
+                    isArrive = 1;
                     status = 5;
                     remake = "抢单成功,等待乘客确认";
                     break;
                 case 200:
-                    isArrive=1;
+                    isArrive = 1;
                     status = 5;
                     remake = "乘客已支付";
             }

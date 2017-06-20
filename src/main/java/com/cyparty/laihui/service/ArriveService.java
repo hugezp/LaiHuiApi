@@ -43,6 +43,7 @@ public class ArriveService {
             for (PassengerOrder passenger : passengerOrderList) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("car_id", passenger.get_id());
+                jsonObject.put("isArrive", passenger.getIsArrive());
                 jsonObject.put("mobile", passenger.getMobile());
                 jsonObject.put("departure_time", DateUtils.getProcessdTime(passenger.getDeparture_time()));
                 jsonObject.put("create_time", DateUtils.getTimesToNow(passenger.getCreate_time()));
