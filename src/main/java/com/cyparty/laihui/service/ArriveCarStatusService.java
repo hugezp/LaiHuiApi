@@ -40,7 +40,7 @@ public class ArriveCarStatusService {
                     int status = order.getOrder_status();
                     result.put("status",status);
                     result.put("isArrive",order.getIsArrive());
-                    //得到司机基本信息
+                    //得到司机手机号
                     List<DepartureInfo> departures = appDB.getAppDriverDpartureInfo("where a.is_enable=1 and a.user_id=" + order.getDriver_id() + " order by CAST(a.create_time AS time) DESC limit 1");
                     if (departures.size() > 0) {
                         if (departures.get(0).getCurrent_seats() == 0) {
@@ -95,16 +95,55 @@ public class ArriveCarStatusService {
                             driverResult.put("mobile", driver.getUser_mobile());
                             driverResult.put("name", driver.getUser_nick_name());
                             driverResult.put("avatar", driver.getAvatar());
+                            PCCount driverPCCount = getPCCount(appDB, driver.getUser_id());
+                            driverResult.put("pc_count", driverPCCount.getTotal());
+                            result.put("driver_data",driverResult);
+                        }
+                        json = AppJsonUtils.returnSuccessJsonString(result,"车主信息获取成功！");
+                        return json;
+                    }else {
+                        where = " where _id=" + order.getDriver_id();
+                        List<User> drivers = appDB.getUserList(where);
+                        if (drivers.size() > 0) {
+                            User driver = drivers.get(0);
+                            driverResult.put("mobile", driver.getUser_mobile());
+                            driverResult.put("name", driver.getUser_nick_name());
+                            driverResult.put("avatar", driver.getAvatar());
 
                             PCCount driverPCCount = getPCCount(appDB, driver.getUser_id());
                             driverResult.put("pc_count", driverPCCount.getTotal());
                         }
+                        List<CarOwnerInfo> carOwnerInfos = appDB.getCarOwnerInfo("where a.user_id=" + order.getDriver_id());
+                        if (carOwnerInfos.size() > 0) {
+                            CarOwnerInfo user1 = carOwnerInfos.get(0);
+                            if (user1.getFlag() == 0) {
+                                driverResult.put("car", user1.getCar_id());
+                                driverResult.put("car_brand", user1.getCar_brand());
+                                driverResult.put("car_color", user1.getCar_color());
+                                driverResult.put("car_type", user1.getCar_type());
+                            } else {
+                                List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order.getDriver_id());
+                                UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                                driverResult.put("car", travelCardInfo.getCar_license_number());
+                                if (travelCardInfos.size() > 0) {
+                                    driverResult.put("car_brand", "");
+                                    driverResult.put("car_color", travelCardInfo.getCar_color());
+                                    driverResult.put("car_type", travelCardInfo.getCar_type());
+                                }
+                            }
+                            driverResult.put("car_owner", user1.getCar_owner());
+                        } else {
+                            List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order.getDriver_id());
+                            UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                            driverResult.put("car", travelCardInfo.getCar_license_number());
+                            if (travelCardInfos.size() > 0) {
+                                driverResult.put("car_brand", "");
+                                driverResult.put("car_color", travelCardInfo.getCar_color());
+                                driverResult.put("car_type", travelCardInfo.getCar_type());
+                            }
+                        }
                         result.put("driver_data",driverResult);
-                        json = AppJsonUtils.returnSuccessJsonString(result,"车主列表获取成功！");
-                        return json;
-                    }else {
-                        result.put("driver_data",driverResult);
-                        json = AppJsonUtils.returnSuccessJsonString(result, "暂无车辆信息！");
+                        json = AppJsonUtils.returnSuccessJsonString(result, "车主信息获取成功！");
                         return json;
                     }
                 }else {
