@@ -187,8 +187,6 @@ public class AppDB {
         List<Tag> tags = jdbcTemplateObject.query(SQL, new TagMapper());
         return tags;
     }
-
-
     public List<PassengerOrder> getPassengerDepartureInfo(String where) {
         String SQL = "SELECT * FROM pc_passenger_publish_info a left join pc_user b on a.user_id=b._id " + where;
         List<PassengerOrder> passengerPublishInfoList = jdbcTemplateObject.query(SQL, new PassengerPublishInfoMapper());

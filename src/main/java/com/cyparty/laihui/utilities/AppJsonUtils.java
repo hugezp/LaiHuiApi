@@ -1778,6 +1778,7 @@ public class AppJsonUtils {
         JSONArray array = new JSONArray();
         int status = 0;
         String remake = "";
+        int isArrive = 0;
         //判断为乘客乘客
         if (judgment.equals("passenger")) {
             String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and a.order_status<=300 and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
@@ -1816,7 +1817,13 @@ public class AppJsonUtils {
                             break;
                         case 100:
                             status = 1;
+                            isArrive = 1;
                             remake = "司机抢单";
+                            break;
+                        case 200:
+                            status = 1;
+                            isArrive = 1;
+                            remake = "等待抢单";
                             break;
                         case 0:
                             status = 1;
@@ -1826,6 +1833,7 @@ public class AppJsonUtils {
                     jsonObject.put("status", status);
                     //分属状态
                     jsonObject.put("remake", remake);
+                    jsonObject.put("isArrive", isArrive);
                     array.add(jsonObject);
                 }
             }

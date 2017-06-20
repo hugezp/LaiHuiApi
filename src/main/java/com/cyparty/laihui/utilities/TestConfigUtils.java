@@ -38,7 +38,14 @@ public class TestConfigUtils {
             case "15738961936" :
                 is_success = true;
                 break;
-
+            //原林
+            case "18838206194" :
+                is_success = true;
+                break;
+            //楊光
+            case "18837272773" :
+                is_success = true;
+                break;
         }
         return is_success;
     }

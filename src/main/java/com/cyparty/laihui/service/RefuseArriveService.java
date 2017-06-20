@@ -3,9 +3,7 @@ package com.cyparty.laihui.service;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.ApiDB;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.ErrorCode;
-import com.cyparty.laihui.domain.Order;
-import com.cyparty.laihui.domain.User;
+import com.cyparty.laihui.domain.*;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.ConfigUtils;
 import com.cyparty.laihui.utilities.NotifyPush;
@@ -115,7 +113,7 @@ public class RefuseArriveService {
                             boolean is = appDB.update("pc_orders", update_sql);
                             //设置乘客车单状态
                             update_sql = " set order_status= 1 where _id=" + passengerOrder.getOrder_id();
-                            boolean i2 =  appDB.update("pc_passenger_publish_info", update_sql);
+                            boolean i2 = appDB.update("pc_passenger_publish_info", update_sql);
                             //通知乘客
                             String p_mobile = passengerOrder.getUser_mobile();
                             String driverMobile = user.getUser_mobile();
@@ -123,16 +121,26 @@ public class RefuseArriveService {
                             where = " SET is_del=0 WHERE driver_phone='" + driverMobile + "' and passenger_id = " + passengerOrder.getUser_id();
                             //修改状态
                             isSuccess = apiDB.update("arrive_driver_relation", where);
+                            PassengerOrder passengerPublishInfo = appDB.getPassengerDepartureInfo(" a._id=" + passengerCarId + " and is_enable = 1").get(0);
                             //乘客信息，司机信息，乘客订单信息
-                            JSONObject driverData = AppJsonUtils.getPushObject(appDB, passengerOrder, 2);
-                            driverData.put("order_status", 100);
+                            JSONObject data = AppJsonUtils.getPushObject(appDB, passengerOrder, 2);
+                            data.put("order_status", 100);
+                            data.put("isArrive", 1);
+                            data.put("boarding_point", passengerPublishInfo.getBoarding_point());
+                            data.put("breakout_point", passengerPublishInfo.getBreakout_point());
+                            data.put("departure_time", passengerPublishInfo.getDeparture_time());
+                            data.put("seats", passengerPublishInfo.getSeats());
+                            data.put("price", passengerPublishInfo.getPay_money());
+                            data.put("order_id", passengerPublishInfo.get_id());
+                            data.put("record_id", passengerOrder.get_id());
+
                             int push_id = userId;
                             int receive_id = passengerOrder.getUser_id();
                             int push_type = 11;
-                            boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, receive_id, push_type, content, 11, "11.caf", driverData.toJSONString(), 1, driverMobile, null);
+                            boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, receive_id, push_type, content, 11, "11.caf", data.toJSONString(), 1, driverMobile, null);
                             if (is_true) {
                                 //将抢单信息通知给乘客
-                                notifyPush.pinCheNotify("11", p_mobile, content, passengerOrder.get_id(), driverData, snatchTime);
+                                notifyPush.pinCheNotify("11", p_mobile, content, passengerOrder.get_id(), data, snatchTime);
                             }
                             where = " WHERE order_id = " + passengerOrder.getOrder_id();
                             int now_id = appDB.getMaxID("_id", "pc_orders", where);

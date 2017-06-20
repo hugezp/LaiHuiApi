@@ -50,6 +50,7 @@ public class ArriveOrderService {
                 List<Order> orderList = appDB.getOrderReview(where_order, 2);
                 Order passengerOrder = orderList.get(0);
                 JSONObject passengerData = AppJsonUtils.getPushObject(appDB, passengerOrder, 1);
+                passengerData.put("isArrive",1);
                 int push_type = 21;
                 int push_id = user.getUser_id();
                 String dwhere = "a left join pc_user b on a.user_id = b._id where a.order_type = 2 and a.is_enable = 1 and a.order_id = " + car_id;
@@ -123,6 +124,14 @@ public class ArriveOrderService {
                 List<Order> orderList = appDB.getOrderReview(where_order, 2);
                 Order passengerOrder = orderList.get(0);
                 JSONObject passengerData = AppJsonUtils.getPushObject(appDB, passengerOrder, 1);
+                passengerData.put("isArrive",1);
+                passengerData.put("boarding_point",passengerOrder.getBoarding_point());
+                passengerData.put("breakout_point",passengerOrder.getBreakout_point());
+                passengerData.put("departure_time",passengerOrder.getDeparture_time());
+                passengerData.put("seats",passengerOrder.getBooking_seats());
+                passengerData.put("price",passengerOrder.getPrice());
+                passengerData.put("order_id",passengerOrder.getOrder_id());
+                passengerData.put("record_id",passengerOrder.get_id());
                 int push_type = 21;
                 int push_id = user.getUser_id();
                 boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "");
