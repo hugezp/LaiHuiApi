@@ -86,6 +86,9 @@ public class DriverArriveController {
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 
+    /**
+     * 车主抢必达单后生成车单
+     */
     @ResponseBody
     @RequestMapping("/driver/default")
     public ResponseEntity<String> driverDefault (HttpServletRequest request){

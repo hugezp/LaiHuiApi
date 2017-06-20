@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 /**
  * Created by pangzhenpeng on 2017/6/20.
  */
 @RequestMapping(value = "/api/app", method = RequestMethod.POST)
 @Controller
 public class PassengerArriveController {
+
     @Autowired
     AppDB appDB;
     private String json = "";
