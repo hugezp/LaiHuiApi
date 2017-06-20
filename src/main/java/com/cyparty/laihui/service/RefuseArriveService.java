@@ -11,6 +11,8 @@ import com.cyparty.laihui.utilities.ConfigUtils;
 import com.cyparty.laihui.utilities.NotifyPush;
 import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,6 +84,11 @@ public class RefuseArriveService {
                     List<Order> passengerOrderList = appDB.getOrderReview(passenger_order_where, 1);
                     if (passengerOrderList.size() > 0) {
                         Order passengerOrder = passengerOrderList.get(0);
+                        if (passengerOrder.getUser_id() == userId) {
+                            result.put("error_code", ErrorCode.getOrder_is_self());
+                            json = AppJsonUtils.returnFailJsonString(result, "抱歉，不能抢自己发的车单哦！");
+                            return json;
+                        }
                         //判断车主座位数是否满足当前乘客车单的需要
                         String snatchTime = Utils.getCurrentTime();//抢单时间
                         String departure_time = Utils.getCurrentTime().split(" ")[0];
@@ -112,7 +119,7 @@ public class RefuseArriveService {
                             //通知乘客
                             String p_mobile = passengerOrder.getUser_mobile();
                             String driverMobile = user.getUser_mobile();
-                            String content = "您的必达车单在" + snatchTime + "被尾号为" + driverMobile.substring(8, 11) + "的司机抢单，请您及时处理！";
+                            String content = "您的必达车单在" + snatchTime + "被尾号为" + driverMobile.substring(7, 11) + "的司机抢单，请您及时处理！";
                             where = " SET is_del=0 WHERE driver_phone='" + driverMobile + "' and passenger_id = " + passengerOrder.getUser_id();
                             //修改状态
                             isSuccess = apiDB.update("arrive_driver_relation", where);

@@ -783,7 +783,7 @@ public class PassengerDepartureController {
     }
 
     /**
-     * 乘客车单状态模块
+     * 乘客订单状态模块
      *
      * @param request
      * @return

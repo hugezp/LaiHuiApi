@@ -1107,7 +1107,7 @@ public class AppJsonUtils {
     }
 
     /**
-     * 获取车单状态
+     * 获取订单状态
      *
      * @param appDB
      * @param page    第几页
@@ -1140,16 +1140,17 @@ public class AppJsonUtils {
             jsonObject.put("create_time", order.getCreate_time());
             jsonObject.put("departure_time", order.getDeparture_time());
             jsonObject.put("price", order.getPrice());
+            jsonObject.put("isArrive", order.getIsArrive());
             //从订单具体状态判断车单进行的状态
             //乘客车单状态
             switch (order.getOrder_status()) {
                 case 0:
                     status = 0;
-                    remake = "订单失效请重新抢单";
+                    remake = "等待抢单";
                     break;
                 case 1:
                     status = 11;
-                    remake = "待乘客确认";
+                    remake = "司机抢单";
                     break;
                 case 2:
                     status = 12;
@@ -1165,7 +1166,20 @@ public class AppJsonUtils {
                     break;
                 case -1:
                     status = 5;
-                    remake = "乘客申请退款";
+                    remake = "申请退款";
+                    break;
+                case 200:
+                    status = 0;
+                    remake = "已支付,等待抢单";
+                    break;
+                case 100:
+                    status = 11;
+                    remake = "司机抢单";
+                    break;
+                case 300:
+                    status = 2;
+                    remake = "等待发车";
+                    break;
             }
             //车单状态
             jsonObject.put("status", status);
@@ -1198,6 +1212,7 @@ public class AppJsonUtils {
         int offset = page * size;
         int status = 0;
         String remake = "";
+        int isArrive = 0;
         where = where + " order by a.create_time DESC limit 1 ";
         List<Order> orderList = appDB.getOrderReview(where, 2);
         for (Order order : orderList) {
@@ -1237,9 +1252,20 @@ public class AppJsonUtils {
                 case -1:
                     status = 5;
                     remake = "已发车";
+                    break;
+                case 100:
+                    isArrive=1;
+                    status = 5;
+                    remake = "抢单成功,等待乘客确认";
+                    break;
+                case 200:
+                    isArrive=1;
+                    status = 5;
+                    remake = "乘客已支付";
             }
             //车单状态
             jsonObject.put("status", status);
+            jsonObject.put("isArrive", isArrive);
             //车单状态备注
             jsonObject.put("remake", remake);
             //得到司机基本信息
@@ -1497,7 +1523,7 @@ public class AppJsonUtils {
     }
 
     //新闻列表查询数据
-    public static JSONObject getNews(AppDB appDB,String where) {
+    public static JSONObject getNews(AppDB appDB, String where) {
         JSONArray dataArray = new JSONArray();
         JSONObject result_json = new JSONObject();
         List<News> newsList = appDB.getNewsList(where);
@@ -1750,6 +1776,10 @@ public class AppJsonUtils {
                         case -1:
                             status = 1;
                             remake = "退款申请";
+                            break;
+                        case 100:
+                            status = 1;
+                            remake = "司机抢单";
                             break;
                         case 0:
                             status = 1;
