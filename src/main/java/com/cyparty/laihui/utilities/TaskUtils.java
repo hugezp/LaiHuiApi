@@ -139,14 +139,21 @@ public class TaskUtils {
             orderList = appDB.getOrderReview(uncomplete_where, 2);
             for (Order order : orderList) {
                 //乘客车单失效，该订单取消
+
+
                 String update_sql = " set order_status=5 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=0";
                 appDB.update("pc_orders", update_sql);
+
+                PassengerOrder passengerPublishInfo = appDB.getPassengerDepartureInfo(" where a._id=" + order.getOrder_id() + " and is_enable = 1").get(0);
+                update_sql = " set is_del= 0 where order_no='"+passengerPublishInfo.getPay_num()+"'";
+                appDB.update("arrive_driver_relation", update_sql);
 
                 update_sql = " set order_status=5 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=2 and order_status>=0 ";
                 appDB.update("pc_orders", update_sql);
 
                 update_sql = " set is_enable=0 where _id = " + order.getOrder_id();
                 appDB.update("pc_passenger_publish_info", update_sql);
+
 
                 System.out.println("订单号为：" + order.getOrder_id() + "的乘客必达订单超时，已成功处理！");
             }

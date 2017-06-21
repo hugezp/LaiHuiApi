@@ -11,7 +11,9 @@ import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
 /**
  * Created by pangzhenpeng on 2017/6/19.
  */
-@Transactional(readOnly = false)
+
 public class RefuseArriveService {
     @Autowired
     static NotifyPush notifyPush;
@@ -58,12 +60,12 @@ public class RefuseArriveService {
         }
     }
 
-    @Transactional(readOnly = false)
-    public static String getSnatchArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request) {
+
+    public static String getSnatchArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request)throws Exception {
         JSONObject result = new JSONObject();
         User user = new User();
         boolean isSuccess = false;
-        try {
+
             //乘客车单ID
             int passengerCarId = Integer.parseInt(request.getParameter("car_id"));
             if (request.getParameter("token") != null && request.getParameter("token").length() == 32) {
@@ -113,15 +115,15 @@ public class RefuseArriveService {
                             boolean is = appDB.update("pc_orders", update_sql);
                             //设置乘客车单状态
                             update_sql = " set order_status= 1 where _id=" + passengerOrder.getOrder_id();
-                            boolean i2 = appDB.update("pc_passenger_publish_info", update_sql);
+                             appDB.update("pc_passenger_publish_info", update_sql);
                             //通知乘客
                             String p_mobile = passengerOrder.getUser_mobile();
                             String driverMobile = user.getUser_mobile();
                             String content = "您的必达车单在" + snatchTime + "被尾号为" + driverMobile.substring(7, 11) + "的司机抢单，请您及时处理！";
                             where = " SET is_del=0 WHERE driver_phone='" + driverMobile + "' and passenger_id = " + passengerOrder.getUser_id();
                             //修改状态
-                            isSuccess = apiDB.update("arrive_driver_relation", where);
-                            PassengerOrder passengerPublishInfo = appDB.getPassengerDepartureInfo(" a._id=" + passengerCarId + " and is_enable = 1").get(0);
+                            apiDB.update("arrive_driver_relation", where);
+                            PassengerOrder passengerPublishInfo = appDB.getPassengerDepartureInfo(" where a._id=" + passengerCarId + " and is_enable = 1").get(0);
                             //乘客信息，司机信息，乘客订单信息
                             JSONObject data = AppJsonUtils.getPushObject(appDB, passengerOrder, 2);
                             data.put("order_status", 100);
@@ -131,8 +133,8 @@ public class RefuseArriveService {
                             data.put("departure_time", passengerPublishInfo.getDeparture_time());
                             data.put("seats", passengerPublishInfo.getSeats());
                             data.put("price", passengerPublishInfo.getPay_money());
-                            data.put("order_id", passengerPublishInfo.get_id());
-                            data.put("record_id", passengerOrder.get_id());
+                            data.put("record_id", passengerPublishInfo.get_id());
+                            data.put("order_id", passengerOrder.get_id());
 
                             int push_id = userId;
                             int receive_id = passengerOrder.getUser_id();
@@ -168,10 +170,6 @@ public class RefuseArriveService {
                 json = AppJsonUtils.returnFailJsonString(result, "非法token!");
                 return json;
             }
-        } catch (Exception e) {
-            result.put("error_code", ErrorCode.getParameter_wrong());
-            json = AppJsonUtils.returnFailJsonString(result, "获取参数错误!");
-            return json;
-        }
+
     }
 }

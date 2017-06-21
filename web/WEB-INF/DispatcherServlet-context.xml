@@ -35,9 +35,9 @@
         <!--<property name="driverClassName" value="com.mysql.jdbc.Driver"/>-->
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <!--<property name="url" value="jdbc:mysql://rdska466r2fvvzh5vr7gb.mysql.rds.aliyuncs.com:3306/copy_cyparty_pc"/>-->
-        <!--<property name="url" value="jdbc:mysql://rdska466r2fvvzh5vr7gb.mysql.rds.aliyuncs.com:3306/laihui_version1"/>-->
-        <!--<property name="username" value="laihuidb2"/>-->
-        <!--<property name="password" value="fjdkjfeyuHHH3267222^^^7()*^h"/>-->
+        <!--<property name="url" value="jdbc:mysql://rm-m5e1a87u05v50r8vs.mysql.rds.aliyuncs.com:3306/laihui_version1"/>
+        <property name="username" value="laihuidb2"/>
+        <property name="password" value="fjdkjfeyuHHH3267222^^^7()*^h"/>-->
         <property name="url" value="jdbc:mysql://rm-m5e1a87u05v50r8vs.mysql.rds.aliyuncs.com:3306/copy_laihui"/>
         <property name="username" value="laihuitest"/>
         <property name="password" value="lldd22EE"/>
@@ -66,6 +66,9 @@
     <bean id="AppDB" class="com.cyparty.laihui.db.AppDB">
         <property name="dataSource" ref="appDataSource"/>
     </bean>
+    <bean id="ApiDB" class="com.cyparty.laihui.db.ApiDB">
+        <property name="dataSource" ref="appDataSource"/>
+    </bean>
     <!--oss-->
     <bean id="ossConfigure" class="com.cyparty.laihui.utilities.OssConfigure">
         <property name="accessKeyId" value="LTAIBylxOP12jqp2"/>
@@ -89,7 +92,7 @@
     <!--<bean id="testUtils" class="com.cyparty.laihui.utilities.TestUtils"></bean>-->
     <!--<bean id="task" class="com.cyparty.laihui.utilities.TaskUtils"></bean>-->
 
-    <bean id="multipartResolver"  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- one of the properties available; the maximum file size (100M)in bytes -->
         <property name="maxUploadSize" value="104857600"/>
         <property name="maxInMemorySize" value="4096"/>
@@ -100,9 +103,13 @@
     </bean>-->
     <!--事物管理-->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="appDataSource" />
+        <property name="dataSource" ref="appDataSource"/>
     </bean>
     <!-- 使用annotation注解方式配置事务 -->
-    <!-- 启用注解 --> <context:annotation-config/>
-    <tx:annotation-driven transaction-manager="transactionManager"  />
+    <!-- 启用注解 -->
+    <context:annotation-config/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <context:component-scan base-package="com.cyparty.laihui" >
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+    </context:component-scan>
 </beans>
