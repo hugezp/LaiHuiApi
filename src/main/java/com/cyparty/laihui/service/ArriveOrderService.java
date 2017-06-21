@@ -133,11 +133,11 @@ public class ArriveOrderService {
                 passengerData.put("price",passengerOrder.getPrice());
                 passengerData.put("order_id",passengerOrder.getOrder_id());
                 passengerData.put("record_id",passengerOrder.get_id());
-                int push_type = 21;
+                int push_type = 22;
                 int push_id = user.getUser_id();
                 boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "");
                 if (is_true) {
-                    NotifyPush.pinCheNotify("21", d_mobile, content, order_id, passengerData, confirm_time);
+                    NotifyPush.pinCheNotify("22", d_mobile, content, order_id, passengerData, confirm_time);
                 }
                 json = AppJsonUtils.returnSuccessJsonString(result, "处理成功！");
                 return json;
