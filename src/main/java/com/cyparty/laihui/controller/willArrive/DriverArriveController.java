@@ -87,18 +87,6 @@ public class DriverArriveController {
     }
 
     /**
-     * 车主抢必达单后生成车单
-     */
-    @ResponseBody
-    @RequestMapping("/driver/default")
-    public ResponseEntity<String> driverDefault (HttpServletRequest request){
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        String json = DriverDefaultService.driverDefault(appDB, request);
-        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-    }
-
-    /**
      * 查看必达单详情
      */
     @ResponseBody
