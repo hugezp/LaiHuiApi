@@ -9,6 +9,7 @@ import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.NotifyPush;
 import com.cyparty.laihui.utilities.Utils;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,13 +19,14 @@ import java.util.List;
  * 必达单订单相关的service
  * Created by YangGuang on 2017/6/17.
  */
+@Component
+@Transactional
 public class ArriveOrderService {
 
     /**
      * 乘客同意车主抢单
      */
-    @Transactional(readOnly = false)
-    public static String passengerAgree(AppDB appDB, HttpServletRequest request) {
+    public static String passengerAgree(AppDB appDB, HttpServletRequest request) throws RuntimeException{
         JSONObject result = new JSONObject();
         String json = "";
         String confirm_time = Utils.getCurrentTime();
@@ -80,8 +82,7 @@ public class ArriveOrderService {
     /**
      * 乘客拒绝车主抢单
      */
-    @Transactional(readOnly = false)
-    public static String passengerRefuse(AppDB appDB, HttpServletRequest request) {
+    public static String passengerRefuse(AppDB appDB, HttpServletRequest request) throws RuntimeException{
         JSONObject result = new JSONObject();
         String json = "";
         String confirm_time = Utils.getCurrentTime();
@@ -106,7 +107,7 @@ public class ArriveOrderService {
                 String update_sql3 = " set is_del = 0 where order_no = '" + tradeNo + "' and driver_phone = '" + d_mobile + "'";
                 appDB.update("arrive_driver_relation", update_sql3);//该车主标记为普通车主
                 String update_sql4 = " set order_status=200 ,update_time='" + confirm_time + "' where order_type = 0 and order_id=" + car_id;
-                appDB.update("pc_orders", update_sql4);//司机抢单记录状态
+                appDB.update("pc_orders", update_sql4);//乘客抢单记录状态
                 if (refuse == 2) {
                     String updateSql = " set is_arrive = 0 where _id = " + car_id;
                     appDB.update("pc_passenger_publish_info", updateSql);

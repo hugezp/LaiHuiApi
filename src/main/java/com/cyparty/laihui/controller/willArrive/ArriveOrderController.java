@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,24 +28,26 @@ public class ArriveOrderController {
     /**
      * 乘客同意车主抢单
      */
+    @Transactional
     @ResponseBody
     @RequestMapping(value = "/passenger/agree")
-    public ResponseEntity<String> passengerAgree(HttpServletRequest request){
+    public ResponseEntity<String> passengerAgree(HttpServletRequest request) throws RuntimeException{
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        String json = ArriveOrderService.passengerAgree(appDB,request);
+        String json = ArriveOrderService.passengerAgree(appDB, request);
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
-}
+    }
 
     /**
      * 乘客拒绝车主抢单
      */
+    @Transactional
     @ResponseBody
     @RequestMapping(value = "/passenger/refuse")
-    public ResponseEntity<String> passengerRefuse(HttpServletRequest request){
+    public ResponseEntity<String> passengerRefuse(HttpServletRequest request) throws RuntimeException{
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        String json = ArriveOrderService.passengerRefuse(appDB,request);
+        String json = ArriveOrderService.passengerRefuse(appDB, request);
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 }
