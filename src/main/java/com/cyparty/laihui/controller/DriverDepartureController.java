@@ -76,10 +76,10 @@ public class DriverDepartureController {
             int duration = nowObject.getIntValue("duration");
             //正式
             double price = 0.0;
-            if (distance<=200000)
+            if (distance <= 200000)
                 price = distance * 3.5 / 10000f;
             else
-            price = distance * 3.3 / 10000f;
+                price = distance * 3.3 / 10000f;
             //测试
 //            double  price =0.01;
             DecimalFormat df = new DecimalFormat("######0.00");
@@ -156,7 +156,7 @@ public class DriverDepartureController {
                     double price = 0.0;
                     try {
                         price = Double.parseDouble(request.getParameter("price"));
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
 
@@ -322,14 +322,14 @@ public class DriverDepartureController {
                     }
                     //获取乘客起点经纬度
                     net.sf.json.JSONObject jsonObject = net.sf.json.JSONObject.fromObject(boarding_point);
-                    double p_start_longitude = Double.parseDouble("".equals(jsonObject.get("longitude").toString())?"0.0":jsonObject.get("longitude").toString());
-                    double p_start_latitude = Double.parseDouble("".equals(jsonObject.get("latitude").toString())?"0.0":jsonObject.get("latitude").toString());
+                    double p_start_longitude = Double.parseDouble("".equals(jsonObject.get("longitude").toString()) ? "0.0" : jsonObject.get("longitude").toString());
+                    double p_start_latitude = Double.parseDouble("".equals(jsonObject.get("latitude").toString()) ? "0.0" : jsonObject.get("latitude").toString());
 
                     //获取乘客终点经纬度
                     net.sf.json.JSONObject jsonObject1 = net.sf.json.JSONObject.fromObject(breakout_point);
-                    double p_end_longitude = Double.parseDouble("".equals(jsonObject1.get("longitude").toString())?"0.0":jsonObject1.get("longitude").toString());
-                    double p_end_latitude = Double.parseDouble("".equals(jsonObject1.get("latitude").toString())?"0.0":jsonObject1.get("latitude").toString());
-                    result = AppJsonUtils.getAPPDriverDepartureList(appDB, page, size, departure_address_code, destination_address_code, 0,p_start_latitude,p_start_longitude,p_end_latitude,p_end_longitude);
+                    double p_end_longitude = Double.parseDouble("".equals(jsonObject1.get("longitude").toString()) ? "0.0" : jsonObject1.get("longitude").toString());
+                    double p_end_latitude = Double.parseDouble("".equals(jsonObject1.get("latitude").toString()) ? "0.0" : jsonObject1.get("latitude").toString());
+                    result = AppJsonUtils.getAPPDriverDepartureList(appDB, page, size, departure_address_code, destination_address_code, 0, p_start_latitude, p_start_longitude, p_end_latitude, p_end_longitude);
                     json = AppJsonUtils.returnSuccessJsonString(result, "全部出车信息获取成功");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 case "show_mine":
@@ -341,7 +341,7 @@ public class DriverDepartureController {
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
                     if (user_id > 0) {
-                        result = AppJsonUtils.getAPPDriverDepartureList(appDB, page, size, departure_address_code, destination_address_code, user_id,0,0,0,0);
+                        result = AppJsonUtils.getAPPDriverDepartureList(appDB, page, size, departure_address_code, destination_address_code, user_id, 0, 0, 0, 0);
                         json = AppJsonUtils.returnSuccessJsonString(result, "车单历史获取成功");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
@@ -551,7 +551,7 @@ public class DriverDepartureController {
                     if (user_id > 0) {
                         String confirm_time = Utils.getCurrentTime();
                         String update_sql;
-                        where = " where user_id=" + user_id + " and order_type=2 and order_status<3 and is_enable=1";
+                        where = " where user_id=" + user_id + " and order_type=2 and (order_status<3 or order_status=200) and is_enable=1";
                         List<Order> orderList = appDB.getOrderReview(where, 0);
                         if (orderList.size() > 0) {
                             for (Order order : orderList) {
@@ -571,12 +571,12 @@ public class DriverDepartureController {
                                 order_id = order.getOrder_id();
                                 update_sql = " set order_status=-1 ,update_time='" + confirm_time + "' where _id=" + order.get_id();
                                 appDB.update("pc_orders", update_sql);
-//                                where = " where order_id="+order.getOrder_id()+" and order_type=2 and is_enable=1";
-//                               Order order2 = appDB.getOrderReview(where,0).get(0);
-//                                //更改乘客行程单状态
-//                                update_sql=" set order_status=1 , update_time='"+Utils.getCurrentTime()+"' where _id="+order.get_id();
-//                                appDB.update("pc_orders",update_sql);
-                                String content = "车主" + user.getUser_nick_name() + "于" + confirm_time + "发车，请您及时乘车！";
+                                String content = "";
+                                if (user.getUser_nick_name() != null && user.getUser_nick_name().equals("")) {
+                                    content = "车主" + user.getUser_nick_name() + "于" + confirm_time + "发车，请您及时乘车！";
+                                } else {
+                                    content = "手机尾号为" + user.getUser_mobile().substring(7,11) + "的车主于" + confirm_time + "发车，请您及时乘车！";
+                                }
                                 List<Order> passengerOrders = appDB.getOrderReview(" where order_type =0 and  order_id ='" + order_id + "'", 0);
                                 if (passengerOrders.size() > 0) {
                                     Order passengerOrder = passengerOrders.get(0);

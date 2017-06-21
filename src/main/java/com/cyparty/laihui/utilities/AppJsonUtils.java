@@ -127,7 +127,6 @@ public class AppJsonUtils {
                 jsonObject.put("name", carTypeData.getName());
                 jsonObject.put("id", carTypeData.getBrand_id());
                 jsonObject.put("logo", carTypeData.getLogo());
-
                 jsonArray.add(jsonObject);
             }
             return_json.put(key, jsonArray);
@@ -152,7 +151,6 @@ public class AppJsonUtils {
             return_json.put("name", carTypeDataList.get(0).getName());
             return_json.put("logo", carTypeDataList.get(0).getLogo());
         }
-
         return return_json;
     }
 
@@ -191,7 +189,6 @@ public class AppJsonUtils {
                     CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
                     info_json.put("name", carOwnerInfo.getCar_owner_name());
                     info_json.put("idsn", carOwnerInfo.getIdsn());
-
                     if (user.getFlag() == 0) {
                         info_json.put("car_no", carOwnerInfo.getCar_id());
                         info_json.put("car_brand", carOwnerInfo.getCar_brand());
@@ -224,12 +221,6 @@ public class AppJsonUtils {
                 passenger_json.put("status", 0);
             }
         }
-        //统计全部拼车次数
-       /* String where_count=" where user_id ="+user.getUser_id()+" and is_enable=1";
-        int departure_total =appDB.getCount("pc_driver_publish_info",where_count);//发车次数
-        where_count=where_count+" and order_status =1";
-        int order_total =appDB.getCount("pc_passenger_orders",where_count);//订单次数*/
-
         PCCount passengerPCCount = getPCCount(appDB, user.getUser_id());
         String mobile = user.getUser_mobile();
         return_json.put("pc_count", passengerPCCount.getTotal());
@@ -241,12 +232,10 @@ public class AppJsonUtils {
         List<String> managerList = new ArrayList<>();
         managerList.add("13838741275");
         managerList.add("13073733023");//周慧杰
-
         managerList.add("18338228688");//李博士
         managerList.add("15737121009");//孙桂军
         managerList.add("15136475852");//张庆
         managerList.add("15737894861");//杨硕
-
         if (managerList.contains(mobile)) {
             is_manager = true;
         }
@@ -261,10 +250,6 @@ public class AppJsonUtils {
         List<DepartureInfo> departureInfoList = new ArrayList<>();
         int offset = page * size;
         int count = 0;
-        //精确搜索不分页
-//        if (page != 0) {
-//            return result_json;
-//        }
         if (departure_address_code != 0 && destination_address_code != 0) {
             //1.最精确
             where = where + " and departure_address_code=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
@@ -290,7 +275,6 @@ public class AppJsonUtils {
             } else {
                 where = where + " and departure_time>='" + Utils.getCurrentTime() + "'";
             }
-
             count = appDB.getCount("pc_driver_publish_info", where);
             //按照创建时间倒序排列
             where = where + " order by create_time DESC limit " + offset + "," + size;
@@ -299,7 +283,6 @@ public class AppJsonUtils {
         }
         //乘客路程距离
         double my_distance = RangeUtils.getDistance(p_start_lat, p_start_lng, p_end_lat, p_end_lng);
-        //
         for (DepartureInfo departure : departureInfoList) {
             String boarding_point = departure.getBoarding_point();
             String breakout_point = departure.getBreakout_point();
@@ -319,9 +302,6 @@ public class AppJsonUtils {
             String suitability = RangeUtils.getSuitability(my_distance, start_distance, end_distance);
             JSONObject driverObject = new JSONObject();
             JSONObject dataObject = new JSONObject();
-           /* String order_where=" where driver_order_id="+departure.getR_id()+" and is_enable=1  and order_type=1 ";
-            int booking_count=appDB.getCount("pc_orders",order_where);
-            dataObject.put("booking_count",booking_count);*/
             driverObject.put("suitability", suitability);
             driverObject.put("start_point_distance", start_distance);
             driverObject.put("end_point_distance", end_distance);
@@ -339,7 +319,6 @@ public class AppJsonUtils {
                     driverObject.put("car_color", carOwnerInfo.getCar_color());
                     driverObject.put("car_type", carOwnerInfo.getCar_type());
                 }
-                //List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(departure.getUser_id());
                 if (travelCardInfos.size() > 0) {
                     UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
                     driverObject.put("car_no", travelCardInfo.getCar_license_number());
@@ -347,7 +326,6 @@ public class AppJsonUtils {
                     driverObject.put("car_color", travelCardInfo.getCar_color());
                     driverObject.put("car_type", travelCardInfo.getCar_type());
                 }
-
             } else {
                 if (travelCardInfos.size() > 0) {
                     UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
@@ -361,14 +339,12 @@ public class AppJsonUtils {
                     driverObject.put("car_color", "");
                     driverObject.put("car_type", "");
                 }
-
             }
             String name = departure.getUser_name();
             driverObject.put("name", name);
             driverObject.put("avatar", departure.getUser_avatar());
             PCCount driverPCCount = getPCCount(appDB, departure.getUser_id());
             driverObject.put("pc_count", driverPCCount.getTotal());
-
             //判断订单是否已过时
             long departure_time = Utils.date2TimeStamp(departure.getStart_time());
             long current_time = Utils.getCurrenTimeStamp();
@@ -382,13 +358,11 @@ public class AppJsonUtils {
             dataObject.put("seats", departure.getInit_seats());
             //剩余座位
             dataObject.put("current_seats", departure.getCurrent_seats());
-            /*dataObject.put("price", departure.getPrice());*/
             dataObject.put("create_time", DateUtils.getTimesToNow(departure.getCreate_time()));
             dataObject.put("boarding_point", JSONObject.parseObject(departure.getBoarding_point()));
             dataObject.put("breakout_point", JSONObject.parseObject(departure.getBreakout_point()));
             dataObject.put("remark", departure.getRemark());
             dataObject.put("user_data", driverObject);
-
             dataArray.add(dataObject);
         }
         result_json.put("data", dataArray);
@@ -402,13 +376,10 @@ public class AppJsonUtils {
         JSONObject jsonObject = new JSONObject();
         JSONObject return_json = new JSONObject();
         String where = " where is_enable=1 and a._id= " + order_id;
-
         List<DepartureInfo> departureInfoList = appDB.getAppDriverDpartureInfo(where);
         for (DepartureInfo departure : departureInfoList) {
             JSONObject driverObject = new JSONObject();
             jsonObject.put("car_id", departure.getR_id());
-
-
             where = " and user_id =" + departure.getUser_id();
             List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo1(where);
             if (carOwnerInfoList.size() > 0) {
@@ -421,7 +392,6 @@ public class AppJsonUtils {
                 } else {
                     //车单品牌类型
                     UserTravelCardInfo travelCardInfo = appDB.getTravelCard(departure.getUser_id()).get(0);
-
                     //车牌号
                     driverObject.put("car_brand", "");
                     driverObject.put("car_no", travelCardInfo.getCar_license_number());
@@ -445,18 +415,8 @@ public class AppJsonUtils {
             driverObject.put("avatar", departure.getUser_avatar());
             driverObject.put("mobile", departure.getMobile());
             driverObject.put("user_id", departure.getUser_id());
-            //统计全部拼车次数
-           /* String where_count=" where user_id ="+departure.getUser_id()+" and is_enable=1";
-            int departure_total =appDB.getCount("pc_driver_publish_info",where_count);//发车次数
-            where_count=where_count+" and order_status =1";
-            int order_total =appDB.getCount("pc_passenger_orders",where_count);//订单次数*/
-
             PCCount driverPCCount = getPCCount(appDB, departure.getUser_id());
-
             driverObject.put("pc_count", driverPCCount.getTotal());
-
-
-            /*jsonObject.put("price",departure.getPrice());*/
             //判断订单是否已过时
             long departure_time = Utils.date2TimeStamp(departure.getStart_time());
             long current_time = Utils.getCurrenTimeStamp();
@@ -487,17 +447,14 @@ public class AppJsonUtils {
             jsonObject.put("points", departure.getPoints());
             jsonObject.put("description", departure.getDescription());
             jsonObject.put("price", departure.getPrice());
-
             String order_where = " where order_id=" + departure.getR_id() + "  and is_enable=1 and order_type=1 ";//只查询订单类型为订单的
             int booking_count = appDB.getCount("pc_orders", order_where);
             jsonObject.put("booking_count", booking_count);
-
             if (user_id != 0) {
                 order_where = order_where + " and  user_id=" + user_id;
             }
             double total_price = 0;
             List<Order> orderList = appDB.getOrderReview(order_where, 0);
-
             //获取乘客订单
             List<Order> orders = appDB.getOrderReview(" where user_id=" + user_id + " and order_type=0 and is_enable=1 order by create_time DESC limit 1", 0);
             if (orders.size() > 0) {
@@ -522,26 +479,16 @@ public class AppJsonUtils {
                     orderObject.put("boarding_point", JSONObject.parseObject(passengerOrder.getBoarding_point()));
                     orderObject.put("breakout_point", JSONObject.parseObject(passengerOrder.getBreakout_point()));
                     orderObject.put("booking_seats", passengerOrder.getSeats());
-
                     orderObject.put("create_time", passengerOrder.getCreate_time());
                     orderObject.put("description", passengerOrder.getDescription());
-
                     passengerData.put("name", passengerOrder.getUser_name());
                     passengerData.put("mobile", passengerOrder.getMobile());
                     passengerData.put("avatar", passengerOrder.getUser_avatar());
-                    //统计全部拼车次数
-                 /*   where_count=" where user_id ="+passengerOrder.getUser_id()+" and is_enable=1";
-                    departure_total =appDB.getCount("pc_driver_publish_info",where_count);//发车次数
-                    where_count=where_count+" and order_status =1";
-                    order_total =appDB.getCount("pc_passenger_orders",where_count);//订单次数*/
-
                     PCCount passengerPCCount = getPCCount(appDB, passengerOrder.getUser_id());
-
                     passengerData.put("pc_count", passengerPCCount.getTotal());
                     orderObject.put("user_data", passengerData);
                     //司机已经确认的金额
                     if (order.getOrder_status() == 1) {
-
                         total_price = total_price + passengerOrder.getPay_money();
                     }
                     orderArray.add(orderObject);
@@ -569,10 +516,6 @@ public class AppJsonUtils {
         int offset = page * size;
         if (id == 0) {
             if (departure_address_code != 0 && destination_address_code != 0) {
-                //精确搜索不分页
-//                if (page != 0) {
-//                    return result_json;
-//                }
                 //1.最精确
                 where = forword_where + "  and departure_address_code=" + departure_address_code + " and destination_address_code=" + destination_address_code + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC limit " + offset + "," + size;
                 List<PassengerOrder> passengerOrderList1 = appDB.getPassengerDepartureInfo(where);
@@ -591,7 +534,6 @@ public class AppJsonUtils {
                 passengerOrderList.addAll(passengerOrderList2);
                 passengerOrderList.addAll(passengerOrderList3);
                 passengerOrderList.addAll(passengerOrderList4);
-
             } else {
                 //查询出发时间大于等于现在时间的乘客车单
                 where = forword_where + " and departure_time>='" + Utils.getCurrentTime() + "'" + " order by departure_time ASC ";
@@ -618,23 +560,6 @@ public class AppJsonUtils {
             passengerObject.put("avatar", departure.getUser_avatar());
             PCCount passengerPCCount = getPCCount(appDB, departure.getUser_id());
             passengerObject.put("pc_count", passengerPCCount.getTotal());
-//            Order diverOrder = appDB.getOrderReview("order_type=2 and order_id="+departure.get_id(),0).get(0);
-//
-//            where =  "and user_id =" + diverOrder.getUser_id();
-//            List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo1(where);
-//            if (carOwnerInfoList.size()>0) {
-//                CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
-//
-//                driverObject.put("name",carOwnerInfo.getUser_name());
-//                driverObject.put("avatar", carOwnerInfo.getUser_avatar());
-//                driverObject.put("car_no", carOwnerInfo.getCar_id());
-//                driverObject.put("car_brand", carOwnerInfo.getCar_brand());
-//                driverObject.put("car_color", carOwnerInfo.getCar_color());
-//                driverObject.put("car_type", carOwnerInfo.getCar_type());
-//                driverObject.put("mobile", carOwnerInfo.getMobile());
-//            }
-
-            // dataObject.put("driver_data", driverObject);
             String order_where = " where order_type=0 and order_id=" + departure.get_id();
             List<Order> orderList = appDB.getOrderReview(order_where, 0);
             Order order = new Order();
@@ -645,21 +570,13 @@ public class AppJsonUtils {
             } else {
                 dataObject.put("info_id", departure.get_id());
             }
+            dataObject.put("isArrive", order.getIsArrive());
             dataObject.put("order_status", order.getOrder_status());
             dataObject.put("is_enable", departure.getIs_enable());
             dataObject.put("departure_time", departure.getDeparture_time());
             dataObject.put("seats", departure.getSeats());
             dataObject.put("description", departure.getDescription());
             dataObject.put("price", departure.getPay_money());
-            //判断是否是通过车可邀请抢单通道过来的
-//            where = " where a.user_id="+user_id+" and a.is_enable=1 order by a._id";
-//            List<DepartureInfo> departureInfoList = appDB.getAppDriverDpartureInfo(where);
-//            if (departureInfoList.size()>0){
-//                where = " where passenger_car_id="+id+" and driver_car_id="+departureInfoList.get(0).getR_id();
-//                if (appDB.getinviteIimit(where).size()>0){
-//                    dataObject.put("price",appDB.getinviteIimit(where).get(0).getPrice()*departure.getSeats());
-//                }
-//            }
             dataObject.put("create_time", DateUtils.getTimesToNow(departure.getCreate_time()));
             dataObject.put("boarding_point", JSONObject.parseObject(departure.getBoarding_point()));
             dataObject.put("breakout_point", JSONObject.parseObject(departure.getBreakout_point()));
@@ -676,7 +593,6 @@ public class AppJsonUtils {
             dataObject.put("suitability", suitability);
             dataObject.put("remark", departure.getRemark());
             dataObject.put("user_data", passengerObject);
-
             dataArray.add(dataObject);
         }
         result_json.put("data", dataArray);
@@ -1744,12 +1660,12 @@ public class AppJsonUtils {
                 jsonObject.put("o_province", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("province"));
                 jsonObject.put("o_city", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("city"));
                 jsonObject.put("o_name", net.sf.json.JSONObject.fromObject(passenger.getBreakout_point()).get("name"));
-                if (passenger.getUser_name() == null) {
+                if (passenger.getUser_name() == null)
                     jsonObject.put("name", "");
-                } else {
+                else
                     jsonObject.put("name", passenger.getUser_name());
-                }
-
+                jsonObject.put("isArrive", passenger.getIsArrive());
+                jsonObject.put("user_avatar", passenger.getUser_avatar());
                 jsonObject.put("user_avatar", passenger.getUser_avatar());
                 jsonObject.put("booking_seats", passenger.getSeats());
                 jsonObject.put("remark", passenger.getRemark());
