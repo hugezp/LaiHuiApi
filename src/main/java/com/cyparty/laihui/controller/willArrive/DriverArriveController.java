@@ -6,7 +6,6 @@ import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.service.ArriveService;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.Utils;
-import com.cyparty.laihui.service.DriverDefaultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
