@@ -46,6 +46,10 @@ public class TestConfigUtils {
             case "18837272773" :
                 is_success = true;
                 break;
+            //苏瑞华
+            case "18838978571" :
+                is_success = true;
+                break;
         }
         return is_success;
     }

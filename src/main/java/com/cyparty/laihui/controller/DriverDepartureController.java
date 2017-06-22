@@ -358,6 +358,7 @@ public class DriverDepartureController {
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
                     String order_id = request.getParameter("order_id");
+                    System.out.println(order_id);
                     result = AppJsonUtils.getAPPDriverDepartureInfo(appDB, order_id, user_id);
                     String data = Utils.getJsonObject(result.toJSONString(), "driver_data");
                     if ("{}".equals(data) || null == data) {

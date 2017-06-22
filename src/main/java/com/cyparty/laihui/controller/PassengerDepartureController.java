@@ -117,9 +117,9 @@ public class PassengerDepartureController {
     @ResponseStatus(value = HttpStatus.OK)
     @RequestMapping(value = "/distance/price", produces = "application/json; charset=utf-8")
     public String getPrice(HttpServletRequest request) {
-        String origin_location = request.getParameter("origin_location");
-        String destination_location = request.getParameter("destination_location");
-        String booking_seats = request.getParameter("booking_seats");
+        String origin_location = request.getParameter("origin_location");//出发地经纬度
+        String destination_location = request.getParameter("destination_location");//目的地经纬度
+        String booking_seats = request.getParameter("booking_seats");//乘客数量
         int person = 1;
         if (booking_seats != null && !booking_seats.isEmpty()) {
             try {
@@ -142,7 +142,6 @@ public class PassengerDepartureController {
                 result = result + line;
             }
         } catch (Exception e) {
-            //System.out.println(e.getMessage());
         }
         JSONObject dataObject = JSONObject.parseObject(result);
         JSONArray dataArray = dataObject.getJSONArray("results");
@@ -150,25 +149,17 @@ public class PassengerDepartureController {
             JSONObject nowObject = dataArray.getJSONObject(0);
             int distance = nowObject.getIntValue("distance");
             int duration = nowObject.getIntValue("duration");
-            //正式
             double start_price = 0;
             double price = distance * 3.3 / 10000f;
             if (distance <= 200000) {
                 start_price = 10.0;
-
             }
             double last_price = start_price + price * person;
-            //测试
-//            double  price =0.01;
-//            double last_price =0.01;
-
-
             DecimalFormat df = new DecimalFormat("######0.00");
             double average = price * 1000f / distance;
-//            resultObject.put("price",0.01);
-//            resultObject.put("total_price",0.01);
             resultObject.put("price", new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             resultObject.put("total_price", new BigDecimal(last_price).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+            resultObject.put("serviceFee", ConfigUtils.getServiceFee());
             resultObject.put("cost_time", duration / 60 + "分钟");
             resultObject.put("distance", distance / 1000);
             resultObject.put("average", new BigDecimal(df.format(average)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());

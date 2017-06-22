@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 
 import com.cyparty.laihui.domain.PassengerOrder;
-import com.cyparty.laihui.utilities.AppJsonUtils;
-import com.cyparty.laihui.utilities.PayConfigUtils;
-import com.cyparty.laihui.utilities.SignUtils;
-import com.cyparty.laihui.utilities.Utils;
+import com.cyparty.laihui.utilities.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -61,26 +58,22 @@ public class PayOrderController {
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         JSONObject result = new JSONObject();
         String json = "";
-        //车主车单ID
-        String driver_id = request.getParameter("driver_id");
         //乘客车单ID
         String order_id = request.getParameter("order_id");
         String pay_type = request.getParameter("pay_type");
         String flag = request.getParameter("flag");
+        double serviceFee = 0.0;
         String body = "拼车费用";
         String description = "拼车费用";
         PassengerOrder passengerOrder;
-        //List<InviteIimit> inviteIimit = new ArrayList<>();
         if (order_id != null && !order_id.isEmpty()) {
             String where = " where a._id=" + order_id + "  and a.is_enable=1 ";
             List<PassengerOrder> passengerOrderList = appDB.getPassengerDepartureInfo(where);
             if (passengerOrderList.size() > 0) {
                 passengerOrder = passengerOrderList.get(0);
-//                where = " where passenger_car_id="+order_id+" and driver_car_id="+driver_id;
-//                if (appDB.getinviteIimit(where).size()>0){
-//                    inviteIimit = appDB.getinviteIimit(where);
-//                }
-
+                if (passengerOrder.getIsArrive()==1){
+                    serviceFee = ConfigUtils.getServiceFee();
+                }
             } else {
                 json = AppJsonUtils.returnFailJsonString(result, "订单已失效！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -96,10 +89,10 @@ public class PayOrderController {
                 String now_ip = Utils.getIP(request);
                 String nonce_str = Utils.getCharAndNum(32);
                 double inputFee = 0.0;
-                inputFee = passengerOrder.getPay_money() * 100;
+                inputFee = (passengerOrder.getPay_money()+serviceFee) * 100;
                 int inputIntFee = (int) inputFee;
                 String total_fee = inputIntFee + "";
-                //total_fee="1";//
+
                 String prepay_id = null;
                 Map<String, String> paraMap = new HashMap<>();
                 paraMap.put("appid", PayConfigUtils.getWx_laihui_app_id());
@@ -165,10 +158,9 @@ public class PayOrderController {
             } else {
                 String now_ip = Utils.getIP(request);
                 String nonce_str = Utils.getCharAndNum(32);
-                double inputFee = passengerOrder.getPay_money() * 100;
+                double inputFee = (passengerOrder.getPay_money()+serviceFee) * 100;
                 int inputIntFee = (int) inputFee;
                 String total_fee = inputIntFee + "";
-                //total_fee="1";//
                 String prepay_id = null;
                 Map<String, String> paraMap = new HashMap<>();
                 paraMap.put("appid", PayConfigUtils.getWx_app_id());
@@ -234,12 +226,7 @@ public class PayOrderController {
 
         } else {
             //支付宝支付
-            double total_fee = 0.0;
-//            if (inviteIimit.size()>0){
-//                total_fee=inviteIimit.get(0).getPrice()*passengerOrder.getSeats();
-//            }else
-            total_fee = passengerOrder.getPay_money();
-            //total_fee=0.01;
+            double total_fee = passengerOrder.getPay_money()+serviceFee;
             Map<String, String> keyValues = new HashMap<String, String>();
             String current_time = Utils.getCurrentTime();
             keyValues.put("app_id", PayConfigUtils.getApp_id());
@@ -257,19 +244,13 @@ public class PayOrderController {
             keyValues.put("version", "1.0");
 
             keyValues.put("notify_url", PayConfigUtils.getAlipay_notify_url());
-//            String signContent = getSignContent(keyValues);
-//            String sign= null;
-//            try {
-//                sign = "sign="+ AlipaySignature.rsaSign(signContent, PayConfigUtils.getPrivate_key(),"UTF-8","RSA2");
-//            } catch (AlipayApiException e) {
-//                e.printStackTrace();
-//            }
             String sign = getSign(keyValues, PayConfigUtils.getPrivate_key());
             json = buildOrderParam(keyValues) + "&" + sign;
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
 
     }
+
     /**
      * 支付接口
      *
@@ -291,8 +272,8 @@ public class PayOrderController {
         String pay_type = request.getParameter("pay_type");
 //        String openId = "oTnCRwHGAGy4it3gYh4hpR6t7olk";
         String code = request.getParameter("code");
-        String openId ="";
-        if(null!=code){
+        String openId = "";
+        if (null != code) {
             openId = PayConfigUtils.getOpenId(code);
         }
 //        String openId ="oTnCRwK_yv9TvZ0sf_Ch1CTT6plI";
@@ -345,19 +326,19 @@ public class PayOrderController {
             String sign = Utils.encode("MD5", stringA).toUpperCase();
             String trade_type = "JSAPI";
             //封装xml
-            String paras ="<xml>\n" +
-                    "<appid>"+PayConfigUtils.getWx_web_app_id()+"</appid>\n"+
-                    "<mch_id>"+PayConfigUtils.getWx_web_mch_id()+"</mch_id>\n"+
-                    "<nonce_str>"+nonce_str+"</nonce_str>\n"+
-                    "<sign>"+sign+"</sign>\n"+
-                    "<body><![CDATA["+body+"]]></body>\n"+
-                    "<attach>"+description+"</attach>\n"+
-                    "<out_trade_no>"+passengerOrder.getPay_num()+"</out_trade_no>\n"+
-                    "<total_fee>"+total_fee+"</total_fee>\n"+
-                    "<spbill_create_ip>"+now_ip+"</spbill_create_ip>\n"+
-                    "<notify_url>"+PayConfigUtils.getWx_pay_web_notify_url()+"</notify_url>\n"+
-                    "<trade_type>"+trade_type+"</trade_type>\n"+
-                    "<openid>"+openId+"</openid>\n"+
+            String paras = "<xml>\n" +
+                    "<appid>" + PayConfigUtils.getWx_web_app_id() + "</appid>\n" +
+                    "<mch_id>" + PayConfigUtils.getWx_web_mch_id() + "</mch_id>\n" +
+                    "<nonce_str>" + nonce_str + "</nonce_str>\n" +
+                    "<sign>" + sign + "</sign>\n" +
+                    "<body><![CDATA[" + body + "]]></body>\n" +
+                    "<attach>" + description + "</attach>\n" +
+                    "<out_trade_no>" + passengerOrder.getPay_num() + "</out_trade_no>\n" +
+                    "<total_fee>" + total_fee + "</total_fee>\n" +
+                    "<spbill_create_ip>" + now_ip + "</spbill_create_ip>\n" +
+                    "<notify_url>" + PayConfigUtils.getWx_pay_web_notify_url() + "</notify_url>\n" +
+                    "<trade_type>" + trade_type + "</trade_type>\n" +
+                    "<openid>" + openId + "</openid>\n" +
                     "</xml>";
             try {
                 String content = senPost(paras);
@@ -368,7 +349,7 @@ public class PayOrderController {
                     String current_noncestr = Utils.getCharAndNum(32);
                     String current_sign = null;
                     long current_timestamp = System.currentTimeMillis() / 1000;
-                    JSONObject signn= new JSONObject();
+                    JSONObject signn = new JSONObject();
                     signn.put("appid", PayConfigUtils.getWx_web_app_id());
                     signn.put("partnerid", PayConfigUtils.getWx_web_mch_id());
                     signn.put("prepayid", prepay_id);
@@ -381,8 +362,9 @@ public class PayOrderController {
                     signn.put("sign", current_sign);
 
                     SortedMap<String, String> finalpackage = new TreeMap<String, String>();
-                    String timeStamp =String.valueOf(System.currentTimeMillis() / 1000);
-                    String packages = "prepay_id="+prepay_id;;//订单详情扩展字符串
+                    String timeStamp = String.valueOf(System.currentTimeMillis() / 1000);
+                    String packages = "prepay_id=" + prepay_id;
+                    ;//订单详情扩展字符串
                     finalpackage.put("appId", PayConfigUtils.getWx_web_app_id());//公众号appid
                     finalpackage.put("timeStamp", timeStamp);
                     finalpackage.put("nonceStr", current_noncestr); //随机数
@@ -411,7 +393,6 @@ public class PayOrderController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
 
             return new ResponseEntity<>(result.toString(), responseHeaders, HttpStatus.OK);
