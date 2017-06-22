@@ -68,6 +68,10 @@ public class ArriveCarStatusService {
                                 result.put("car_brand", "");
                                 result.put("car_color", travelCardInfo.getCar_color());
                                 result.put("car_type", travelCardInfo.getCar_type());
+                            }else {
+                                result.put("car_brand", "");
+                                result.put("car_color", "");
+                                result.put("car_type", "");
                             }
                         }
                     } else {

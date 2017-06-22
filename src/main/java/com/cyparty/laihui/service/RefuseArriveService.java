@@ -79,7 +79,7 @@ public class RefuseArriveService {
                         source = 1;
                     }
                     //判断该单是否已经被抢
-                    String passenger_order_where = " a left join pc_user b on a.user_id=b._id where order_id=" + passengerCarId + " and is_enable=1 and order_status= 200";
+                    String passenger_order_where = " a left join pc_user b on a.user_id=b._id where order_id=" + passengerCarId + " and is_enable=1 and order_type = 0 and order_status= 200";
                     //检测当前乘客行程是否依旧有效
                     List<Order> passengerOrderList = appDB.getOrderReview(passenger_order_where, 1);
                     if (passengerOrderList.size() > 0) {

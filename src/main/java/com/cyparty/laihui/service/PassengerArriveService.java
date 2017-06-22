@@ -124,4 +124,26 @@ public class PassengerArriveService {
 
         return json;
     }
+
+    /**
+     * 乘客订单详情
+     */
+    public static String orderDetail(AppDB appDB,HttpServletRequest request){
+        JSONObject result = new JSONObject();
+        String json = "";
+        String confirm_time = Utils.getCurrentTime();
+        //乘客订单记录id
+        int orderId = Integer.parseInt(request.getParameter("order_id"));
+        //判断用户标识
+        String token = request.getParameter("token");
+        if (token != null && token.length() == 32) {
+            result = AppJsonUtils.getMyArriveBookingOrderInfo(appDB, orderId);
+            json = AppJsonUtils.returnSuccessJsonString(result, "请求成功！");
+            return json;
+        }else {
+            result.put("error_code", ErrorCode.getToken_expired());
+            json = AppJsonUtils.returnFailJsonString(result, "非法token！");
+            return json;
+        }
+    }
 }

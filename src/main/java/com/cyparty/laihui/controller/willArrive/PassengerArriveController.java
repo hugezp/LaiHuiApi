@@ -32,4 +32,17 @@ public class PassengerArriveController {
         json = PassengerArriveService.getInviteDriver(request,appDB);
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
+
+    /**
+     * 乘客订单详情
+     */
+    @ResponseBody
+    @RequestMapping("passenger/orderDetail")
+    public ResponseEntity<String> orderDetail(HttpServletRequest request){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        json = PassengerArriveService.orderDetail(appDB,request);
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+    }
+
 }

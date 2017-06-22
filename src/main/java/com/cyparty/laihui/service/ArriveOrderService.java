@@ -67,7 +67,7 @@ public class ArriveOrderService {
                     NotifyPush.pinCheNotify("21", d_mobile, content, order_id, passengerData, confirm_time);
                 }
                 json = AppJsonUtils.returnSuccessJsonString(result, "处理成功！");
-                defaultCreate(driverOrderList,source,car_id,appDB);
+                defaultCreate(driverOrderList, source, car_id, appDB);
                 return json;
             } else {
                 result.put("error_code", ErrorCode.getBooking_order_is_not_existing());
@@ -169,30 +169,37 @@ public class ArriveOrderService {
         List<CrossCity> driverInfoList = appDB.getCrossCityList(where);
         where = " where _id =" + user_id;
         User user = appDB.getUserList(where).get(0);
-        if (passengerOrderList.size() > 0 && driverInfoList.size() == 0) {
+        if (passengerOrderList.size() > 0) {
             PassengerOrder passengerOrder = passengerOrderList.get(0);
             if (user.getIs_car_owner() == 1) {
-                DepartureInfo departure = new DepartureInfo();
-                departure.setUser_id(user.getUser_id());
-                departure.setMobile(user.getUser_mobile());
-                departure.setStart_time(passengerOrder.getDeparture_time());
-                departure.setBoarding_point(passengerOrder.getBoarding_point());
-                departure.setBreakout_point(passengerOrder.getBreakout_point());
-                departure.setInit_seats(5);
-                departure.setCurrent_seats(5 - passengerOrder.getSeats());
-                departure.setDeparture_city_code(passengerOrder.getDeparture_city_code());
-                departure.setDeparture_address_code(passengerOrder.getDeparture_address_code());
-                departure.setDestination_city_code(passengerOrder.getDestination_city_code());
-                departure.setDestination_address_code(passengerOrder.getDestination_address_code());
-                departure.setPrice(passengerOrder.getPay_money());
-                departure.setRemark(passengerOrder.getRemark());
-                departure.setBoarding_latitude(passengerOrder.getBoarding_latitude());
-                departure.setBoarding_longitude(passengerOrder.getBoarding_longitude());
-                departure.setBreakout_latitude(passengerOrder.getBreakout_latitude());
-                departure.setBreakout_longitude(passengerOrder.getBreakout_longitude());
-                departure.setDeparture_code(passengerOrder.getDeparture_code());
-                departure.setDestination_code(passengerOrder.getDestination_code());
-                appDB.createPCHDeparture(departure, source);
+                if (driverInfoList.size() == 0){
+                    DepartureInfo departure = new DepartureInfo();
+                    departure.setUser_id(user.getUser_id());
+                    departure.setMobile(user.getUser_mobile());
+                    departure.setStart_time(passengerOrder.getDeparture_time());
+                    departure.setBoarding_point(passengerOrder.getBoarding_point());
+                    departure.setBreakout_point(passengerOrder.getBreakout_point());
+                    departure.setInit_seats(5);
+                    departure.setCurrent_seats(5 - passengerOrder.getSeats());
+                    departure.setDeparture_city_code(passengerOrder.getDeparture_city_code());
+                    departure.setDeparture_address_code(passengerOrder.getDeparture_address_code());
+                    departure.setDestination_city_code(passengerOrder.getDestination_city_code());
+                    departure.setDestination_address_code(passengerOrder.getDestination_address_code());
+                    departure.setPrice(passengerOrder.getPay_money());
+                    departure.setRemark(passengerOrder.getRemark());
+                    departure.setBoarding_latitude(passengerOrder.getBoarding_latitude());
+                    departure.setBoarding_longitude(passengerOrder.getBoarding_longitude());
+                    departure.setBreakout_latitude(passengerOrder.getBreakout_latitude());
+                    departure.setBreakout_longitude(passengerOrder.getBreakout_longitude());
+                    departure.setDeparture_code(passengerOrder.getDeparture_code());
+                    departure.setDestination_code(passengerOrder.getDestination_code());
+                    appDB.createPCHDeparture(departure, source);
+                }else {
+                    CrossCity departure = driverInfoList.get(0);
+                    int currentSeats = departure.getCurrent_seats() - passengerOrder.getSeats();
+                    where = " set current_seats = " + currentSeats + " where _id = " + departure.getR_id();
+                    appDB.update("pc_driver_publish_info",where);
+                }
             }
         }
     }

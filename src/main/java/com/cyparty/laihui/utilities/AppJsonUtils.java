@@ -696,7 +696,7 @@ public class AppJsonUtils {
                     remark = "退款成功";
                     break;
                 case 100:
-                    status = 11;
+                    status = 1;
                     isArrive = 1;
                     remark = "司机抢单";
                     break;
@@ -883,16 +883,11 @@ public class AppJsonUtils {
                 where = " where user_id=" + order1.getUser_id();
                 List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo(where);
                 where = " where user_id = " + order1.getUser_id() + " and is_enable=1 order by CONVERT (create_time USING gbk)COLLATE gbk_chinese_ci desc limit 1";
-                DepartureInfo departureInfo = appDB.getAppDriverDpartureInfo(where).get(0);
+                List<DepartureInfo> departureInfoList = appDB.getAppDriverDpartureInfo(where);
+                DepartureInfo departureInfo = departureInfoList.get(0);
                 userObject.put("driver_id", departureInfo.getR_id());
                 userObject.put("ini_seats", departureInfo.getInit_seats());
                 userObject.put("current_seats", departureInfo.getCurrent_seats());
-//                List<InviteIimit> inviteIimit = new ArrayList<>();
-//                where = " where passenger_car_id="+order.getOrder_id()+" and driver_car_id="+departureInfo.getR_id();
-//                if (appDB.getinviteIimit(where).size()>0&&appDB.getinviteIimit(where).get(0).getPrice()>0){
-//                    inviteIimit = appDB.getinviteIimit(where);
-//                    jsonObject.put("price", inviteIimit.get(0).getPrice()*order.getBooking_seats());
-//                }else
                 jsonObject.put("price", order.getPrice());
                 if (carOwnerInfoList.size() > 0) {
                     CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
@@ -938,6 +933,80 @@ public class AppJsonUtils {
         }
 
         return jsonObject;
+    }
+
+    public static JSONObject getMyArriveBookingOrderInfo(AppDB appDB, int order_id) {
+        JSONObject result = new JSONObject();
+        JSONObject orderResult = new JSONObject();
+        String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where a.is_enable=1 and a._id=" + order_id;
+        List<Order> orderList = appDB.getOrderReview(where, 2);
+        for (Order order : orderList) {
+            JSONObject driverResult = new JSONObject();
+            //乘客订单记录id
+            orderResult.put("order_id", order.get_id());
+            //乘客车单id
+            orderResult.put("record_id", order.getOrder_id());
+            String update_time = Utils.getTimeSubOrAdd(order.getUpdate_time(), 15);
+            orderResult.put("update_time", update_time);
+            orderResult.put("order_status", order.getOrder_status());//order_status<=3
+            orderResult.put("seats", order.getBooking_seats());
+            orderResult.put("boarding_point", JSONObject.parseObject(order.getBoarding_point()));
+            orderResult.put("breakout_point", JSONObject.parseObject(order.getBreakout_point()));
+            orderResult.put("description", order.getDescription());
+            orderResult.put("create_time", order.getCreate_time());
+            orderResult.put("departure_time", order.getDeparture_time());
+            //result.put("price", order.getPrice());
+            orderResult.put("remark", order.getRemark());
+            //得到司机基本信息
+            where = " where order_id=" + order.getOrder_id() + " and order_type=2 and order_status!=4 and is_enable=1";//查询已经抢单且有效的司机抢单记录
+            List<Order> driverOrders = appDB.getOrderReview(where, 0);
+            for (Order order1 : driverOrders) {
+                where = " where _id = " + order1.getUser_id();
+                User user = appDB.getUserList(where).get(0);
+                driverResult.put("grab_id", order1.get_id());
+                driverResult.put("name", user.getUser_name());
+                driverResult.put("mobile", user.getUser_mobile());
+                driverResult.put("avatar", user.getAvatar());
+                where = " where user_id=" + order1.getUser_id();
+                List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo(where);
+                orderResult.put("price", order.getPrice());
+                if (user.getIs_car_owner() == 1){
+                    if (carOwnerInfoList.size() > 0) {
+                        CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
+                        if (carOwnerInfo.getFlag() == 0) {
+                            driverResult.put("car_no", carOwnerInfo.getCar_id());
+                            driverResult.put("car_brand", carOwnerInfo.getCar_brand());
+                            driverResult.put("car_color", carOwnerInfo.getCar_color());
+                            driverResult.put("car_type", carOwnerInfo.getCar_type());
+                        } else {
+                            UserTravelCardInfo travelCardInfo = appDB.getTravelCard(order1.getUser_id()).get(0);
+                            driverResult.put("car_no", travelCardInfo.getCar_license_number());
+                            driverResult.put("car_brand", "");
+                            driverResult.put("car_color", travelCardInfo.getCar_color());
+                            driverResult.put("car_type", travelCardInfo.getCar_type());
+                        }
+                    } else {
+                        List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order1.getUser_id());
+                        if (travelCardInfos.size() > 0) {
+                            UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                            driverResult.put("car_no", travelCardInfo.getCar_license_number());
+                            driverResult.put("car_brand", "");
+                            driverResult.put("car_color", travelCardInfo.getCar_color());
+                            driverResult.put("car_type", travelCardInfo.getCar_type());
+                        }
+                    }
+                }else {
+                    driverResult.put("car_no", "");
+                    driverResult.put("car_brand", "");
+                    driverResult.put("car_color", "");
+                    driverResult.put("car_type", "");
+                }
+            }
+            result.put("driver_data", driverResult);
+            result.put("order_data", orderResult);
+        }
+
+        return result;
     }
 
     //司机获取抢单列表
@@ -1697,7 +1766,7 @@ public class AppJsonUtils {
         int isArrive = 0;
         //判断为乘客乘客
         if (judgment.equals("passenger")) {
-            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and a.order_status<=300 and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
+            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and a.order_status<300 and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
             List<Order> orderList = appDB.getOrderReview(where, 2);
             if (orderList.size() > 0) {
                 for (Order order : orderList) {
@@ -1740,6 +1809,11 @@ public class AppJsonUtils {
                             status = 1;
                             isArrive = 1;
                             remake = "等待抢单";
+                            break;
+                        case 300:
+                            status = 1;
+                            isArrive = 1;
+                            remake = "等待发车";
                             break;
                         case 0:
                             status = 1;
