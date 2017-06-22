@@ -139,7 +139,7 @@ public class RefuseArriveService {
                             int push_id = userId;
                             int receive_id = passengerOrder.getUser_id();
                             int push_type = 11;
-                            boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, receive_id, push_type, content, 11, "11.caf", data.toJSONString(), 1, driverMobile, null);
+                            boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, receive_id, push_type, content, 11, "11.caf", data.toJSONString(), 1, driverMobile, null,1);
                             if (is_true) {
                                 //将抢单信息通知给乘客
                                 notifyPush.pinCheNotify("11", p_mobile, content, passengerOrder.get_id(), data, snatchTime);
@@ -156,7 +156,6 @@ public class RefuseArriveService {
                             return json;
                         }
                     } else {
-                        result.put("error_code", ErrorCode.getDeparture_order_expired());
                         json = AppJsonUtils.returnFailJsonString(result, "下手晚了，该单已被其他车主抢走了！");
                         return json;
                     }

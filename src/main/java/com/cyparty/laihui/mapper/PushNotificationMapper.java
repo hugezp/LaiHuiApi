@@ -25,6 +25,7 @@ public class PushNotificationMapper implements RowMapper<PushNotification>  {
         push.setUser_name(resultSet.getString("user_name"));
         push.setLink_url(resultSet.getString("link_url"));
         push.setTitle(resultSet.getString("title"));
+        push.setIsArrive(resultSet.getInt("is_arrive"));
         return push;
     }
 }

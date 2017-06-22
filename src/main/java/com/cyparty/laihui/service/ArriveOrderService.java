@@ -62,7 +62,7 @@ public class ArriveOrderService {
                 String d_mobile = driverOrderList.get(0).getUser_mobile();
                 int order_id = driverOrderList.get(0).getOrder_id();
                 int id = driverOrderList.get(0).getUser_id();
-                boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "");
+                boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "",1);
                 if (is_true) {
                     NotifyPush.pinCheNotify("21", d_mobile, content, order_id, passengerData, confirm_time);
                 }
@@ -137,7 +137,7 @@ public class ArriveOrderService {
                 passengerData.put("record_id", passengerOrder.get_id());
                 int push_type = 22;
                 int push_id = user.getUser_id();
-                boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "");
+                boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "",1);
                 if (is_true) {
                     NotifyPush.pinCheNotify("22", d_mobile, content, order_id, passengerData, confirm_time);
                 }

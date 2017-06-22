@@ -5,87 +5,148 @@ package com.cyparty.laihui.domain;
  * 推送消息
  */
 public class PushNotification {
-   private int _id;//订单id
-   private int order_id;//订单id
-   private int push_id;//推送者id
-   private int receive_id;//接受者id
-   private int push_type;//标识身份
-   private String alert;//消息内容
-   private int type;//消息类型
-   private String sound;
-   private String data;//具体数据
-   private String time;//推送的时间
-   private int status;//状态 0 未读 1 已读
-   private int is_enable;//状态 0 未读 1 已读
-   private String user_name;
-   private String link_url;//广告链接或者活动链接
-   private String title; //标题
+    private int _id;//订单id
+    private int order_id;//订单id
+    private int push_id;//推送者id
+    private int receive_id;//接受者id
+    private int push_type;//标识身份
+    private String alert;//消息内容
+    private int type;//消息类型
+    private String sound;
+    private String data;//具体数据
+    private String time;//推送的时间
+    private int status;//状态 0 未读 1 已读
+    private int is_enable;//状态 0 未读 1 已读
+    private String user_name;
+    private String link_url;//广告链接或者活动链接
+    private String title; //标题
+    private int isArrive;
 
-   public int get_id() {
-      return _id;
-   }
+    public int getIsArrive() {
+        return isArrive;
+    }
 
-   public void set_id(int _id) {
-      this._id = _id;
-   }
+    public void setIsArrive(int isArrive) {
+        this.isArrive = isArrive;
+    }
 
-   public int getIs_enable() {
-      return is_enable;
-   }
+    public int get_id() {
+        return _id;
+    }
 
-   public void setIs_enable(int is_enable) {
-      this.is_enable = is_enable;
-   }
+    public void set_id(int _id) {
+        this._id = _id;
+    }
 
-   public int getOrder_id(){return order_id;}
+    public int getIs_enable() {
+        return is_enable;
+    }
 
-   public void setOrder_id(int order_id){this.order_id=order_id;}
+    public void setIs_enable(int is_enable) {
+        this.is_enable = is_enable;
+    }
 
-   public int getPush_id(){return push_id;}
+    public int getOrder_id() {
+        return order_id;
+    }
 
-   public void setPush_id(int push_id){this.push_id=push_id;}
+    public void setOrder_id(int order_id) {
+        this.order_id = order_id;
+    }
 
-   public int getReceive_id(){return receive_id;}
+    public int getPush_id() {
+        return push_id;
+    }
 
-   public void setReceive_id(int receive_id){this.receive_id=receive_id;}
+    public void setPush_id(int push_id) {
+        this.push_id = push_id;
+    }
 
-   public int getPush_type(){return push_type;}
+    public int getReceive_id() {
+        return receive_id;
+    }
 
-   public void setPush_type(int push_type){this.push_type=push_type;}
+    public void setReceive_id(int receive_id) {
+        this.receive_id = receive_id;
+    }
 
-   public String getAlert(){return alert;}
+    public int getPush_type() {
+        return push_type;
+    }
 
-   public void setAlert(String alert){this.alert=alert;}
+    public void setPush_type(int push_type) {
+        this.push_type = push_type;
+    }
 
-   public int getType(){return type;}
+    public String getAlert() {
+        return alert;
+    }
 
-   public void setType(int type){this.type=type;}
+    public void setAlert(String alert) {
+        this.alert = alert;
+    }
 
-   public String getSound(){return sound;}
+    public int getType() {
+        return type;
+    }
 
-   public void setSound(String sound){this.sound=sound;}
+    public void setType(int type) {
+        this.type = type;
+    }
 
-   public String getData(){return data;}
+    public String getSound() {
+        return sound;
+    }
 
-   public void setData(String data) {this.data = data;}
+    public void setSound(String sound) {
+        this.sound = sound;
+    }
 
-   public String getTime(){return time;}
+    public String getData() {
+        return data;
+    }
 
-   public void setTime(String time){this.time=time; }
+    public void setData(String data) {
+        this.data = data;
+    }
 
-   public int getStatus(){return status;}
+    public String getTime() {
+        return time;
+    }
 
-   public void setStatus(int status){this.status=status;}
+    public void setTime(String time) {
+        this.time = time;
+    }
 
-   public String getUser_name(){return user_name;}
+    public int getStatus() {
+        return status;
+    }
 
-   public void setUser_name(String user_name){this.user_name=user_name;}
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-   public String getLink_url(){return link_url;}
+    public String getUser_name() {
+        return user_name;
+    }
 
-   public void setLink_url(String link_url){this.link_url=link_url;}
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
 
-   public String getTitle() {return title;}
+    public String getLink_url() {
+        return link_url;
+    }
 
-   public void setTitle(String title) {this.title = title;}
+    public void setLink_url(String link_url) {
+        this.link_url = link_url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

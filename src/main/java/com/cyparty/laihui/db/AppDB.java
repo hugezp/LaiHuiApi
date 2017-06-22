@@ -597,6 +597,16 @@ public class AppDB {
         return is_success;
     }
 
+    public boolean createPush(int order_id, int push_id, int receive_id, int push_type, String alert, int type, String sound, String data, int status, String user_name, String link_url,int isArrive) {
+        boolean is_success = true;
+        String SQL = "insert into pc_push_notification (order_id,push_id,receive_id,push_type,alert,type,sound,data,time,status,is_enable,user_name,link_url,is_arrive) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{order_id, push_id, receive_id, push_type, alert, type, sound, data, Utils.getCurrentTime(), status, 1, user_name, link_url,isArrive});
+        if (count < 1) {
+            is_success = false;
+        }
+        return is_success;
+    }
+
     public List<PushNotification> getPushList(String where) {
         String SQL = "select * from pc_push_notification " + where;
         List<PushNotification> pushList = jdbcTemplateObject.query(SQL, new PushNotificationMapper());

@@ -41,6 +41,7 @@ public class PassengerCommonMapper implements RowMapper<PassengerOrder> {
         passenger.setDestination_code(resultSet.getInt("destination_code"));
         passenger.setS_distance(resultSet.getDouble("s_distance"));
         passenger.setE_distance(resultSet.getDouble("e_distance"));
+        passenger.setIsArrive(resultSet.getInt("is_arrive"));
 
         String name= Utils.checkNull(resultSet.getString("user_name"));
         String idsn= Utils.checkNull(resultSet.getString("user_idsn"));

@@ -560,8 +560,8 @@ public class AppJsonUtils {
             passengerObject.put("avatar", departure.getUser_avatar());
             PCCount passengerPCCount = getPCCount(appDB, departure.getUser_id());
             passengerObject.put("pc_count", passengerPCCount.getTotal());
-            String order_where = " where order_type=0 and order_id=" + departure.get_id();
-            List<Order> orderList = appDB.getOrderReview(order_where, 0);
+            String order_where = " a join pc_passenger_publish_info b on a.order_id = b._id where a.order_type=0 and a.order_id=" + departure.get_id();
+            List<Order> orderList = appDB.getOrderReview(order_where, 2);
             Order order = new Order();
             if (orderList.size() > 0) {
                 order = orderList.get(0);
@@ -970,7 +970,7 @@ public class AppJsonUtils {
                 where = " where user_id=" + order1.getUser_id();
                 List<CarOwnerInfo> carOwnerInfoList = appDB.getCarOwnerInfo(where);
                 orderResult.put("price", order.getPrice());
-                if (user.getIs_car_owner() == 1){
+                if (user.getIs_car_owner() == 1) {
                     if (carOwnerInfoList.size() > 0) {
                         CarOwnerInfo carOwnerInfo = carOwnerInfoList.get(0);
                         if (carOwnerInfo.getFlag() == 0) {
@@ -995,7 +995,7 @@ public class AppJsonUtils {
                             driverResult.put("car_type", travelCardInfo.getCar_type());
                         }
                     }
-                }else {
+                } else {
                     driverResult.put("car_no", "");
                     driverResult.put("car_brand", "");
                     driverResult.put("car_color", "");
@@ -2033,6 +2033,7 @@ public class AppJsonUtils {
         JSONArray jsonArray = new JSONArray();
         for (PushNotification push : pushList) {
             JSONObject pushJson = new JSONObject();
+            JSONObject infoJson = new JSONObject();
             pushJson.put("message_id", push.get_id());
             pushJson.put("order_id", push.getOrder_id());
             pushJson.put("push_id", push.getPush_id());
@@ -2040,9 +2041,32 @@ public class AppJsonUtils {
             pushJson.put("push_type", push.getPush_type());
             pushJson.put("alert", push.getAlert());
             pushJson.put("type", push.getType());
-            pushJson.put("data", push.getData());
+            pushJson.put("isArrive", push.getIsArrive());
             pushJson.put("time", push.getTime());
             pushJson.put("status", push.getStatus());
+            String where = " a join pc_passenger_publish_info b on a.order_id = b._id where a.order_type = 0 and a.is_enable = 1 and a._id = " + push.getOrder_id();
+            List<Order> orderReview = appDB.getOrderReview(where, 2);
+            if (orderReview.size()>0){
+                Order order = orderReview.get(0);
+                infoJson.put("departure_time",order.getDeparture_time());
+                infoJson.put("order_id",order.getOrder_id());
+                infoJson.put("price",order.getPrice());
+                infoJson.put("seats",order.getBooking_seats());
+                pushJson.put("order_status",order.getOrder_status());
+                infoJson.put("boarding_point",order.getBoarding_point());
+                infoJson.put("breakout_point",order.getBreakout_point());
+                infoJson.put("record_id",order.getOrder_id());
+            }else {
+                infoJson.put("departure_time","");
+                infoJson.put("order_id","");
+                infoJson.put("price","");
+                infoJson.put("seats","");
+                pushJson.put("order_status","");
+                infoJson.put("boarding_point","");
+                infoJson.put("breakout_point","");
+                infoJson.put("record_id","");
+            }
+            pushJson.put("info", infoJson);
             List<User> users = appDB.getUserList(" where _id =" + push.getPush_id());
             if (users.size() > 0) {
                 pushJson.put("avatar", users.get(0).getAvatar());
@@ -2070,11 +2094,15 @@ public class AppJsonUtils {
             result.put("content", push.getAlert());
             result.put("time", push.getTime());
             result.put("total", total);
+            where = " a join pc_passenger_publish_info b on a.order_id = b._id where a.order_type = 2 and a.is_enable = 1 and a.order_id = " + push.getOrder_id();
+            List<Order> orderReview = appDB.getOrderReview(where, 2);
+            result.put("info", orderReview);
         } else {
             result.put("title", title);
             result.put("content", "");
             result.put("time", "");
             result.put("total", total);
+            result.put("info", "");
         }
         return result;
     }
