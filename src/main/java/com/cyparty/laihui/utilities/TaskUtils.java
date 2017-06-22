@@ -144,9 +144,12 @@ public class TaskUtils {
                 String update_sql = " set order_status=5 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=0";
                 appDB.update("pc_orders", update_sql);
 
-                PassengerOrder passengerPublishInfo = appDB.getPassengerDepartureInfo(" where a._id=" + order.getOrder_id() + " and is_enable = 1").get(0);
-                update_sql = " set is_del= 0 where order_no='"+passengerPublishInfo.getPay_num()+"'";
-                appDB.update("arrive_driver_relation", update_sql);
+                List<PassengerOrder> passengerDepartureInfo = appDB.getPassengerDepartureInfo(" where a._id=" + order.getOrder_id() + " and is_enable = 1");
+                if (passengerDepartureInfo.size() > 0) {
+                    PassengerOrder passengerPublishInfo = passengerDepartureInfo.get(0);
+                    update_sql = " set is_del= 0 where order_no='" + passengerPublishInfo.getPay_num() + "'";
+                    appDB.update("arrive_driver_relation", update_sql);
+                }
 
                 update_sql = " set order_status=5 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=2 and order_status>=0 ";
                 appDB.update("pc_orders", update_sql);
