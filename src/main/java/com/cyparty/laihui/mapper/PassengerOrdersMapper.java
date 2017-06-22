@@ -25,7 +25,6 @@ public class PassengerOrdersMapper implements RowMapper<PassengerOrder> {
         order.setDescription(Utils.checkNull(resultSet.getString("description")));
         order.setOrder_status(resultSet.getInt("order_status"));
         order.setCreate_time(resultSet.getString("create_time").split("\\.")[0]);
-
         String name= Utils.checkNull(resultSet.getString("user_name"));
         String idsn= Utils.checkNull(resultSet.getString("user_idsn"));
 

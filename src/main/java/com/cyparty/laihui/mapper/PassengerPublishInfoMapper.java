@@ -45,7 +45,7 @@ public class PassengerPublishInfoMapper implements RowMapper<PassengerOrder> {
         passenger.setDestination_code(resultSet.getInt("destination_code"));
         passenger.setRefuse(resultSet.getInt("refuse"));
         passenger.setTrade_no(resultSet.getString("trade_no"));
-
+        passenger.setIsArrive(resultSet.getInt("is_Arrive"));
         String name= Utils.checkNull(resultSet.getString("user_name"));
         String idsn= Utils.checkNull(resultSet.getString("user_idsn"));
 
