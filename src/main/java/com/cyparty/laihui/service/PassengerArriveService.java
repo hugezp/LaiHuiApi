@@ -22,11 +22,11 @@ import java.util.List;
 public class PassengerArriveService {
     @Autowired
     static NotifyPush notifyPush;
-    private static String json = "";
 
     public static String getInviteDriver(HttpServletRequest request, AppDB appDB) {
         JSONObject result = new JSONObject();
         User user = new User();
+        String json = "";
         int userId = 0;
         try {
             String token = request.getParameter("token");
@@ -145,5 +145,9 @@ public class PassengerArriveService {
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return json;
         }
+    }
+    public static String insertItinerary(){
+        String json = "";
+        return json;
     }
 }

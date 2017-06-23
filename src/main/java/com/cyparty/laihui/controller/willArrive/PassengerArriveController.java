@@ -24,6 +24,12 @@ public class PassengerArriveController {
     @Autowired
     AppDB appDB;
     private String json = "";
+
+    /**
+     * 乘客邀请司机抢单
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/invite/driver",method = RequestMethod.POST)
     public ResponseEntity<String> inviteDriver(HttpServletRequest request){
@@ -37,7 +43,7 @@ public class PassengerArriveController {
      * 乘客订单详情
      */
     @ResponseBody
-    @RequestMapping("passenger/orderDetail")
+    @RequestMapping("/passenger/orderDetail")
     public ResponseEntity<String> orderDetail(HttpServletRequest request){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
@@ -45,4 +51,15 @@ public class PassengerArriveController {
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 
+    /**
+     * 乘客发布行程
+     */
+    @ResponseBody
+    @RequestMapping(value = "/passenger/release/itinerary")
+    public ResponseEntity<String> releaseItinerary(HttpServletRequest request){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        json = PassengerArriveService.orderDetail(appDB,request);
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+    }
 }

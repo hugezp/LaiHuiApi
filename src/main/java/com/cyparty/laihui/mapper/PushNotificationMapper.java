@@ -15,17 +15,18 @@ public class PushNotificationMapper implements RowMapper<PushNotification>  {
         push.setPush_id(resultSet.getInt("push_id"));
         push.setReceive_id(resultSet.getInt("receive_id"));
         push.setPush_type(resultSet.getInt("push_type"));
-        push.setAlert(resultSet.getString("alert"));
+        push.setAlert(Utils.checkNull(resultSet.getString("alert")));
         push.setType(resultSet.getInt("type"));
-        push.setSound(resultSet.getString("sound"));
-        push.setData(resultSet.getString("data"));
+        push.setSound(Utils.checkNull(resultSet.getString("sound")));
+        push.setData(Utils.checkNull(resultSet.getString("data")));
         push.setTime(Utils.checkTime(resultSet.getString("time")));
         push.setStatus(resultSet.getInt("status"));
         push.setIs_enable(resultSet.getInt("is_enable"));
-        push.setUser_name(resultSet.getString("user_name"));
-        push.setLink_url(resultSet.getString("link_url"));
-        push.setTitle(resultSet.getString("title"));
+        push.setUser_name(Utils.checkNull(resultSet.getString("user_name")));
+        push.setLink_url(Utils.checkNull(resultSet.getString("link_url")));
+        push.setTitle(Utils.checkNull(resultSet.getString("title")));
         push.setIsArrive(resultSet.getInt("is_arrive"));
+        push.setImageUrl(Utils.checkNull(resultSet.getString("image_url")));
         return push;
     }
 }

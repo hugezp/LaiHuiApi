@@ -25,11 +25,11 @@ import java.util.List;
 public class RefuseArriveService {
     @Autowired
     static NotifyPush notifyPush;
-    private static String json = "";
 
     @Transactional(readOnly = false)
     public static String getRefuseArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request) {
         JSONObject result = new JSONObject();
+        String json = "";
         try {
             int passengerId = Integer.parseInt(request.getParameter("user_id"));
             if (request.getParameter("token") != null && request.getParameter("token").length() == 32) {
@@ -65,7 +65,7 @@ public class RefuseArriveService {
         JSONObject result = new JSONObject();
         User user = new User();
         boolean isSuccess = false;
-
+        String json = "";
             //乘客车单ID
             int passengerCarId = Integer.parseInt(request.getParameter("car_id"));
             if (request.getParameter("token") != null && request.getParameter("token").length() == 32) {

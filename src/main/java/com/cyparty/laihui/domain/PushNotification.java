@@ -20,8 +20,8 @@ public class PushNotification {
     private String user_name;
     private String link_url;//广告链接或者活动链接
     private String title; //标题
-    private int isArrive;
-
+    private int isArrive; //是否是必达车单 0 不是 1 是
+    private String imageUrl;
     public int getIsArrive() {
         return isArrive;
     }
@@ -148,5 +148,13 @@ public class PushNotification {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

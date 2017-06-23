@@ -2020,6 +2020,7 @@ public class AppJsonUtils {
             pushJson.put("type", push.getType());
             pushJson.put("time", push.getTime());
             pushJson.put("link_url", push.getLink_url());
+            pushJson.put("imageUrl", push.getImageUrl());
             jsonArray.add(pushJson);
         }
         List<PushNotification> pushs = appDB.getPushList(" where flag=" + flag + " and is_enable=1 and status =1");

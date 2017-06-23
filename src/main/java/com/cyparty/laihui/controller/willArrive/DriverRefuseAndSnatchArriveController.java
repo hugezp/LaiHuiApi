@@ -28,7 +28,6 @@ public class DriverRefuseAndSnatchArriveController {
     private AppDB appDB;
     @Autowired
     NotifyPush notifyPush;
-
     private String json = "";
     /**
      * 车主拒绝乘客必达单
