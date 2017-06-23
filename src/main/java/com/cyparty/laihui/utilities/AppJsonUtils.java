@@ -993,6 +993,11 @@ public class AppJsonUtils {
                             driverResult.put("car_brand", "");
                             driverResult.put("car_color", travelCardInfo.getCar_color());
                             driverResult.put("car_type", travelCardInfo.getCar_type());
+                        }else {
+                            driverResult.put("car_no", "");
+                            driverResult.put("car_brand", "");
+                            driverResult.put("car_color", "");
+                            driverResult.put("car_type", "");
                         }
                     }
                 } else {
