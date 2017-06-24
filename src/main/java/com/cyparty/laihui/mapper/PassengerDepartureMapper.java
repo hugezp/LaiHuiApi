@@ -23,8 +23,7 @@ public class PassengerDepartureMapper implements RowMapper<Order> {
         order.setUpdate_time(Utils.checkTime(resultSet.getString("update_time")));
         order.setCreate_time(Utils.checkTime(resultSet.getString("create_time")));
         order.setRemark(Utils.checkNull(resultSet.getString("remark")));
-
-
+        order.setTradeNo(Utils.checkNull(resultSet.getString("trade_no")));
         order.setBoarding_point(resultSet.getString("boarding_point"));
         order.setBreakout_point(resultSet.getString("breakout_point"));
         order.setBooking_seats(resultSet.getInt("booking_seats"));

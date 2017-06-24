@@ -23,12 +23,13 @@ ErrorCode {
     private static final int booking_times_limit = 405; //预定车单次数超过限制
     private static final int booking_order_is_existing = 407; //当前存在订单，提醒先删除当前订单
     private static final int booking_order_is_not_existing = 406; //当前订单不存在
+    private static final int ORDER_TIMEOUT = 408; //订单支付超时
     private static final int order_is_aleardy_grabed = 501; //当前订单不存在
     private static final int order_grabed_unable_cancle = 502; //当前订单不存在
     private static final int order_is_self = 100; //司机不能抢自己的单子
     private static final int invite_time = 601; //邀请过于频繁
-    private static final int no_data = 408;
-    private static final int error_system = 500;
+    private static final int no_data = 408;//暂无数据
+    private static final int error_system = 500;//系统错误
 
     public static int getInvite_time() {
         return invite_time;
@@ -101,5 +102,9 @@ ErrorCode {
 
     public static int getError_system() {
         return error_system;
+    }
+
+    public static int getOrderTimeout() {
+        return ORDER_TIMEOUT;
     }
 }

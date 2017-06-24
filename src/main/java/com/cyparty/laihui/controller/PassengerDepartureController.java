@@ -213,7 +213,6 @@ public class PassengerDepartureController {
                     user_id = appDB.getIDByToken(token);
                 } catch (Exception e) {
                     user_id = 0;
-                    e.printStackTrace();
                 }
             }
             String boarding_point = request.getParameter("boarding_point");

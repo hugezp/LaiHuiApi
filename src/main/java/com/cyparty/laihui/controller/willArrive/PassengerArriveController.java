@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,7 +60,19 @@ public class PassengerArriveController {
     public ResponseEntity<String> releaseItinerary(HttpServletRequest request){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
-        json = PassengerArriveService.orderDetail(appDB,request);
+        json = PassengerArriveService.insertItinerary(appDB,request);
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+    }
+    /**
+     * 乘客发布行程成功或失败操作
+     */
+    @Transactional(readOnly = false)
+    @ResponseBody
+    @RequestMapping(value = "/passenger/release/yesOrNo")
+    public ResponseEntity<String> release(HttpServletRequest request) throws Exception {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        json = PassengerArriveService.judgment(appDB,request);
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 }

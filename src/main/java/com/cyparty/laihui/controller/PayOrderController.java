@@ -252,7 +252,7 @@ public class PayOrderController {
     }
 
     /**
-     * 支付接口
+     * 微信公众号支付接口
      *
      * @param request
      * @param response
@@ -270,13 +270,11 @@ public class PayOrderController {
         //乘客车单ID
         String order_id = request.getParameter("order_id");
         String pay_type = request.getParameter("pay_type");
-//        String openId = "oTnCRwHGAGy4it3gYh4hpR6t7olk";
         String code = request.getParameter("code");
         String openId = "";
         if (null != code) {
             openId = PayConfigUtils.getOpenId(code);
         }
-//        String openId ="oTnCRwK_yv9TvZ0sf_Ch1CTT6plI";
         String body = "拼车费用";
         String description = "拼车费用";
         PassengerOrder passengerOrder;
@@ -381,8 +379,6 @@ public class PayOrderController {
                     String stringB = finals.toString() + "&key=" + PayConfigUtils.getWx_web_mch_secret_key();
                     System.out.println(stringB);
                     String finalsign = Utils.encode("MD5", stringB).toUpperCase();
-//                        result.put("openid",openId);
-//                        result.put("prepayid", prepay_id);
                     result.put("appId", PayConfigUtils.getWx_web_app_id());
                     result.put("timeStamp", current_timestamp);
                     result.put("nonceStr", current_noncestr);

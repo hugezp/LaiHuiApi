@@ -2,7 +2,7 @@ package com.cyparty.laihui.domain;
 
 /**
  * Created by zhu on 2016/12/6.
- *对应数据库中的 pc_order   pay_cash_log pc_user pc_passenger_publish_info表
+ * 对应数据库中的 pc_order   pay_cash_log pc_user pc_passenger_publish_info表
  */
 public class Order {
     private int _id;
@@ -45,7 +45,9 @@ public class Order {
     private String update_time;
     //备注
     private String remark;
-
+    //订单号
+    private String tradeNo;
+    //是否是必答车单 0 不是 1 是
     private int isArrive;
 
     public int getIsArrive() {
@@ -161,7 +163,6 @@ public class Order {
     }
 
 
-
     public int get_id() {
         return _id;
     }
@@ -226,7 +227,19 @@ public class Order {
         this.create_time = create_time;
     }
 
-    public String getRemark(){return remark;}
+    public String getRemark() {
+        return remark;
+    }
 
-    public void setRemark(String remark){this.remark=remark;}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
+    }
 }
