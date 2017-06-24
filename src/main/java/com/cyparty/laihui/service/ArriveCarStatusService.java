@@ -96,12 +96,12 @@ public class ArriveCarStatusService {
                     return json;
                 }
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return json;
             }
         } catch (Exception e) {
-            result.put("error_code", ErrorCode.getError_system());
+            result.put("error_code", ErrorCode.ERROR_SYSTEM);
             json = AppJsonUtils.returnFailJsonString(result, "服务器错误！");
             return json;
         }

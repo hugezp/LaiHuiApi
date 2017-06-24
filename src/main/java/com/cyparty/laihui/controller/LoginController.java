@@ -61,7 +61,7 @@ public class LoginController {
                     where = " where user_mobile=" + mobile;
                     userList1 = appDB.getUserList(where);
                     if (userList1.size() == 0) {
-                        result.put("error_code", ErrorCode.getSms_times_limit());
+                        result.put("error_code", ErrorCode.SMS_TIMES_LIMIT);
                         json = AppJsonUtils.returnFailJsonString(result, "为了使您拥有更好的体验，请到应用宝市场下载最新版本");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -70,7 +70,7 @@ public class LoginController {
                         //发送验证码
                         code = Utils.sendCodeMessage(mobile);
                     } else {
-                        result.put("error_code", ErrorCode.getSms_times_limit());
+                        result.put("error_code", ErrorCode.SMS_TIMES_LIMIT);
                         json = AppJsonUtils.returnFailJsonString(result, "发送验证码过于频繁，请稍后重试！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -80,7 +80,7 @@ public class LoginController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码发送成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getSms_send_failed());
+                        result.put("error_code", ErrorCode.SMS_SEND_FAILED);
                         json = AppJsonUtils.returnFailJsonString(result, "验证码发送失败，请校验您输入的手机号是否正确！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -89,7 +89,7 @@ public class LoginController {
                     //String my_mobile = "O0jD+jlqkxLcqfOfBLNacHCzGLkFcTbCMlZVvTlknilzaPiass+DoumWBJHvbd1smn6xEmaajUvqfPYmBwK4ufXM+Z8vtaIXjOtb0UdIXZpeQJwSuyoWiaKDfWL3NyHmlGvT+RR6CvRKSFlWo3YOp0MS2i8/MVi3dfZ0Q0jBFdk=";
                     String my_mobile = request.getParameter("my_mobile");
                     if (my_mobile == null || my_mobile.length() != 172 && my_mobile.length() != 175) {
-                        result.put("error_code", ErrorCode.getSms_send_failed());
+                        result.put("error_code", ErrorCode.SMS_SEND_FAILED);
                         json = AppJsonUtils.returnFailJsonString(result, "验证码发送失败，请校验您输入的手机号是否正确！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -100,12 +100,12 @@ public class LoginController {
                         where = " where user_mobile=" + mobile;
                         userList1 = appDB.getUserList(where);
                         if (userList1.size() == 0) {
-                            result.put("error_code", ErrorCode.getSms_times_limit());
+                            result.put("error_code", ErrorCode.SMS_TIMES_LIMIT);
                             json = AppJsonUtils.returnFailJsonString(result, "为了使您拥有更好的体验，请到应用宝市场下载最新版本");
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                         }
                     } catch (Exception e) {
-                        result.put("error_code", ErrorCode.getParameter_wrong());
+                        result.put("error_code", ErrorCode.PARAMETER_WRONG);
                         json = AppJsonUtils.returnFailJsonString(result, "为了使您拥有更好的体验，请到应用宝市场下载最新版本");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -114,7 +114,7 @@ public class LoginController {
                         //发送验证码
                         code = Utils.sendCodeMessage(mobile);
                     } else {
-                        result.put("error_code", ErrorCode.getSms_times_limit());
+                        result.put("error_code", ErrorCode.SMS_TIMES_LIMIT);
                         json = AppJsonUtils.returnFailJsonString(result, "发送验证码过于频繁，请稍后重试！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -124,7 +124,7 @@ public class LoginController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码发送成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getSms_send_failed());
+                        result.put("error_code", ErrorCode.SMS_SEND_FAILED);
                         json = AppJsonUtils.returnFailJsonString(result, "验证码发送失败，请校验您输入的手机号是否正确！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -179,12 +179,12 @@ public class LoginController {
                             json = AppJsonUtils.returnSuccessJsonString(result, "验证码正确！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
-                            result.put("error_code", ErrorCode.getSms_checked_failed());
+                            result.put("error_code", ErrorCode.SMS_CHECKED_FAILED);
                             json = AppJsonUtils.returnFailJsonString(result, "验证码错误，请核对您的校验码！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                     } else {
-                        result.put("error_code", ErrorCode.getSms_checked_failed());
+                        result.put("error_code", ErrorCode.SMS_CHECKED_FAILED);
                         json = AppJsonUtils.returnFailJsonString(result, "请确认是否收到验证码！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -204,7 +204,7 @@ public class LoginController {
                     if (TestConfigUtils.getMobile(mobile)) {
                         status = "200";
                         if (!code.equals("0603")) {
-                            result.put("error_code", ErrorCode.getSms_checked_failed());
+                            result.put("error_code", ErrorCode.SMS_CHECKED_FAILED);
                             json = AppJsonUtils.returnFailJsonString(result, "验证码错误，请核对您的校验码！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
@@ -261,11 +261,11 @@ public class LoginController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证码正确！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else if (status.equals("466")) {
-                        result.put("error_code", ErrorCode.getSms_times_limit());
+                        result.put("error_code", ErrorCode.SMS_TIMES_LIMIT);
                         json = AppJsonUtils.returnFailJsonString(result, "验证码为空！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getSms_checked_failed());
+                        result.put("error_code", ErrorCode.SMS_CHECKED_FAILED);
                         json = AppJsonUtils.returnFailJsonString(result, "验证码错误，请核对您的校验码！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -279,22 +279,22 @@ public class LoginController {
                             json = AppJsonUtils.returnSuccessJsonString(result, "token验证通过！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
-                            result.put("error_code", ErrorCode.getToken_expired());
+                            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                             json = AppJsonUtils.returnFailJsonString(result, "token失效！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                     } else {
-                        result.put("error_code", ErrorCode.getParameter_wrong());
+                        result.put("error_code", ErrorCode.PARAMETER_WRONG);
                         json = AppJsonUtils.returnFailJsonString(result, "参数有误！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
             }
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -320,7 +320,7 @@ public class LoginController {
                 token = request.getParameter("token");
                 id = appDB.getIDByToken(token);
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -352,7 +352,7 @@ public class LoginController {
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                     }
-                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    result.put("error_code", ErrorCode.PARAMETER_WRONG);
                     json = AppJsonUtils.returnFailJsonString(result, "上传失败，请重试！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 case "user_base":
@@ -360,17 +360,17 @@ public class LoginController {
                         json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getUserInfo(appDB, id), "用户基本信息获取成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
             }
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }

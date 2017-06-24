@@ -163,7 +163,7 @@ public class DriverDepartureController {
                     if (token != null && token.length() == 32) {
                         user_id = appDB.getIDByToken(token);
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -177,12 +177,12 @@ public class DriverDepartureController {
                         String user_where = " where _id=" + user_id;
                         String mobile = appDB.getUserList(user_where).get(0).getUser_mobile();
                         if (appDB.getUserList(user_where).get(0).getIs_validated() != 1) {
-                            result.put("error_code", ErrorCode.getIs_validated());
+                            result.put("error_code", ErrorCode.IS_VALIDATED);
                             json = AppJsonUtils.returnFailJsonString(result, "请先进行实名认证！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                         if (appDB.getUserList(user_where).get(0).getIs_car_owner() != 1) {
-                            result.put("error_code", ErrorCode.getIs_car_owner());
+                            result.put("error_code", ErrorCode.IS_CAR_OWNER);
                             json = AppJsonUtils.returnFailJsonString(result, "请先进行车主认证！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
@@ -190,11 +190,11 @@ public class DriverDepartureController {
                         String current_time = Utils.getCurrentTime().split(" ")[0] + " 00:00:00";
                         String get_ticket_sql = " where user_id=" + user_id + " and create_time >='" + current_time + "'";
                         int count = appDB.getCount("pc_driver_publish_info", get_ticket_sql);
-                        if (count >= ConfigUtils.getDriver_departure_counts()) {
+                        if (count >= ConfigUtils.DRIVER_DEPARTURE_COUNTS) {
                             result.put("current", count);
-                            result.put("total", ConfigUtils.getDriver_departure_counts());
-                            result.put("left", ConfigUtils.getDriver_departure_counts() - count);
-                            json = AppJsonUtils.returnFailJsonString(result, "每日发布行程次数为" + ConfigUtils.getDriver_departure_counts() + "次，您今日发布次数已达到上限！");
+                            result.put("total", ConfigUtils.DRIVER_DEPARTURE_COUNTS);
+                            result.put("left", ConfigUtils.DRIVER_DEPARTURE_COUNTS - count);
+                            json = AppJsonUtils.returnFailJsonString(result, "每日发布行程次数为" + ConfigUtils.DRIVER_DEPARTURE_COUNTS + "次，您今日发布次数已达到上限！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                         DepartureInfo departure = new DepartureInfo();
@@ -224,7 +224,7 @@ public class DriverDepartureController {
                             destination_code = Integer.parseInt((destination_address_code + "").substring(0, 4));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            result.put("error_code", ErrorCode.getParameter_wrong());
+                            result.put("error_code", ErrorCode.PARAMETER_WRONG);
                             json = AppJsonUtils.returnFailJsonString(result, "发布失败！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
@@ -262,12 +262,12 @@ public class DriverDepartureController {
                             json = AppJsonUtils.returnSuccessJsonString(result, "发布成功！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
-                            result.put("error_code", ErrorCode.getParameter_wrong());
+                            result.put("error_code", ErrorCode.PARAMETER_WRONG);
                             json = AppJsonUtils.returnFailJsonString(result, "发布失败！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -275,7 +275,7 @@ public class DriverDepartureController {
                     if (token != null && token.length() == 32) {
                         user_id = appDB.getIDByToken(token);
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -336,7 +336,7 @@ public class DriverDepartureController {
                     if (token != null && token.length() == 32) {
                         user_id = appDB.getIDByToken(token);
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -345,7 +345,7 @@ public class DriverDepartureController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "车单历史获取成功");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -353,7 +353,7 @@ public class DriverDepartureController {
                     if (token != null && token.length() == 32) {
                         user_id = appDB.getIDByToken(token);
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -370,12 +370,12 @@ public class DriverDepartureController {
                     }
 
             }
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -406,12 +406,12 @@ public class DriverDepartureController {
                     user = appDB.getUserList(now_where).get(0);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -448,7 +448,7 @@ public class DriverDepartureController {
                     try {
                         //身份验证
                         if (user.getIs_car_owner() != 1) {
-                            result.put("error_code", ErrorCode.getIs_validated());
+                            result.put("error_code", ErrorCode.IS_VALIDATED);
                             json = AppJsonUtils.returnFailJsonString(result, "请先进行车主认证！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
@@ -480,7 +480,7 @@ public class DriverDepartureController {
                             //判断车主座位数是否满足当前乘客车单的需要
 
                             if (passengerOrder.getUser_id() == user_id) {
-                                result.put("error_code", ErrorCode.getOrder_is_self());
+                                result.put("error_code", ErrorCode.ORDER_IS_SELF);
                                 json = AppJsonUtils.returnFailJsonString(result, "抱歉，不能抢自己发的车单哦！");
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                             }
@@ -489,7 +489,7 @@ public class DriverDepartureController {
                             String order_where = " where  user_id= " + user_id + " and create_time >= '" + departure_time + " 00:00:00'  and create_time <='" + departure_time + " 24:00:00' and order_type=2 ";
                             int total = appDB.getCount("pc_orders", order_where);
                             //规定每天可以预定5次
-                            if (total <= ConfigUtils.getDriver_grad_order_counts()) {
+                            if (total <= ConfigUtils.DRIVER_GRAD_ORDER_COUNTS) {
 
                                 Order order1 = new Order();
                                 order1.setUser_id(user_id);
@@ -502,7 +502,7 @@ public class DriverDepartureController {
                                 is_success = appDB.createOrderReview(order1);
                                 /*}*/
                             } else {
-                                result.put("error_code", ErrorCode.getBooking_times_limit());
+                                result.put("error_code", ErrorCode.BOOKING_TIMES_LIMIT);
                                 json = AppJsonUtils.returnFailJsonString(result, "每日抢单次数达到上限！");
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                             }
@@ -542,11 +542,11 @@ public class DriverDepartureController {
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                             }
                         }
-                        result.put("error_code", ErrorCode.getDeparture_order_expired());
+                        result.put("error_code", ErrorCode.DEPARTURE_ORDER_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "下手晚了，该单已被其他车主抢走了！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
-                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    result.put("error_code", ErrorCode.PARAMETER_WRONG);
                     json = AppJsonUtils.returnFailJsonString(result, "参数有误！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 case "driver_confirm_start_car":
@@ -607,7 +607,7 @@ public class DriverDepartureController {
                         json = AppJsonUtils.returnFailJsonString(result, "车主发车失败！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
-                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    result.put("error_code", ErrorCode.PARAMETER_WRONG);
                     json = AppJsonUtils.returnFailJsonString(result, "参数有误！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
                 //车主结束行程
@@ -635,7 +635,7 @@ public class DriverDepartureController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "结束行程成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
-                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    result.put("error_code", ErrorCode.PARAMETER_WRONG);
                     json = AppJsonUtils.returnFailJsonString(result, "参数有误！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 case "passenger_confirm":
@@ -655,7 +655,7 @@ public class DriverDepartureController {
                             where_order = " a left join pc_passenger_publish_info b on a.order_id=b._id where b._id=" + passenger_order_id + " and b.is_enable=1 and b.order_status=1 and departure_time>='" + Utils.getCurrentTime() + "'";
                             passengerOrderList = appDB.getOrderReview(where_order, 2);
                         } else {
-                            result.put("error_code", ErrorCode.getBooking_order_is_not_existing());
+                            result.put("error_code", ErrorCode.BOOKING_ORDER_IS_NOT_EXISTING);
                             json = AppJsonUtils.returnFailJsonString(result, "司机已取消抢单！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
@@ -718,16 +718,16 @@ public class DriverDepartureController {
                                 json = AppJsonUtils.returnSuccessJsonString(result, "处理成功！");
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                             }
-                            result.put("error_code", ErrorCode.getBooking_order_is_not_existing());
+                            result.put("error_code", ErrorCode.BOOKING_ORDER_IS_NOT_EXISTING);
                             json = AppJsonUtils.returnFailJsonString(result, "参数错误！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
                         } else {
-                            result.put("error_code", ErrorCode.getParameter_wrong());
+                            result.put("error_code", ErrorCode.PARAMETER_WRONG);
                             json = AppJsonUtils.returnFailJsonString(result, "乘客已取消该订单或者订单已失效！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
                     }
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 case "delete":
@@ -741,7 +741,7 @@ public class DriverDepartureController {
                             Order order = orderList.get(0);
                             //检测乘客是否支付
                             if (order.getOrder_status() == 2 || order.getOrder_status() == -1) {
-                                result.put("error_code", ErrorCode.getOrder_grabed_unable_cancle());
+                                result.put("error_code", ErrorCode.ORDER_GRABED_UNABLE_CANCLE);
                                 json = AppJsonUtils.returnFailJsonString(result, "乘客已支付，抢单无法取消，如有特殊原因，建议联系乘客主动取消！");
                                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                             }
@@ -808,7 +808,7 @@ public class DriverDepartureController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "删除成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 //订单状态
@@ -818,7 +818,7 @@ public class DriverDepartureController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "司机抢单列表获取成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 case "show_my_order_info":
@@ -833,12 +833,12 @@ public class DriverDepartureController {
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
             }
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -867,12 +867,12 @@ public class DriverDepartureController {
                     user = appDB.getUserList(now_where).get(0);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -912,17 +912,17 @@ public class DriverDepartureController {
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
                         }
                     }
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
 
             }
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -942,7 +942,7 @@ public class DriverDepartureController {
             user_id = appDB.getIDByToken(token);
 
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }

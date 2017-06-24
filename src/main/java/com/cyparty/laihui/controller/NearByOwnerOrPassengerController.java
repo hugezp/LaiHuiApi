@@ -88,13 +88,13 @@ public class NearByOwnerOrPassengerController {
                 if (user_id > 0) {
                     user = appDB.getUserList(where).get(0);
                 } else {
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }
 
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -144,7 +144,7 @@ public class NearByOwnerOrPassengerController {
                     //用户与车主（乘客）的距离
                     double distance = 0.0;
                     //乘客附近的车主列表
-                    where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' and init_seats != 0 having distance <= " + ConfigUtils.getQuery_distance() + " order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 3";
+                    where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' and init_seats != 0 having distance <= " + ConfigUtils.QUERY_DISTANCE + " order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 3";
                     List<DriverAndCar> owenrList = appDB.getOwenrList1(where, p_longitude, p_latitude);
                     if (owenrList.size() != 0) {
                         result = AppJsonUtils.getNearByOwnerList(owenrList, page, size, owenrList.size(), appDB);
@@ -221,7 +221,7 @@ public class NearByOwnerOrPassengerController {
                     double o_lon = Double.parseDouble(request.getParameter("p_longitude"));
                     double o_lat = Double.parseDouble(request.getParameter("p_latitude"));
                     //乘客附近的乘客列表
-                    where = " where is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having distance <= " + ConfigUtils.getQuery_distance() + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 3";
+                    where = " where a.order_status = 0 and is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having distance <= " + ConfigUtils.QUERY_DISTANCE + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 3";
                     List<PassengerOrder> passengerList = appDB.getPassengerList(where, o_lon, o_lat);
                     if (passengerList.size() != 0) {
                         result = AppJsonUtils.getNearByPassengerList(passengerList, page, size, passengerList.size());
@@ -255,7 +255,7 @@ public class NearByOwnerOrPassengerController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -283,7 +283,7 @@ public class NearByOwnerOrPassengerController {
         double distance = 0.0;
         String current_time = Utils.getCurrentTimeSubOrAddHour(-3);
         //设定附近的定义范围
-        double query_distance = ConfigUtils.getQuery_distance();
+        double query_distance = ConfigUtils.QUERY_DISTANCE;
         try {
             String action = request.getParameter("action");
             int page = 0;
@@ -309,7 +309,7 @@ public class NearByOwnerOrPassengerController {
                 user_id = appDB.getIDByToken(token);
 
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -319,7 +319,7 @@ public class NearByOwnerOrPassengerController {
                     //获取乘客经纬度
                     double p_longitude = Double.parseDouble(request.getParameter("p_longitude"));
                     double p_latitude = Double.parseDouble(request.getParameter("p_latitude"));
-                    where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' and init_seats != 0 having distance <= " + ConfigUtils.getQuery_distance() + " order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
+                    where = " where is_enable =1 and p.user_id != " + user_id + " and departure_time > '" + current_time + "' and init_seats != 0 having distance <= " + ConfigUtils.QUERY_DISTANCE + " order by CONVERT (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
                     List<DriverAndCar> owenrList = appDB.getOwenrList1(where, p_longitude, p_latitude);
                     if (owenrList.size() != 0) {
                         result = AppJsonUtils.getNearByOwnerList(owenrList, page, size, owenrList.size(), appDB);
@@ -333,8 +333,8 @@ public class NearByOwnerOrPassengerController {
                     //获取车主经纬度
                     double o_lon = Double.parseDouble(request.getParameter("p_longitude"));
                     double o_lat = Double.parseDouble(request.getParameter("p_latitude"));
-                    //乘客附近的车主列表
-                    where = " where is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having distance <= " + ConfigUtils.getQuery_distance() + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
+                    //乘客附近的乘客列表
+                    where = " where a.order_status = 0 and is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having distance <= " + ConfigUtils.QUERY_DISTANCE + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
                     List<PassengerOrder> passengerList = appDB.getPassengerList(where, o_lon, o_lat);
                     if (passengerList.size() != 0) {
                         result = AppJsonUtils.getNearByPassengerList(passengerList, page, size, passengerList.size());
@@ -345,7 +345,7 @@ public class NearByOwnerOrPassengerController {
                     }
             }
         } catch (Exception e) {
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -423,18 +423,18 @@ public class NearByOwnerOrPassengerController {
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
                 } else {
-                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    result.put("error_code", ErrorCode.PARAMETER_WRONG);
                     json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
                 }
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -446,7 +446,7 @@ public class NearByOwnerOrPassengerController {
     private JSONObject newCommon(int user_id, String action) {
         JSONObject jsonResult = new JSONObject();
         String json = "";
-        double query_distance = ConfigUtils.getQuery_distance();
+        double query_distance = ConfigUtils.QUERY_DISTANCE;
         String current_time = Utils.getCurrentTimeSubOrAddHour(0);
         String where = " where user_id=" + user_id + " and is_enable=1 and is_default=1";
         if (appDB.getCommonRoute(where).size() == 0) {

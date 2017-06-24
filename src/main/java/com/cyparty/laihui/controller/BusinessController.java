@@ -59,7 +59,7 @@ public class BusinessController {
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
         }catch (Exception e){
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result,"获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }

@@ -61,13 +61,13 @@ public class PersonalInformationController {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }
             }
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
@@ -114,12 +114,12 @@ public class PersonalInformationController {
             if (token != null && token.length() == 32) {
                 user_id = appDB.getIDByToken(token);
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
@@ -152,7 +152,7 @@ public class PersonalInformationController {
             }
 
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }

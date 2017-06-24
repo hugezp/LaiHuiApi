@@ -102,7 +102,7 @@ public class GeetestController {
                 //发送验证码
                 code = Utils.sendCodeMessage(mobile);
             } else {
-                result.put("error_code", ErrorCode.getSms_times_limit());
+                result.put("error_code", ErrorCode.SMS_TIMES_LIMIT);
                 json = AppJsonUtils.returnFailJsonString(result, "发送验证码过于频繁，请稍后重试！");
                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
@@ -112,7 +112,7 @@ public class GeetestController {
                 json = AppJsonUtils.returnSuccessJsonString(result, "验证码发送成功！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             } else {
-                result.put("error_code", ErrorCode.getSms_send_failed());
+                result.put("error_code", ErrorCode.SMS_SEND_FAILED);
                 json = AppJsonUtils.returnFailJsonString(result, "验证码发送失败，请校验您输入的手机号是否正确！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }

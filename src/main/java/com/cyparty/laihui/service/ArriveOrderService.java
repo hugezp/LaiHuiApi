@@ -70,12 +70,12 @@ public class ArriveOrderService {
                 defaultCreate(driverOrderList, source, car_id, appDB);
                 return json;
             } else {
-                result.put("error_code", ErrorCode.getBooking_order_is_not_existing());
+                result.put("error_code", ErrorCode.BOOKING_ORDER_IS_NOT_EXISTING);
                 json = AppJsonUtils.returnFailJsonString(result, "该订单已失效或未被抢单！");
                 return json;
             }
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return json;
         }
@@ -144,13 +144,13 @@ public class ArriveOrderService {
                 json = AppJsonUtils.returnSuccessJsonString(result, "处理成功！");
                 return json;
             } else {
-                result.put("error_code", ErrorCode.getBooking_order_is_not_existing());
+                result.put("error_code", ErrorCode.BOOKING_ORDER_IS_NOT_EXISTING);
                 json = AppJsonUtils.returnFailJsonString(result, "请勿重复拒绝！");
                 return json;
 
             }
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return json;
         }
@@ -219,7 +219,7 @@ public class ArriveOrderService {
             json = AppJsonUtils.returnSuccessJsonString(result, "司机抢单列表获取成功！");
             return json;
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return json;
         }
