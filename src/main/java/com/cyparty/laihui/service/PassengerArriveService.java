@@ -208,8 +208,16 @@ public class PassengerArriveService {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Calendar c = Calendar.getInstance();
                 try {
-                    c.setTime(format.parse(release_time));
-                } catch (ParseException e) {
+                    Date startTime = format.parse(start_time);
+                    Date releaseTime = format.parse(release_time);
+                    long longTime = startTime.getTime() - releaseTime.getTime();
+                    long hour = longTime / (60 * 60 * 1000);
+                    if(hour<2){
+                        json = AppJsonUtils.returnFailJsonString(result, "必达单必须提前两小时发布！");
+                        return json;
+                    }
+                    c.setTime(format.parse(start_time));
+                } catch (Exception e) {
                     e.printStackTrace();
                     result.put("error_code", ErrorCode.getParameter_wrong());
                     json = AppJsonUtils.returnFailJsonString(result, "创建失败！");
@@ -224,8 +232,8 @@ public class PassengerArriveService {
                 int hour = c.get(Calendar.HOUR_OF_DAY);
                 int min = c.get(Calendar.MINUTE);          //获取当前分钟
                 int ss = c.get(Calendar.SECOND);          //获取当前秒
-                if((dayForWeek==7)||(hour<9 || hour>18 || (hour==18 && (min>0 || ss>0)))){
-                    json = AppJsonUtils.returnFailJsonString(result, "必达单出发时间必须为周一至周六早9点到晚6点！");
+                if((dayForWeek==7)||(hour<11 || hour>18 || (hour==18 && (min>0 || ss>0)))){
+                    json = AppJsonUtils.returnFailJsonString(result, "必达单出发时间必须为周一至周六早11点到晚6点！");
                     return json;
                 }
 
