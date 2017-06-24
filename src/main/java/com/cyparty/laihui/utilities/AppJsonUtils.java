@@ -1877,7 +1877,7 @@ public class AppJsonUtils {
         int isArrive = 0;
         //判断为乘客乘客
         if (judgment.equals("passenger")) {
-            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and (a.order_status<3 or a.order_status in(100,200,300)) and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
+            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and (a.order_status<3 or a.order_status in(100,200)) and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
             List<Order> orderList = appDB.getOrderReview(where, 2);
             if (orderList.size() > 0) {
                 for (Order order : orderList) {
