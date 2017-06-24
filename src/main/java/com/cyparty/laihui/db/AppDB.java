@@ -467,7 +467,7 @@ public class AppDB {
     public boolean createOrderReview(Order order) {
         boolean is_success = true;
         String SQL = "insert into pc_orders(user_id,order_id,create_time,order_status,order_type,source,is_enable,update_time) VALUES (?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{order.getUser_id(), order.getOrder_id(), order.getCreate_time(), order.getOrder_status(), order.getOrder_type(), order.getSource(), 1, order.getCreate_time()});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{order.getUser_id(), order.getOrder_id(), order.getCreate_time(), order.getOrder_status(), order.getOrder_type(), order.getSource(), order.getIs_enable(), order.getCreate_time()});
         if (count < 1) {
             is_success = false;
         }
