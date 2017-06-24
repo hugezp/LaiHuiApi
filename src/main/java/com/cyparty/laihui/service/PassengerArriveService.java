@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.crypto.Data;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.cyparty.laihui.controller.PayOrderController.buildOrderParam;
@@ -202,6 +204,32 @@ public class PassengerArriveService {
             User user = appDB.getUserList(user_where).get(0);
             if (user.getIs_validated() == 1) {
                 String start_time = request.getParameter("departure_time");//出发时间
+                //验证出发时间 周一到周六 早九点到晚六点
+                String release_time = Utils.getCurrentTime();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Calendar c = Calendar.getInstance();
+                try {
+                    c.setTime(format.parse(release_time));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    json = AppJsonUtils.returnFailJsonString(result, "创建失败！");
+                    return json;
+                }
+                int dayForWeek = 0;
+                if(c.get(Calendar.DAY_OF_WEEK) == 1){
+                    dayForWeek = 7;
+                }else{
+                    dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+                }
+                int hour = c.get(Calendar.HOUR_OF_DAY);
+                int min = c.get(Calendar.MINUTE);          //获取当前分钟
+                int ss = c.get(Calendar.SECOND);          //获取当前秒
+                if((dayForWeek==7)||(hour<9 || hour>18 || (hour==18 && (min>0 || ss>0)))){
+                    json = AppJsonUtils.returnFailJsonString(result, "必达单出发时间必须为周一至周六早9点到晚6点！");
+                    return json;
+                }
+
                 int source = 0;
                 if (request.getParameter("source") != null && request.getParameter("source").equals("iOS")) {
                     source = 1;
@@ -221,12 +249,36 @@ public class PassengerArriveService {
                 try {
                     JSONObject boardingObject = JSONObject.parseObject(boarding_point);
                     departure_address_code = boardingObject.getIntValue("adCode");
+                    //验证出发地点 （郑州市）
+                    String departure_address_code_str = String.valueOf(departure_address_code);
+                    if(departure_address_code_str==null || departure_address_code_str.equals("")||departure_address_code_str.length()<6){
+                        json = AppJsonUtils.returnFailJsonString(result, "获取参数错误！");
+                        return json;
+                    }else{
+                        departure_address_code_str=departure_address_code_str.substring(0,4);
+                        if(!departure_address_code_str.equals("4101")){
+                            json = AppJsonUtils.returnFailJsonString(result, "出发地必须是郑州，其它地区暂未开通服务！");
+                            return json;
+                        }
+                    }
                     departure_city_code = Integer.parseInt((departure_address_code + "").substring(0, 4) + "00");
                     boarding_latitude = boardingObject.getString("latitude");
                     boarding_longitude = boardingObject.getString("longitude");
                     departure_code = Integer.parseInt((departure_address_code + "").substring(0, 4));
                     JSONObject breakoutObject = JSONObject.parseObject(breakout_point);
                     destination_address_code = breakoutObject.getIntValue("adCode");
+                    //验证目的地点 （河南省内）
+                    String destination_address_code_str = String.valueOf(destination_address_code);
+                    if(destination_address_code_str==null || destination_address_code_str.equals("")||destination_address_code_str.length()<6){
+                        json = AppJsonUtils.returnFailJsonString(result, "获取参数错误！");
+                        return json;
+                    }else{
+                        destination_address_code_str=destination_address_code_str.substring(0,2);
+                        if(!destination_address_code_str.equals("41")){
+                            json = AppJsonUtils.returnFailJsonString(result, "目的地必须是河南省内，其它地区暂未开通服务！");
+                            return json;
+                        }
+                    }
                     destination_city_code = Integer.parseInt((destination_address_code + "").substring(0, 4) + "00");
                     breakout_latitude = breakoutObject.getString("latitude");
                     breakout_longitude = breakoutObject.getString("longitude");
