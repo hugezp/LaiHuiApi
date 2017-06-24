@@ -46,7 +46,7 @@ public class OrderController {
                 user_id = appDB.getIDByToken(token);
 
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -61,7 +61,7 @@ public class OrderController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }

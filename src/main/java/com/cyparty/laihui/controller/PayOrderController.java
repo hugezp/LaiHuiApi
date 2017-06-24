@@ -62,7 +62,6 @@ public class PayOrderController {
         String order_id = request.getParameter("order_id");
         String pay_type = request.getParameter("pay_type");
         String flag = request.getParameter("flag");
-        double serviceFee = 0.0;
         String body = "拼车费用";
         String description = "拼车费用";
         PassengerOrder passengerOrder;
@@ -72,7 +71,6 @@ public class PayOrderController {
             if (passengerOrderList.size() > 0) {
                 passengerOrder = passengerOrderList.get(0);
                 if (passengerOrder.getIsArrive()==1){
-                    serviceFee = ConfigUtils.getServiceFee();
                 }
             } else {
                 json = AppJsonUtils.returnFailJsonString(result, "订单已失效！");
@@ -89,7 +87,7 @@ public class PayOrderController {
                 String now_ip = Utils.getIP(request);
                 String nonce_str = Utils.getCharAndNum(32);
                 double inputFee = 0.0;
-                inputFee = (passengerOrder.getPay_money()+serviceFee) * 100;
+                inputFee = passengerOrder.getPay_money() * 100;
                 int inputIntFee = (int) inputFee;
                 String total_fee = inputIntFee + "";
 
@@ -158,7 +156,7 @@ public class PayOrderController {
             } else {
                 String now_ip = Utils.getIP(request);
                 String nonce_str = Utils.getCharAndNum(32);
-                double inputFee = (passengerOrder.getPay_money()+serviceFee) * 100;
+                double inputFee = passengerOrder.getPay_money() * 100;
                 int inputIntFee = (int) inputFee;
                 String total_fee = inputIntFee + "";
                 String prepay_id = null;
@@ -226,7 +224,7 @@ public class PayOrderController {
 
         } else {
             //支付宝支付
-            double total_fee = passengerOrder.getPay_money()+serviceFee;
+            double total_fee = passengerOrder.getPay_money();
             Map<String, String> keyValues = new HashMap<String, String>();
             String current_time = Utils.getCurrentTime();
             keyValues.put("app_id", PayConfigUtils.getApp_id());

@@ -44,17 +44,17 @@ public class RefuseArriveService {
                     json = AppJsonUtils.returnSuccessJsonString(result, "拒绝成功!");
                     return json;
                 } else {
-                    result.put("error_code", ErrorCode.getError_system());
+                    result.put("error_code", ErrorCode.ERROR_SYSTEM);
                     json = AppJsonUtils.returnFailJsonString(result, "服务器错误!");
                     return json;
                 }
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token!");
                 return json;
             }
         } catch (Exception e) {
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误!");
             return json;
         }
@@ -85,7 +85,7 @@ public class RefuseArriveService {
                 if (passengerOrderList.size() > 0) {
                     Order passengerOrder = passengerOrderList.get(0);
                     if (passengerOrder.getUser_id() == userId) {
-                        result.put("error_code", ErrorCode.getOrder_is_self());
+                        result.put("error_code", ErrorCode.INVITE_TIME);
                         json = AppJsonUtils.returnFailJsonString(result, "抱歉，不能抢自己发的车单哦！");
                         return json;
                     }
@@ -95,7 +95,7 @@ public class RefuseArriveService {
                     String order_where = " where  user_id= " + userId + " and create_time >= '" + departure_time + " 00:00:00'  and create_time <='" + departure_time + " 24:00:00' and order_type=2 ";
                     int total = appDB.getCount("pc_orders", order_where);
                     //规定每天可以预定5次
-                    if (total <= ConfigUtils.getDriver_grad_order_counts()) {
+                    if (total <= ConfigUtils.DRIVER_GRAD_ORDER_COUNTS) {
                         Order order = new Order();
                         order.setUser_id(userId);
                         order.setOrder_id(passengerOrder.getOrder_id());
@@ -106,7 +106,7 @@ public class RefuseArriveService {
                         order.setIs_enable(1);
                         isSuccess = appDB.createOrderReview(order);
                     } else {
-                        result.put("error_code", ErrorCode.getBooking_times_limit());
+                        result.put("error_code", ErrorCode.BOOKING_TIMES_LIMIT);
                         json = AppJsonUtils.returnFailJsonString(result, "每日抢单次数达到上限！");
                         return json;
                     }
@@ -152,7 +152,7 @@ public class RefuseArriveService {
                         json = AppJsonUtils.returnSuccessJsonString(result, "抢单成功！");
                         return json;
                     } else {
-                        result.put("error_code", ErrorCode.getError_system());
+                        result.put("error_code", ErrorCode.ERROR_SYSTEM);
                         json = AppJsonUtils.returnFailJsonString(result, "服务器错误!");
                         return json;
                     }
@@ -161,12 +161,12 @@ public class RefuseArriveService {
                     return json;
                 }
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token!");
                 return json;
             }
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token!");
             return json;
         }

@@ -49,7 +49,7 @@ public class PassengerArriveService {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 }
                 int flag = 1;
@@ -128,7 +128,7 @@ public class PassengerArriveService {
                 }
             }
         } catch (Exception e) {
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
         }
 
@@ -151,7 +151,7 @@ public class PassengerArriveService {
             json = AppJsonUtils.returnSuccessJsonString(result, "请求成功！");
             return json;
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return json;
         }
@@ -173,7 +173,7 @@ public class PassengerArriveService {
             }
         }
         if (ParamVerificationUtils.insertItineraryValidation(request) == 0) {
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return json;
         }
@@ -211,7 +211,7 @@ public class PassengerArriveService {
                     c.setTime(format.parse(release_time));
                 } catch (ParseException e) {
                     e.printStackTrace();
-                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    result.put("error_code", ErrorCode.PARAMETER_WRONG);
                     json = AppJsonUtils.returnFailJsonString(result, "创建失败！");
                     return json;
                 }
@@ -284,7 +284,7 @@ public class PassengerArriveService {
                     destination_code = Integer.parseInt((destination_address_code + "").substring(0, 4));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    result.put("error_code", ErrorCode.PARAMETER_WRONG);
                     json = AppJsonUtils.returnFailJsonString(result, "创建失败！");
                     return json;
                 }
@@ -325,11 +325,11 @@ public class PassengerArriveService {
                     String now_where = "";
                     now_where = " where user_id=" + user_id + " and create_time >='" + now_time + "' and order_type=0 ";
                     List<Order> todayOrderList = appDB.getOrderReview(now_where, 0);
-                    if (todayOrderList.size() < ConfigUtils.getDriver_departure_counts()) {
+                    if (todayOrderList.size() < ConfigUtils.DRIVER_DEPARTURE_COUNTS) {
                         //将车单添加到数据库中
                         is_success = appDB.createPassengerDepartureArrive(order);
                     } else {
-                        json = AppJsonUtils.returnFailJsonString(result, "每日发布行程次数为" + ConfigUtils.getPassenger_departure_counts() + "次，您今日发布次数已达到上限！");
+                        json = AppJsonUtils.returnFailJsonString(result, "每日发布行程次数为" + ConfigUtils.PASSENGER_DEPARTURE_COUNTS + "次，您今日发布次数已达到上限！");
                         return json;
                     }
                 }
@@ -367,7 +367,7 @@ public class PassengerArriveService {
                 json = AppJsonUtils.returnFailJsonString(result, "行程创建失败！");
                 return json;
             } else {
-                result.put("error_code", ErrorCode.getIs_validated());
+                result.put("error_code", ErrorCode.IS_VALIDATED);
                 json = AppJsonUtils.returnFailJsonString(result, "请先进行乘客身份认证！");
                 return json;
             }
@@ -383,12 +383,12 @@ public class PassengerArriveService {
         String tradeNo = request.getParameter("tradeNo");
         String releaseTime = request.getParameter("releaseTime");
         if (ParamVerificationUtils.judgmentValidation(request) == 0) {
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return json;
         }
-        if (DateUtils.getTimesToNow1(releaseTime)>ConfigUtils.getOrderTimeout()){
-            result.put("error_code", ErrorCode.getOrderTimeout());
+        if (DateUtils.getTimesToNow1(releaseTime)>ConfigUtils.ORDER_TIMEOUT){
+            result.put("error_code", ErrorCode.ORDER_TIMEOUT);
             json = AppJsonUtils.returnFailJsonString(result, "订单支付超时");
             return json;
         }

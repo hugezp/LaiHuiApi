@@ -42,7 +42,7 @@ public class ArrivePayController {
         double price = Double.parseDouble(request.getParameter("price"));
         String tradeNo = request.getParameter("tradeNo");
         String pay_type = request.getParameter("pay_type");
-        double serviceFee = ConfigUtils.getServiceFee();
+        double serviceFee = ConfigUtils.SERVICE_FEE;
         String body = "拼车费用";
         String description = "拼车费用";
         if (pay_type != null && !pay_type.isEmpty()) {

@@ -57,7 +57,7 @@ public class CommonRouteController {
         if (token != null && token.length() == 32) {
             user_id = appDB.getIDByToken(token);
         } else {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
@@ -89,13 +89,13 @@ public class CommonRouteController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "常用路线添加成功");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getParameter_wrong());
+                        result.put("error_code", ErrorCode.PARAMETER_WRONG);
                         json = AppJsonUtils.returnFailJsonString(result, "常用路线添加失败！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
 
                 }
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             //逻辑上的删除，将其设为不可用
@@ -117,7 +117,7 @@ public class CommonRouteController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "删除成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getParameter_wrong());
+                        result.put("error_code", ErrorCode.PARAMETER_WRONG);
                         json = AppJsonUtils.returnFailJsonString(result, "抱歉，此删除无效，请重新尝试！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -128,7 +128,7 @@ public class CommonRouteController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "删除成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getParameter_wrong());
+                        result.put("error_code", ErrorCode.PARAMETER_WRONG);
                         json = AppJsonUtils.returnFailJsonString(result, "抱歉，此删除无效，请重新尝试！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -155,7 +155,7 @@ public class CommonRouteController {
                     json = AppJsonUtils.returnSuccessJsonString(result, "您的路线更新成功！");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 } else {
-                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    result.put("error_code", ErrorCode.PARAMETER_WRONG);
                     json = AppJsonUtils.returnFailJsonString(result, "抱歉！您的路线更新无效，请重新尝试");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }
@@ -178,7 +178,7 @@ public class CommonRouteController {
                             json = AppJsonUtils.returnSuccessJsonString(result, "关闭成功！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
-                            result.put("error_code", ErrorCode.getParameter_wrong());
+                            result.put("error_code", ErrorCode.PARAMETER_WRONG);
                             json = AppJsonUtils.returnFailJsonString(result, "由于系统原因关闭失败，请见谅！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
@@ -189,7 +189,7 @@ public class CommonRouteController {
                             json = AppJsonUtils.returnSuccessJsonString(result, "开启成功！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         } else {
-                            result.put("error_code", ErrorCode.getParameter_wrong());
+                            result.put("error_code", ErrorCode.PARAMETER_WRONG);
                             json = AppJsonUtils.returnFailJsonString(result, "由于系统原因开启失败，请见谅！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
@@ -207,12 +207,12 @@ public class CommonRouteController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "默认路线成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getParameter_wrong());
+                        result.put("error_code", ErrorCode.PARAMETER_WRONG);
                         json = AppJsonUtils.returnFailJsonString(result, "由于系统原因设置失败，请见谅！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
         }
-        result.put("error_code", ErrorCode.getParameter_wrong());
+        result.put("error_code", ErrorCode.PARAMETER_WRONG);
         json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
 
@@ -235,7 +235,7 @@ public class CommonRouteController {
         //终点距离
         double end_point_distance = 0.0;
         //查询范围
-        double query_distance = ConfigUtils.getQuery_distance();
+        double query_distance = ConfigUtils.QUERY_DISTANCE;
         String current_time = Utils.getCurrentTimeSubOrAddHour(0);
         try {
             String action = request.getParameter("action");
@@ -262,7 +262,7 @@ public class CommonRouteController {
                 user_id = appDB.getIDByToken(token);
 
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -321,14 +321,14 @@ public class CommonRouteController {
                     }
                     break;
                 default:
-                    result.put("error_code", ErrorCode.getParameter_wrong());
+                    result.put("error_code", ErrorCode.PARAMETER_WRONG);
                     json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }

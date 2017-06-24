@@ -96,17 +96,17 @@ public class APIController {
                         json = AppJsonUtils.returnSuccessJsonString(result, "您的建议我们已收到，感谢支持！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token!");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                     }
             }
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
         }
@@ -271,12 +271,12 @@ public class APIController {
                 id = appDB.getIDByToken(token);
             } catch (Exception e) {
                 jsonObject.put("status", false);
-                jsonObject.put("error_code", ErrorCode.getToken_expired());
+                jsonObject.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 jsonObject.put("msg", "非法token！");
             }
         } else {
             jsonObject.put("status", false);
-            jsonObject.put("error_code", ErrorCode.getToken_expired());
+            jsonObject.put("error_code", ErrorCode.TOKEN_EXPIRED);
             jsonObject.put("msg", "非法token！");
         }
         String where = " where user_id=" + id + " and is_reg=1";
@@ -409,7 +409,7 @@ public class APIController {
                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
         } else {
-            result_json.put("error_code", ErrorCode.getParameter_wrong());
+            result_json.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result_json, "获取参数有误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
         }

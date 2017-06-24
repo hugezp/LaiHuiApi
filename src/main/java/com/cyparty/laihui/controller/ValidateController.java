@@ -66,12 +66,12 @@ public class ValidateController {
                     json = AppJsonUtils.returnSuccessJsonString(AppJsonUtils.getcolor(), "车辆颜色数据获取成功！");
                     return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -105,7 +105,7 @@ public class ValidateController {
                 id = appDB.getIDByToken(token);
 
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -150,7 +150,7 @@ public class ValidateController {
                         }
 
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
@@ -184,7 +184,7 @@ public class ValidateController {
                             carOwnerInfo.setCar_color(request.getParameter("car_color"));
 
                             if (carOwnerInfo.getCar_owner_name() == null || carOwnerInfo.getCar_owner_name().isEmpty()) {
-                                result.put("error_code", ErrorCode.getParameter_wrong());
+                                result.put("error_code", ErrorCode.PARAMETER_WRONG);
                                 json = AppJsonUtils.returnFailJsonString(result, "提交失败！");
                                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                             }
@@ -229,22 +229,22 @@ public class ValidateController {
                             json = AppJsonUtils.returnSuccessJsonString(result, "提交成功！");
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                         } else {
-                            result.put("error_code", ErrorCode.getParameter_wrong());
+                            result.put("error_code", ErrorCode.PARAMETER_WRONG);
                             json = AppJsonUtils.returnFailJsonString(result, "提交失败！");
                             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                         }
                     } else {
-                        result.put("error_code", ErrorCode.getToken_expired());
+                        result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                         json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
             }
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -271,7 +271,7 @@ public class ValidateController {
                 token = request.getParameter("token");
                 user_id = appDB.getIDByToken(token);
                 if (user_id == 0) {
-                    result.put("error_code", ErrorCode.getToken_expired());
+                    result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                     json = AppJsonUtils.returnFailJsonString(result, "无效token！");
                     return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                 }
@@ -283,42 +283,42 @@ public class ValidateController {
                 case "driver":
                     get_ticket_sql = " where user_id=" + user_id + " and create_time >='" + current_time + "'";
                     count = appDB.getCount("pc_driver_publish_info", get_ticket_sql);
-                    if (count < ConfigUtils.getDriver_departure_counts()) {
+                    if (count < ConfigUtils.DRIVER_DEPARTURE_COUNTS) {
                         result.put("current", count);
-                        result.put("total", ConfigUtils.getDriver_departure_counts());
-                        result.put("left", ConfigUtils.getDriver_departure_counts() - count);
+                        result.put("total", ConfigUtils.DRIVER_DEPARTURE_COUNTS);
+                        result.put("left", ConfigUtils.DRIVER_DEPARTURE_COUNTS - count);
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证通过！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     } else {
                         result.put("current", count);
-                        result.put("total", ConfigUtils.getDriver_departure_counts());
-                        result.put("left", ConfigUtils.getDriver_departure_counts() - count);
+                        result.put("total", ConfigUtils.DRIVER_DEPARTURE_COUNTS);
+                        result.put("left", ConfigUtils.DRIVER_DEPARTURE_COUNTS - count);
                         json = AppJsonUtils.returnFailJsonString(result, "您今日发车次数已达到每日发车次数上限！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
                 case "passenger":
                     get_ticket_sql = " where user_id=" + user_id + " and create_time >='" + current_time + "'";
                     count = appDB.getCount("pc_passenger_publish_info", get_ticket_sql);
-                    if (count < ConfigUtils.getBooking_counts()) {
+                    if (count < ConfigUtils.BOOKING_COUNTS) {
                         result.put("current", count);
-                        result.put("total", ConfigUtils.getBooking_counts());
-                        result.put("left", ConfigUtils.getBooking_counts() - count);
+                        result.put("total", ConfigUtils.BOOKING_COUNTS);
+                        result.put("left", ConfigUtils.BOOKING_COUNTS - count);
                         json = AppJsonUtils.returnSuccessJsonString(result, "验证通过！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     } else {
                         result.put("current", count);
-                        result.put("total", ConfigUtils.getBooking_counts());
-                        result.put("left", ConfigUtils.getBooking_counts() - count);
+                        result.put("total", ConfigUtils.BOOKING_COUNTS);
+                        result.put("left", ConfigUtils.BOOKING_COUNTS - count);
                         json = AppJsonUtils.returnFailJsonString(result, "您今日预定次数已达到每日预定次数上限！");
                         return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
                     }
             }
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -348,7 +348,7 @@ public class ValidateController {
             if (token != null) {
                 id = appDB.getIDByToken(token);
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
@@ -502,13 +502,13 @@ public class ValidateController {
                 json = AppJsonUtils.returnFailJsonString(result, "身份证与姓名不匹配!");
                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -536,7 +536,7 @@ public class ValidateController {
         String effective_date_end = request.getParameter("effective_date_end");
         //String photo = request.getParameter("driver_license_photo");
         if (StringUtil.isBlank(token) || "null".equals(token)) {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } else if (StringUtil.isBlank(driver_name) || "null".equals(driver_name)) {
@@ -649,7 +649,7 @@ public class ValidateController {
         String vehicle_owner_name = request.getParameter("vehicle_owner_name");
 //        String photo = request.getParameter("travel_license_photo");
         if (StringUtil.isBlank(token) || "null".equals(token)) {
-            result.put("error_code", ErrorCode.getToken_expired());
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         } else if (StringUtil.isBlank(car_license_number) || "null".equals(car_license_number)) {

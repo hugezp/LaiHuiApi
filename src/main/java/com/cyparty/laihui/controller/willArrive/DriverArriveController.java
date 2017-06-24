@@ -61,20 +61,20 @@ public class DriverArriveController {
                     //获取json数据
                     result = ArriveService.getArriveListJson(mobile, appDB, page, size);
                 } catch (Exception e) {
-                    result.put("error_code", ErrorCode.getError_system());
+                    result.put("error_code", ErrorCode.ERROR_SYSTEM);
                     json = AppJsonUtils.returnFailJsonString(result, "服务器错误!");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 }
 
 
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
             }
 
         } catch (Exception e) {
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<>(json, responseHeaders, HttpStatus.BAD_REQUEST);
         }
@@ -111,12 +111,12 @@ public class DriverArriveController {
                     return new ResponseEntity<>(json, httpHeaders, HttpStatus.OK);
                 }
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "非法token!");
                 return new ResponseEntity<>(json, httpHeaders, HttpStatus.OK);
             }
         } catch (Exception e) {
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误!");
             return new ResponseEntity<>(json, httpHeaders, HttpStatus.OK);
         }

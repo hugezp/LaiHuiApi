@@ -55,12 +55,12 @@ public class QRCodeController {
                     content = ConfigUtils.NATIONAL_AGENT + token;
                 }
             } else {
-                result.put("error_code", ErrorCode.getToken_expired());
+                result.put("error_code", ErrorCode.TOKEN_EXPIRED);
                 json = AppJsonUtils.returnFailJsonString(result, "无效token");
                 return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
             }
         } else {
-            result.put("error_code", ErrorCode.getParameter_wrong());
+            result.put("error_code", ErrorCode.PARAMETER_WRONG);
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误");
             return new ResponseEntity<String>(json, responseHeaders, HttpStatus.OK);
         }
