@@ -1040,7 +1040,7 @@ public class AppJsonUtils {
             jsonObject.put("create_time", order.getCreate_time());
             jsonObject.put("departure_time", order.getDeparture_time());
             jsonObject.put("price", order.getPrice());
-            jsonObject.put("remake", order.getRemark());
+            jsonObject.put("remark", order.getRemark());
             //判断车主的订单状态和备注
             switch (order.getOrder_status()) {
                 case 0:
@@ -1077,20 +1077,18 @@ public class AppJsonUtils {
                     break;
                 case 100:
                     status = 1;
-                    isArrive = 1;
                     remark = "抢单成功,待乘客确认";
                     break;
                 case 200:
                     status = 1;
-                    isArrive = 1;
                     remark = "乘客支付成功";
                     break;
             }
             //乘客订单状态
             jsonObject.put("status", status);
             //乘客订单状态备注
-            jsonObject.put("remark", remark);
-            jsonObject.put("isArrive", isArrive);
+            jsonObject.put("remake", remark);
+            jsonObject.put("isArrive", order.getIsArrive());
 
             //得到乘客基本信息
             where = " where _id=" + order.getUser_id();
@@ -1111,6 +1109,7 @@ public class AppJsonUtils {
             driverObject.put("mobile", driver.getUser_mobile());
             driverObject.put("name", driver.getUser_nick_name());
             driverObject.put("avatar", driver.getAvatar());
+            driverObject.put("isVerification",driver.getIs_car_owner());
 
             PCCount driverPCCount = getPCCount(appDB, driver.getUser_id());
             driverObject.put("pc_count", driverPCCount.getTotal());
@@ -1128,6 +1127,113 @@ public class AppJsonUtils {
         return result_json;
     }
 
+    public static JSONObject getMyGrabOrderList(AppDB appDB,int user_id) {
+        JSONObject result_json = new JSONObject();
+        JSONArray dataArray = new JSONArray();
+        String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where a.order_status in(-1,0,1,2,100,200) and a.is_enable=1 and a.order_type=2 and a.user_id=" + user_id;
+        int count = appDB.getCount("pc_orders", where);
+        int status = 0;
+        String remark = "";
+        where = where + " order by a.create_time DESC";
+        List<Order> orderList = appDB.getOrderReview(where, 2);
+        for (Order order : orderList) {
+            JSONObject jsonObject = new JSONObject();
+            JSONObject userObject = new JSONObject();
+            JSONObject driverObject = new JSONObject();
+            jsonObject.put("order_id", order.get_id());
+            jsonObject.put("order_status", order.getOrder_status());
+            jsonObject.put("update_time", order.getUpdate_time());
+            jsonObject.put("seats", order.getBooking_seats());
+            jsonObject.put("boarding_point", JSONObject.parseObject(order.getBoarding_point()));
+            jsonObject.put("breakout_point", JSONObject.parseObject(order.getBreakout_point()));
+            jsonObject.put("description", order.getDescription());
+            jsonObject.put("create_time", order.getCreate_time());
+            jsonObject.put("departure_time", order.getDeparture_time());
+            jsonObject.put("price", order.getPrice());
+            jsonObject.put("remark", order.getRemark());
+            //判断车主的订单状态和备注
+            switch (order.getOrder_status()) {
+                case 0:
+                    status = 1;
+                    remark = "等待确认";
+                    break;
+                case 1:
+                    status = 1;
+                    remark = "抢单成功";
+                    break;
+                case 2:
+                    status = 1;
+                    remark = "乘客支付成功";
+                    break;
+                case 3:
+                    status = 3;
+                    remark = "订单完成";
+                    break;
+                case 4:
+                    status = 3;
+                    remark = "抢单失败";
+                    break;
+                case 5:
+                    status = 4;
+                    remark = "乘客订单失效";
+                    break;
+                case 6:
+                    status = 1;
+                    remark = "乘客申请退款";
+                    break;
+                case -1:
+                    status = 2;
+                    remark = "已发车";
+                    break;
+                case 100:
+                    status = 1;
+                    remark = "抢单成功,待乘客确认";
+                    break;
+                case 200:
+                    status = 1;
+                    remark = "乘客支付成功";
+                    break;
+            }
+            //乘客订单状态
+            jsonObject.put("status", status);
+            //乘客订单状态备注
+            jsonObject.put("remake", remark);
+            jsonObject.put("isArrive", order.getIsArrive());
+
+            //得到乘客基本信息
+            where = " where _id=" + order.getUser_id();
+            List<User> passengers = appDB.getUserList(where);
+            if (passengers.size() > 0) {
+                User user = passengers.get(0);
+                userObject.put("mobile", user.getUser_mobile());
+                userObject.put("name", user.getUser_nick_name());
+                userObject.put("avatar", user.getAvatar());
+
+                PCCount driverPCCount = getPCCount(appDB, user.getUser_id());
+                userObject.put("pc_count", driverPCCount.getTotal());
+            }
+            //得到司机基本信息
+            where = " where _id=" + order.getDriver_id();
+            User driver = appDB.getUserList(where).get(0);
+
+            driverObject.put("mobile", driver.getUser_mobile());
+            driverObject.put("name", driver.getUser_nick_name());
+            driverObject.put("avatar", driver.getAvatar());
+            driverObject.put("isVerification",driver.getIs_car_owner());
+
+            PCCount driverPCCount = getPCCount(appDB, driver.getUser_id());
+            driverObject.put("pc_count", driverPCCount.getTotal());
+
+            jsonObject.put("passenger_data", userObject);
+            jsonObject.put("driver_data", driverObject);
+
+            dataArray.add(jsonObject);
+
+        }
+        result_json.put("data", dataArray);
+        return result_json;
+    }
+
     /**
      * 获取订单状态
      *
@@ -1140,7 +1246,7 @@ public class AppJsonUtils {
     public static JSONObject getMyPassengerStatusList(AppDB appDB, int page, int size, int user_id) {
         JSONObject result_json = new JSONObject();
         JSONArray dataArray = new JSONArray();
-        String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where a.is_enable=1  and a.order_type=0   and a.order_status<4 and a.order_id in(select order_id from pc_orders where user_id=" + user_id + " and order_type=2 and is_enable=1)";
+        String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where a.is_enable=1  and a.order_type=0   and (a.order_status<4 or a.order_status in(100,200,300)) and a.order_id in(select order_id from pc_orders where user_id=" + user_id + " and order_type=2 and is_enable=1)";
         int offset = page * size;
         int status = 0;
         String remake = "";
@@ -1771,7 +1877,7 @@ public class AppJsonUtils {
         int isArrive = 0;
         //判断为乘客乘客
         if (judgment.equals("passenger")) {
-            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and a.order_status<300 and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
+            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and (a.order_status<3 or a.order_status in(100,200)) and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
             List<Order> orderList = appDB.getOrderReview(where, 2);
             if (orderList.size() > 0) {
                 for (Order order : orderList) {

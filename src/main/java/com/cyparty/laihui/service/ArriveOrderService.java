@@ -62,7 +62,7 @@ public class ArriveOrderService {
                 String d_mobile = driverOrderList.get(0).getUser_mobile();
                 int order_id = driverOrderList.get(0).getOrder_id();
                 int id = driverOrderList.get(0).getUser_id();
-                boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "",1);
+                boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "", 1);
                 if (is_true) {
                     NotifyPush.pinCheNotify("21", d_mobile, content, order_id, passengerData, confirm_time);
                 }
@@ -137,7 +137,7 @@ public class ArriveOrderService {
                 passengerData.put("record_id", passengerOrder.get_id());
                 int push_type = 22;
                 int push_id = user.getUser_id();
-                boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "",1);
+                boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, id, push_type, content, push_type, push_type + ".caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), "", 1);
                 if (is_true) {
                     NotifyPush.pinCheNotify("22", d_mobile, content, order_id, passengerData, confirm_time);
                 }
@@ -172,7 +172,7 @@ public class ArriveOrderService {
         if (passengerOrderList.size() > 0) {
             PassengerOrder passengerOrder = passengerOrderList.get(0);
             if (user.getIs_car_owner() == 1) {
-                if (driverInfoList.size() == 0){
+                if (driverInfoList.size() == 0) {
                     DepartureInfo departure = new DepartureInfo();
                     departure.setUser_id(user.getUser_id());
                     departure.setMobile(user.getUser_mobile());
@@ -194,13 +194,34 @@ public class ArriveOrderService {
                     departure.setDeparture_code(passengerOrder.getDeparture_code());
                     departure.setDestination_code(passengerOrder.getDestination_code());
                     appDB.createPCHDeparture(departure, source);
-                }else {
+                } else {
                     CrossCity departure = driverInfoList.get(0);
                     int currentSeats = departure.getCurrent_seats() - passengerOrder.getSeats();
                     where = " set current_seats = " + currentSeats + " where _id = " + departure.getR_id();
-                    appDB.update("pc_driver_publish_info",where);
+                    appDB.update("pc_driver_publish_info", where);
                 }
             }
+        }
+    }
+
+    /**
+     * 订单列表
+     */
+    public static String orderList(AppDB appDB, HttpServletRequest request) {
+        JSONObject result = new JSONObject();
+        String json = "";
+        int userId = 0;
+        //判断用户标识
+        String token = request.getParameter("token");
+        if (token != null && token.length() == 32) {
+            userId = appDB.getIDByToken(token);
+            result = AppJsonUtils.getMyGrabOrderList(appDB, userId);
+            json = AppJsonUtils.returnSuccessJsonString(result, "司机抢单列表获取成功！");
+            return json;
+        } else {
+            result.put("error_code", ErrorCode.getToken_expired());
+            json = AppJsonUtils.returnFailJsonString(result, "非法token！");
+            return json;
         }
     }
 }

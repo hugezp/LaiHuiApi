@@ -25,6 +25,10 @@ import java.util.Map;
 /**
  * Created by dupei on 2017/3/17 0017.
  */
+
+/**
+ * 违章查询模块
+ */
 @Controller
 @ResponseBody
 @RequestMapping(value = "/api/app", method = RequestMethod.POST)
@@ -32,7 +36,6 @@ public class TrafficViolationController {
     @Autowired
     AppDB appDB;
 
-    //违章查询模块
     @ResponseBody
     @RequestMapping(value = "/illegal/inquire", method = RequestMethod.POST)
     public ResponseEntity<String> getCommonRoute(HttpServletRequest request) {

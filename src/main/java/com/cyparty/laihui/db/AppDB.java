@@ -764,7 +764,7 @@ public class AppDB {
      */
     public List<CrossCity> getCrossCityList1(String where) {
         String SQL = "SELECT * FROM pc_passenger_publish_info" + where;
-        List<CrossCity> crossCityList = jdbcTemplateObject.query(SQL, new CrossCityMapper());
+        List<CrossCity> crossCityList = jdbcTemplateObject.query(SQL, new CrossCity1Mapper());
         return crossCityList;
     }
 

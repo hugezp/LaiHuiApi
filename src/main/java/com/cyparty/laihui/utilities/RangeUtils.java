@@ -36,6 +36,14 @@ public class RangeUtils {
         s = s*1000;
         return s;
     }
+
+    /**
+     * 计算匹配度方法
+     * @param my_distance
+     * @param start_point_distance
+     * @param end_point_distance
+     * @return
+     */
     public static String getSuitability(double my_distance,double start_point_distance,double end_point_distance){
         DecimalFormat df   = new DecimalFormat("######0.00");
         double match = (start_point_distance+end_point_distance)/my_distance;

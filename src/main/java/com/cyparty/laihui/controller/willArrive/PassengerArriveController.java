@@ -56,7 +56,7 @@ public class PassengerArriveController {
      * 乘客发布行程
      */
     @ResponseBody
-    @RequestMapping(value = "/passenger/release/itinerary")
+    @RequestMapping(value = "/passenger/release/itinerary",method = RequestMethod.POST)
     public ResponseEntity<String> releaseItinerary(HttpServletRequest request){
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
@@ -68,7 +68,7 @@ public class PassengerArriveController {
      */
     @Transactional(readOnly = false)
     @ResponseBody
-    @RequestMapping(value = "/passenger/release/yesOrNo")
+    @RequestMapping(value = "/passenger/release/yesOrNo",method = RequestMethod.POST)
     public ResponseEntity<String> release(HttpServletRequest request) throws Exception {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
