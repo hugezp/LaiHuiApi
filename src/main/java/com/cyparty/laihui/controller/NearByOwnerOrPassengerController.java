@@ -333,7 +333,7 @@ public class NearByOwnerOrPassengerController {
                     //获取车主经纬度
                     double o_lon = Double.parseDouble(request.getParameter("p_longitude"));
                     double o_lat = Double.parseDouble(request.getParameter("p_latitude"));
-                    //乘客附近的车主列表
+                    //乘客附近的乘客列表
                     where = " where a.order_status = 0 and is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having distance <= " + ConfigUtils.QUERY_DISTANCE + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit " + offset + "," + size;
                     List<PassengerOrder> passengerList = appDB.getPassengerList(where, o_lon, o_lat);
                     if (passengerList.size() != 0) {
