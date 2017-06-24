@@ -213,6 +213,7 @@ public class PassengerArriveService {
                     long longTime = startTime.getTime() - releaseTime.getTime();
                     long hour = longTime / (60 * 60 * 1000);
                     if(hour<2){
+
                         json = AppJsonUtils.returnFailJsonString(result, "必达单必须提前两小时发布！");
                         return json;
                     }

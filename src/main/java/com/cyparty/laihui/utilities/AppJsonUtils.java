@@ -661,6 +661,7 @@ public class AppJsonUtils {
             jsonObject.put("create_time", order.getCreate_time());
             jsonObject.put("departure_time", order.getDeparture_time());
             jsonObject.put("price", order.getPrice());
+            jsonObject.put("remark", order.getRemark());
             //判断乘客的订单状态和备注
             switch (order.getOrder_status()) {
                 case 0:
@@ -715,7 +716,7 @@ public class AppJsonUtils {
             //乘客订单状态
             jsonObject.put("status", status);
             //乘客订单状态备注
-            jsonObject.put("remark", remark);
+            jsonObject.put("remake", remark);
             jsonObject.put("isArrive", isArrive);
             //得到乘客基本信息
             String passenger_where = " where _id=" + order.getUser_id();
@@ -993,7 +994,7 @@ public class AppJsonUtils {
                             driverResult.put("car_brand", "");
                             driverResult.put("car_color", travelCardInfo.getCar_color());
                             driverResult.put("car_type", travelCardInfo.getCar_type());
-                        }else {
+                        } else {
                             driverResult.put("car_no", "");
                             driverResult.put("car_brand", "");
                             driverResult.put("car_color", "");
@@ -1109,7 +1110,7 @@ public class AppJsonUtils {
             driverObject.put("mobile", driver.getUser_mobile());
             driverObject.put("name", driver.getUser_nick_name());
             driverObject.put("avatar", driver.getAvatar());
-            driverObject.put("isVerification",driver.getIs_car_owner());
+            driverObject.put("isVerification", driver.getIs_car_owner());
 
             PCCount driverPCCount = getPCCount(appDB, driver.getUser_id());
             driverObject.put("pc_count", driverPCCount.getTotal());
@@ -1127,7 +1128,7 @@ public class AppJsonUtils {
         return result_json;
     }
 
-    public static JSONObject getMyGrabOrderList(AppDB appDB,int user_id) {
+    public static JSONObject getMyGrabOrderList(AppDB appDB, int user_id) {
         JSONObject result_json = new JSONObject();
         JSONArray dataArray = new JSONArray();
         String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where a.order_status in(-1,0,1,2,100,200) and a.is_enable=1 and a.order_type=2 and a.user_id=" + user_id;
@@ -1219,7 +1220,7 @@ public class AppJsonUtils {
             driverObject.put("mobile", driver.getUser_mobile());
             driverObject.put("name", driver.getUser_nick_name());
             driverObject.put("avatar", driver.getAvatar());
-            driverObject.put("isVerification",driver.getIs_car_owner());
+            driverObject.put("isVerification", driver.getIs_car_owner());
 
             PCCount driverPCCount = getPCCount(appDB, driver.getUser_id());
             driverObject.put("pc_count", driverPCCount.getTotal());
@@ -2158,26 +2159,16 @@ public class AppJsonUtils {
             pushJson.put("status", push.getStatus());
             String where = " a join pc_passenger_publish_info b on a.order_id = b._id where a.order_type = 0 and a.is_enable = 1 and a._id = " + push.getOrder_id();
             List<Order> orderReview = appDB.getOrderReview(where, 2);
-            if (orderReview.size()>0){
-                Order order = orderReview.get(0);
-                infoJson.put("departure_time",order.getDeparture_time());
-                infoJson.put("order_id",order.getOrder_id());
-                infoJson.put("price",order.getPrice());
-                infoJson.put("seats",order.getBooking_seats());
-                pushJson.put("order_status",order.getOrder_status());
-                infoJson.put("boarding_point",order.getBoarding_point());
-                infoJson.put("breakout_point",order.getBreakout_point());
-                infoJson.put("record_id",order.getOrder_id());
-            }else {
-                infoJson.put("departure_time","");
-                infoJson.put("order_id","");
-                infoJson.put("price","");
-                infoJson.put("seats","");
-                pushJson.put("order_status","");
-                infoJson.put("boarding_point","");
-                infoJson.put("breakout_point","");
-                infoJson.put("record_id","");
-            }
+            Order order = orderReview.get(0);
+            infoJson.put("departure_time", order.getDeparture_time());
+            infoJson.put("order_id", String.valueOf(order.getOrder_id()));
+            infoJson.put("price", String.valueOf(order.getPrice()));
+            infoJson.put("seats", String.valueOf(order.getBooking_seats()));
+            pushJson.put("order_status", String.valueOf(order.getOrder_status()));
+            infoJson.put("boarding_point", order.getBoarding_point());
+            infoJson.put("breakout_point", order.getBreakout_point());
+            infoJson.put("record_id", String.valueOf(order.getOrder_id()));
+            infoJson.put("departure_time", "");
             pushJson.put("info", infoJson);
             List<User> users = appDB.getUserList(" where _id =" + push.getPush_id());
             if (users.size() > 0) {
