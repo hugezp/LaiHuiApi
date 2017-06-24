@@ -1,6 +1,7 @@
 package com.cyparty.laihui.controller.willArrive;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cyparty.laihui.utilities.ConfigUtils;
 import com.cyparty.laihui.utilities.PayConfigUtils;
 import com.cyparty.laihui.utilities.Utils;
 import org.springframework.http.HttpHeaders;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
@@ -42,15 +42,15 @@ public class ArrivePayController {
         double price = Double.parseDouble(request.getParameter("price"));
         String tradeNo = request.getParameter("tradeNo");
         String pay_type = request.getParameter("pay_type");
-        double serviceFee = 0.0;
+        double serviceFee = ConfigUtils.getServiceFee();
         String body = "拼车费用";
         String description = "拼车费用";
         if (pay_type != null && !pay_type.isEmpty()) {
             //微信支付(来回公司名下)
             String now_ip = Utils.getIP(request);
             String nonce_str = Utils.getCharAndNum(32);
-            double inputFee = 1;
-           // double inputFee = (price + serviceFee) * 100;
+            //double inputFee = 1;
+            double inputFee = (price + serviceFee) * 100;
             int inputIntFee = (int) inputFee;
             String total_fee = inputIntFee + "";
 
@@ -118,8 +118,8 @@ public class ArrivePayController {
 
         } else {
             //支付宝支付
-            double total_fee = 0.01;
-            //double total_fee = price + serviceFee;
+            //double total_fee = 0.01;
+            double total_fee = price + serviceFee;
             Map<String, String> keyValues = new HashMap<String, String>();
             String current_time = Utils.getCurrentTime();
             keyValues.put("app_id", PayConfigUtils.getApp_id());

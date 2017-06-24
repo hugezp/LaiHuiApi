@@ -162,7 +162,6 @@ public class PassengerArriveService {
         boolean is_success = true;
         int seats = 0;
         int user_id = 0;
-        int order_id = 0;
         if (request.getParameter("token") != null) {
             try {
                 token = request.getParameter("token");
@@ -277,7 +276,6 @@ public class PassengerArriveService {
                     if (todayOrderList.size() < ConfigUtils.getDriver_departure_counts()) {
                         //将车单添加到数据库中
                         is_success = appDB.createPassengerDepartureArrive(order);
-
                     } else {
                         json = AppJsonUtils.returnFailJsonString(result, "每日发布行程次数为" + ConfigUtils.getPassenger_departure_counts() + "次，您今日发布次数已达到上限！");
                         return json;
@@ -299,7 +297,6 @@ public class PassengerArriveService {
                     order1.setRemark(remark);
                     order1.setIs_enable(0);
                     appDB.createOrderReview(order1);
-
                     //乘客车单ID
                     List<Order> orders = appDB.getOrderReview(" where order_id =" + id, 0);
                     result.put("car_id", id);
@@ -343,21 +340,20 @@ public class PassengerArriveService {
             json = AppJsonUtils.returnFailJsonString(result, "订单支付超时");
             return json;
         }
-        if (request.getParameter("flag").equals("success")) {
+        if (request.getParameter("flag").equals("1")) {
             success = true;
         }
         if (success) {
             where = " set is_enable= 1 where trade_no = '" + tradeNo + "'";
             appDB.update("pc_passenger_publish_info", where);
-            where = " a right join pc_passenger_publish_info b on a.order_id=b._id where where trade_no = '" + tradeNo + "'";
+            where = " a right join pc_passenger_publish_info b on a.order_id=b._id where trade_no='"+tradeNo+"'";
             List<Order> orderList = appDB.getOrderReview(where, 2);
             if (orderList.size() > 0) {
                 where = " set is_enable= 1 where _id = " + orderList.get(0).get_id() + "";
-                appDB.update("pc_order", where);
+                appDB.update("pc_orders", where);
                 json = AppJsonUtils.returnSuccessJsonString(result, "行程创建成功！");
                 return json;
             }
-
         }
         json = AppJsonUtils.returnFailJsonString(result, "行程创建失败！");
         return json;
