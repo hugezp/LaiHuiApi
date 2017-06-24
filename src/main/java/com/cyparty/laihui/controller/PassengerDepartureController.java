@@ -213,6 +213,7 @@ public class PassengerDepartureController {
                     user_id = appDB.getIDByToken(token);
                 } catch (Exception e) {
                     user_id = 0;
+                    e.printStackTrace();
                 }
             }
             String boarding_point = request.getParameter("boarding_point");
@@ -309,11 +310,11 @@ public class PassengerDepartureController {
                             order.setBreakout_longitude(breakout_longitude);
                             order.setDeparture_code(departure_code);
                             order.setDestination_code(destination_code);
-
+                            order.setIs_enable(1);
                             String trade_no = Utils.getTimestamp() + Utils.random(2);//15
                             order.setPay_num(trade_no);
                             //判断是否已存在进行中车单
-                            String order_where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and a.order_status<4 and a.order_status>=0 and order_type=0 and a.user_id=" + user_id;
+                            String order_where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and a.order_status in(0,1,2,3,100,200,300) and order_type=0 and a.user_id=" + user_id;
                             List<Order> passengerDepartureInfo = appDB.getOrderReview(order_where, 2);
                             if (passengerDepartureInfo.size() > 0) {
                                 json = AppJsonUtils.returnFailJsonString(result, "太贪心了，您尚有未完成的行程！");
@@ -321,12 +322,7 @@ public class PassengerDepartureController {
                             } else {
                                 //查询今日已发布次数
                                 String now_time = Utils.getCurrentTime().split(" ")[0] + " 00:00:00";
-                                String now_where = "";
-                                if (isArrive.equals("1")) {
-                                    now_where = " where user_id=" + user_id + " and create_time >='" + now_time + "' and order_type=200 ";
-                                } else {
-                                    now_where = " where user_id=" + user_id + " and create_time >='" + now_time + "' and order_type=0 ";
-                                }
+                                String now_where = " where user_id=" + user_id + " and create_time >='" + now_time + "' and order_type=0 ";
                                 List<Order> todayOrderList = appDB.getOrderReview(now_where, 0);
                                 if (todayOrderList.size() < ConfigUtils.getDriver_departure_counts()) {
                                     //将车单添加到数据库中
@@ -358,6 +354,7 @@ public class PassengerDepartureController {
                                 order1.setIs_complete(0);
                                 order1.setCreate_time(confirm_time);
                                 order1.setRemark(remark);
+                                order1.setIs_enable(1);
                                 appDB.createOrderReview(order1);
                                 //乘客车单ID
                                 List<Order> orders = appDB.getOrderReview(" where order_id =" + id, 0);

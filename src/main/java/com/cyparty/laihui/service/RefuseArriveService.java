@@ -61,16 +61,15 @@ public class RefuseArriveService {
     }
 
 
-    public static String getSnatchArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request) throws Exception {
+    public static String getSnatchArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request)throws Exception {
         JSONObject result = new JSONObject();
         User user = new User();
         boolean isSuccess = false;
         String json = "";
-        int userId = 0;
         //乘客车单ID
         int passengerCarId = Integer.parseInt(request.getParameter("car_id"));
         if (request.getParameter("token") != null && request.getParameter("token").length() == 32) {
-            userId = appDB.getIDByToken(request.getParameter("token"));
+            int userId = appDB.getIDByToken(request.getParameter("token"));
             if (userId > 0) {
                 String where = " where _id=" + userId;
                 user = appDB.getUserList(where).get(0);
@@ -78,19 +77,6 @@ public class RefuseArriveService {
                 String nowSource = request.getParameter("source");
                 if (nowSource != null && !nowSource.isEmpty() && nowSource.equals("iOS")) {
                     source = 1;
-                }
-                String confirm_time1 = Utils.getCurrentTime();
-                where = " where user_id = " + userId + " and departure_time>'" + confirm_time1 + "' and is_enable=1";
-                if (appDB.getAppDriverDpartureInfo(where).size() == 0) {
-                    json = AppJsonUtils.returnFailJsonString(result, "请先创建车单！");
-                    return json;
-                }
-
-                //身份验证
-                if (user.getIs_car_owner() != 1) {
-                    result.put("error_code", ErrorCode.getIs_validated());
-                    json = AppJsonUtils.returnFailJsonString(result, "请先进行车主认证！");
-                    return json;
                 }
                 //判断该单是否已经被抢
                 String passenger_order_where = " a left join pc_user b on a.user_id=b._id where order_id=" + passengerCarId + " and is_enable=1 and order_type = 0 and order_status= 200";
@@ -117,6 +103,7 @@ public class RefuseArriveService {
                         order.setOrder_status(100);
                         order.setOrder_type(2);
                         order.setCreate_time(snatchTime);
+                        order.setIs_enable(1);
                         isSuccess = appDB.createOrderReview(order);
                     } else {
                         result.put("error_code", ErrorCode.getBooking_times_limit());
@@ -153,7 +140,7 @@ public class RefuseArriveService {
                         int push_id = userId;
                         int receive_id = passengerOrder.getUser_id();
                         int push_type = 11;
-                        boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, receive_id, push_type, content, 11, "11.caf", data.toJSONString(), 1, driverMobile, null, 1);
+                        boolean is_true = appDB.createPush(passengerOrder.get_id(), push_id, receive_id, push_type, content, 11, "11.caf", data.toJSONString(), 1, driverMobile, null,1);
                         if (is_true) {
                             //将抢单信息通知给乘客
                             notifyPush.pinCheNotify("11", p_mobile, content, passengerOrder.get_id(), data, snatchTime);

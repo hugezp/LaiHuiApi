@@ -281,7 +281,7 @@ public class DriverDepartureController {
                     }
                     if (user_id > 0) {
                         id = Integer.parseInt(request.getParameter("order_id"));
-                        where = " where user_id=" + user_id + " and is_enable=1 and order_type=2 and order_status<3";
+                        where = " where user_id=" + user_id + " and is_enable=1 and order_type=2 and (order_status<3 or order_status in(100,200))";
 
                         if (appDB.getOrderReview(where, 0).size() > 0) {
                             json = AppJsonUtils.returnFailJsonString(result, "还有订单未处理，请处理订单后在删除！");
@@ -498,6 +498,7 @@ public class DriverDepartureController {
                                 order1.setOrder_status(0);
                                 order1.setOrder_type(2);
                                 order1.setCreate_time(create_time);
+                                order1.setIs_enable(1);
                                 is_success = appDB.createOrderReview(order1);
                                 /*}*/
                             } else {
@@ -552,7 +553,7 @@ public class DriverDepartureController {
                     if (user_id > 0) {
                         String confirm_time = Utils.getCurrentTime();
                         String update_sql;
-                        where = " where user_id=" + user_id + " and order_type=2 and (order_status<3 or order_status=200) and is_enable=1";
+                        where = " where user_id=" + user_id + " and order_type=2 and (order_status<3 or order_status in(100,200)) and is_enable=1";
                         List<Order> orderList = appDB.getOrderReview(where, 0);
                         if (orderList.size() > 0) {
                             for (Order order : orderList) {
@@ -562,6 +563,11 @@ public class DriverDepartureController {
                                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                                     } else {
                                         json = AppJsonUtils.returnFailJsonString(result, "不能发车哦，还有乘客没有支付呢！");
+                                        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+                                    }
+                                }else {
+                                    if (order.getOrder_status() == 100){
+                                        json = AppJsonUtils.returnFailJsonString(result, "不能发车哦，还有乘客没有同意呢！");
                                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                                     }
                                 }
@@ -609,7 +615,7 @@ public class DriverDepartureController {
                     if (user_id > 0) {
                         String confirm_time = Utils.getCurrentTime();
                         String update_sql;
-                        where = " where user_id=" + user_id + " and order_type=2 and is_enable=1 order by CONVERT (create_time USING gbk)COLLATE gbk_chinese_ci desc limit 1";
+                        where = " where user_id=" + user_id + " and order_type=2 and is_enable=1 and order_status not in(3,4,5,6) order by CONVERT (create_time USING gbk)COLLATE gbk_chinese_ci desc";
                         List<Order> orderList = appDB.getOrderReview(where, 0);
                         if (orderList.size() > 0) {
                             for (Order order : orderList) {
@@ -807,15 +813,6 @@ public class DriverDepartureController {
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                 //订单状态
                 case "show_my_orders":
-//                    int flag=0;
-//                    if(request.getParameter("flag")!=null){
-//                        try {
-//                            flag=Integer.parseInt(request.getParameter("flag"));
-//                        } catch (NumberFormatException e) {
-//                            flag=0;
-//                            e.printStackTrace();
-//                        }
-//                    }
                     if (user_id > 0) {
                         result = AppJsonUtils.getMyGrabOrderList(appDB, page, size, user_id);
                         json = AppJsonUtils.returnSuccessJsonString(result, "司机抢单列表获取成功！");

@@ -3,6 +3,7 @@ package com.cyparty.laihui.controller.willArrive;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.ErrorCode;
+import com.cyparty.laihui.service.ArriveOrderService;
 import com.cyparty.laihui.service.ArriveService;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.Utils;
@@ -119,5 +120,17 @@ public class DriverArriveController {
             json = AppJsonUtils.returnFailJsonString(result, "获取参数错误!");
             return new ResponseEntity<>(json, httpHeaders, HttpStatus.OK);
         }
+    }
+
+    /**
+     * 订单列表
+     */
+    @ResponseBody
+    @RequestMapping(value = "/arrive/orderList")
+    public ResponseEntity<String> orderList (HttpServletRequest request){
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        String json = ArriveOrderService.orderList(appDB, request);
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 }

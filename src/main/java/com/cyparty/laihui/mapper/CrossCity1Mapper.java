@@ -1,7 +1,6 @@
 package com.cyparty.laihui.mapper;
 
 import com.cyparty.laihui.domain.CrossCity;
-import com.cyparty.laihui.domain.DriverPublishInfo;
 import com.cyparty.laihui.utilities.Utils;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -11,7 +10,7 @@ import java.sql.SQLException;
 /**
  * Created by zhu on 2015/12/29.
  */
-public class CrossCityMapper implements RowMapper<CrossCity> {
+public class CrossCity1Mapper implements RowMapper<CrossCity> {
 
     public CrossCity mapRow(ResultSet resultSet, int i) throws SQLException {
         CrossCity departure=new CrossCity();
@@ -25,7 +24,6 @@ public class CrossCityMapper implements RowMapper<CrossCity> {
         departure.setDestination_address_code(resultSet.getInt("destination_address_code"));
         departure.setDeparture_city_code(resultSet.getInt("departure_city_code"));
         departure.setDestination_city_code(resultSet.getInt("destination_city_code"));
-        departure.setCurrent_seats(resultSet.getInt("current_seats"));
         return departure;
     }
 }

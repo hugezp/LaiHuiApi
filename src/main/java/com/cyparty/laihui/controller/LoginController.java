@@ -190,6 +190,7 @@ public class LoginController {
                     }
                     //MOB版短信检查
                 case "mob_sms_check":
+                    String status = "";
                     String addr1 = Utils.getIP(request);
                     String ip_location1;
                     try {
@@ -201,7 +202,8 @@ public class LoginController {
                     code = request.getParameter("code");
                     //测试手机号判断
                     if (TestConfigUtils.getMobile(mobile)) {
-                        if (!code.equals("0603")){
+                        status = "200";
+                        if (!code.equals("0603")) {
                             result.put("error_code", ErrorCode.getSms_checked_failed());
                             json = AppJsonUtils.returnFailJsonString(result, "验证码错误，请核对您的校验码！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -219,10 +221,10 @@ public class LoginController {
                             json = AppJsonUtils.returnSuccessJsonString(result, "验证码正确！");
                             return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
                         }
+                    } else {
+                        //得到返回状态
+                        status = SmsWebApiKit.getInstance().checkcode(mobile, "86", code);
                     }
-                    //得到返回状态
-                    String status = SmsWebApiKit.getInstance().checkcode(mobile, "86", code);
-
                     if (status.equals("200")) {
                         //创建该用户
                         where = " where user_mobile='" + mobile + "' ";
