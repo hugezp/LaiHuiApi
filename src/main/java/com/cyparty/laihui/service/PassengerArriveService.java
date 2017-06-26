@@ -205,7 +205,7 @@ public class PassengerArriveService {
                         json = AppJsonUtils.returnFailJsonString(result, "必达单必须提前两小时发布！");
                         return json;
                     }
-                    c.setTime(format.parse(start_time));
+                    c.setTime(format.parse(release_time));
                 } catch (Exception e) {
                     e.printStackTrace();
                     result.put("error_code", ErrorCode.PARAMETER_WRONG);
@@ -221,8 +221,8 @@ public class PassengerArriveService {
                 int hour = c.get(Calendar.HOUR_OF_DAY);
                 int min = c.get(Calendar.MINUTE);          //获取当前分钟
                 int ss = c.get(Calendar.SECOND);          //获取当前秒
-                if((dayForWeek==7)||(hour<11 || hour>18 || (hour==18 && (min>0 || ss>0)))){
-                    json = AppJsonUtils.returnFailJsonString(result, "必达单出发时间必须为周一至周六早11点到晚6点！");
+                if((dayForWeek==7)||(hour<10 || hour>18 || (hour==18 && (min>0 || ss>0)))){
+                    json = AppJsonUtils.returnFailJsonString(result, "必达单发布时间必须为周一至周六早10点到晚6点！");
                     return json;
                 }
 
