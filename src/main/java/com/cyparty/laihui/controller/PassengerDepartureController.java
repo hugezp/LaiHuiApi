@@ -899,6 +899,8 @@ public class PassengerDepartureController {
             try {
                 //获取乘客订单id
                 int id = Integer.parseInt(request.getParameter("id"));
+                String where = " where _id = " + id;
+                List<Order> orderReview = appDB.getOrderReview(where, 0);
                 //获取车主手机号
                 String driver_mobile = request.getParameter("driver_mobile");
                 String content = "乘客" + user.getUser_nick_name() + "在" + confirm_time + "提醒您发车！";
@@ -907,7 +909,7 @@ public class PassengerDepartureController {
                 int push_type = 27;
                 List<User> drivers = appDB.getUserList(" where user_mobile ='" + driver_mobile + "'");
                 if (drivers.size() > 0) {
-                    appDB.createPush(id, user_id, drivers.get(0).getUser_id(), push_type, content, push_type, "27.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
+                    appDB.createPush(orderReview.get(0).getOrder_id(), user_id, drivers.get(0).getUser_id(), push_type, content, push_type, "27.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
                     notifyPush.pinCheNotify("27", driver_mobile, content, id, passengerData, confirm_time);
 
                     json = AppJsonUtils.returnSuccessJsonString(result, "提醒发车成功！");

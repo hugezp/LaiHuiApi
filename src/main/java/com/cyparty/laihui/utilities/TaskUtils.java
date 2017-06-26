@@ -141,7 +141,7 @@ public class TaskUtils {
                 //乘客车单失效，该订单取消
 
 
-                String update_sql = " set order_status=5 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=0";
+                String update_sql = " set order_status=-1 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=0";
                 appDB.update("pc_orders", update_sql);
 
                 List<PassengerOrder> passengerDepartureInfo = appDB.getPassengerDepartureInfo(" where a._id=" + order.getOrder_id() + " and is_enable = 1");

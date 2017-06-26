@@ -685,7 +685,7 @@ public class AppJsonUtils {
                     remark = "订单完成";
                     break;
                 case -1:
-                    status = 2;
+                    status = 3;
                     remark = "申请退款";
                     break;
                 case 5:
@@ -1878,7 +1878,7 @@ public class AppJsonUtils {
         int isArrive = 0;
         //判断为乘客乘客
         if (judgment.equals("passenger")) {
-            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and (a.order_status<3 or a.order_status in(100,200)) and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
+            String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where  b.is_enable=1 and (a.order_status<3 or a.order_status in(100,200)) and a.order_status != -1 and a.user_id=" + user_id + " and order_type=0 order by a.order_status desc limit 0,1";
             List<Order> orderList = appDB.getOrderReview(where, 2);
             if (orderList.size() > 0) {
                 for (Order order : orderList) {
@@ -2157,7 +2157,7 @@ public class AppJsonUtils {
             pushJson.put("isArrive", push.getIsArrive());
             pushJson.put("time", push.getTime());
             pushJson.put("status", push.getStatus());
-            String where = " a join pc_passenger_publish_info b on a.order_id = b._id where a.order_type = 0 and a.is_enable = 1 and a._id = " + push.getOrder_id();
+            String where = " a join pc_passenger_publish_info b on a.order_id = b._id where a.order_type = 0 and a.is_enable = 1 and a.order_id = " + push.getOrder_id();
             List<Order> orderReview = appDB.getOrderReview(where, 2);
             Order order = orderReview.get(0);
             infoJson.put("departure_time", order.getDeparture_time());
