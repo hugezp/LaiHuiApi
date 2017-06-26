@@ -3,17 +3,16 @@ package com.cyparty.laihui.service;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.ApiDB;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.*;
+import com.cyparty.laihui.domain.ErrorCode;
+import com.cyparty.laihui.domain.Order;
+import com.cyparty.laihui.domain.PassengerOrder;
+import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.ConfigUtils;
 import com.cyparty.laihui.utilities.NotifyPush;
 import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -77,6 +76,14 @@ public class RefuseArriveService {
                 String nowSource = request.getParameter("source");
                 if (nowSource != null && !nowSource.isEmpty() && nowSource.equals("iOS")) {
                     source = 1;
+                }
+                //判断是否实名
+                if (user.getIs_car_owner() == 0){
+                    //判断是否为推送用户
+                    if (!appDB.isArriveDriver(user.getUser_mobile())){
+                        json = AppJsonUtils.returnFailJsonString(result, "抱歉，您未实名认证，不能抢单！");
+                        return json;
+                    }
                 }
                 //判断该单是否已经被抢
                 String passenger_order_where = " a left join pc_user b on a.user_id=b._id where order_id=" + passengerCarId + " and is_enable=1 and order_type = 0 and order_status= 200";

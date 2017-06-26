@@ -2,8 +2,8 @@ package com.cyparty.laihui.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.Popularizing;
 import com.cyparty.laihui.domain.Popularize;
+import com.cyparty.laihui.domain.Popularizing;
 import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import javax.servlet.http.HttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

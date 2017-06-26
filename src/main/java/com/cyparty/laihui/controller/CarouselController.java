@@ -3,7 +3,6 @@ package com.cyparty.laihui.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.utilities.AppJsonUtils;
-import com.cyparty.laihui.utilities.OssUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

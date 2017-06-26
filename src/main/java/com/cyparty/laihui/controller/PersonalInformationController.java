@@ -5,8 +5,6 @@ import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
-import com.cyparty.laihui.utilities.OssUtil;
-import com.cyparty.laihui.utilities.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -2,10 +2,10 @@ package com.cyparty.laihui.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.CarOwnerInfo;
 import com.cyparty.laihui.domain.ErrorCode;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.HttpUtils;
+import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -15,11 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.apache.http.HttpResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

@@ -3,7 +3,10 @@ package com.cyparty.laihui.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.*;
+import com.cyparty.laihui.domain.DepartureInfo;
+import com.cyparty.laihui.domain.ErrorCode;
+import com.cyparty.laihui.domain.Order;
+import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +25,6 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

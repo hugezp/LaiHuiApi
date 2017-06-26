@@ -2,7 +2,10 @@ package com.cyparty.laihui.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.*;
+import com.cyparty.laihui.domain.Code;
+import com.cyparty.laihui.domain.ErrorCode;
+import com.cyparty.laihui.domain.Popularize;
+import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.*;
 import com.cyparty.laihui.utilities.SMSUtils.SmsWebApiKit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 
