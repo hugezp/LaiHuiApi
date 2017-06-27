@@ -2159,6 +2159,8 @@ public class AppJsonUtils {
             pushJson.put("status", push.getStatus());
             String where = " a join pc_passenger_publish_info b on a.order_id = b._id where a.order_type = 0 and a.is_enable = 1 and a.order_id = " + push.getOrder_id();
             List<Order> orderReview = appDB.getOrderReview(where, 2);
+            if (orderReview.size() == 0)
+                continue;
             Order order = orderReview.get(0);
             infoJson.put("departure_time", order.getDeparture_time());
             infoJson.put("order_id", String.valueOf(order.getOrder_id()));
