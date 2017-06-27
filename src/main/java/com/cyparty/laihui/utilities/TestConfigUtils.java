@@ -34,10 +34,6 @@ public class TestConfigUtils {
             case "15516015893" :
                 is_success = true;
                 break;
-                //庞振朋
-            case "15738961936" :
-                is_success = true;
-                break;
             //原林
             case "18838206194" :
                 is_success = true;
@@ -48,6 +44,9 @@ public class TestConfigUtils {
                 break;
             //苏瑞华
             case "18838978571" :
+                is_success = true;
+                break;
+            case "15890199037" :
                 is_success = true;
                 break;
         }

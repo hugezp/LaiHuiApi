@@ -2037,7 +2037,10 @@ public class AppJsonUtils {
     public static JSONObject isNewMessage(AppDB appDB, int user_id) {
         List<PushNotification> pushList = appDB.getPushList("where receive_id=" + user_id + " and status=1 and is_enable=1");
         List<PushNotification> pushs = appDB.getPushList("where flag =1 and status=1 and is_enable=1");
+        //消息条数
+        int totalCount = pushList.size() + pushs.size();
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("totalCount",totalCount);
         if (pushList.size() > 0 || pushs.size() > 0) {
             jsonObject.put("is_message", 1);
         } else {

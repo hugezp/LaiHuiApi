@@ -60,7 +60,7 @@ public class RefuseArriveService {
     }
 
 
-    public static String getSnatchArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request)throws Exception {
+    public static String getSnatchArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request) throws Exception {
         JSONObject result = new JSONObject();
         User user = new User();
         boolean isSuccess = false;
@@ -78,10 +78,10 @@ public class RefuseArriveService {
                     source = 1;
                 }
                 //判断是否实名
-                if (user.getIs_car_owner() == 0){
+                if (user.getIs_car_owner() == 0) {
                     //判断是否为推送用户
-                    if (!appDB.isArriveDriver(user.getUser_mobile())){
-                        json = AppJsonUtils.returnFailJsonString(result, "抱歉，您未实名认证，不能抢单！");
+                    if (!appDB.isArriveDriver(user.getUser_mobile())) {
+                        json = AppJsonUtils.returnFailJsonString(result, "抱歉，您未车主认证，不能抢单！");
                         return json;
                     }
                 }
@@ -147,7 +147,7 @@ public class RefuseArriveService {
                         int push_id = userId;
                         int receive_id = passengerOrder.getUser_id();
                         int push_type = 11;
-                        boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, receive_id, push_type, content, 11, "11.caf", data.toJSONString(), 1, driverMobile, null,1);
+                        boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, receive_id, push_type, content, 11, "11.caf", data.toJSONString(), 1, driverMobile, null, 1);
                         if (is_true) {
                             //将抢单信息通知给乘客
                             notifyPush.pinCheNotify("11", p_mobile, content, passengerOrder.get_id(), data, snatchTime);

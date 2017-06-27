@@ -19,7 +19,7 @@ import java.io.IOException;
 public class NotifyPush {
     //推送环境
     //正式环境：prod  测试环境：dev
-    private static String val ="prod";
+    private static String val ="dev";
         public static void main(String[] args) {
             //pinCheNotify("d6a5018284f8e0ffd4d2789a84d5c884");
         //pinCheNotify("24","18638016939","李先生",28);
