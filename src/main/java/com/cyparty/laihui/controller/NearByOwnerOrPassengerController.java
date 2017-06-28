@@ -478,7 +478,7 @@ public class NearByOwnerOrPassengerController {
                 break;
             case "nearby_passenger":
                 //符合要求的乘客列表
-                where = " where is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having s_distance <= " + query_distance + " and e_distance <= " + query_distance + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1";
+                where = " where is_enable =1 and order_status = 0 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having s_distance <= " + query_distance + " and e_distance <= " + query_distance + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1";
                 List<PassengerOrder> passengerList = appDB.getPassengerList(where, departure_lon, departure_lat, destinat_lon, destinat_lat);
                 if (passengerList.size() > 0) {
                     //通过经纬度获取距离
