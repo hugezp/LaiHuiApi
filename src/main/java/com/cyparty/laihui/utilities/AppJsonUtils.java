@@ -5,10 +5,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.*;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by zhu on 2016/10/21.
@@ -796,13 +795,13 @@ public class AppJsonUtils {
      * @param role  角色 1：乘客 2：车主
      * @return
      */
-    public static JSONObject getPushObject(AppDB appDB, Order order, int role) {
-        JSONObject userObject = new JSONObject();
+    public static Map getPushObject(AppDB appDB, Order order, int role) {
+        Map userObject = new HashMap();
         //得到乘客基本信息
         if (role == 1) {
             String passenger_where = " where _id=" + order.getUser_id();
             User passenger = appDB.getUserList(passenger_where).get(0);
-            JSONObject passengerData = new JSONObject();
+            Map passengerData = new HashMap();
             passengerData.put("order_status", 100);
             passengerData.put("user_mobile", passenger.getUser_mobile());
             passengerData.put("user_avatar", passenger.getAvatar());

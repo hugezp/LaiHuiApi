@@ -5,13 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.*;
 import com.cyparty.laihui.utilities.*;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -23,6 +22,7 @@ public class PassengerArriveService {
 
     public static String getInviteDriver(HttpServletRequest request, AppDB appDB) {
         JSONObject result = new JSONObject();
+        Gson gson = new Gson();
         User user = new User();
         String json = "";
         int userId = 0;
@@ -105,9 +105,27 @@ public class PassengerArriveService {
                         int push_id = userId;
                         int receive_id = driver_user_id;
                         int push_type = 28;
-                        appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
-                        //将邀请消息推送给车主
-                        notifyPush.pinCheNotify("28", driverMobile, content, grab_id, passengerData, confirm_time);
+                        boolean isSuccess = appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
+                        if (isSuccess){
+                            //将邀请消息推送给车主
+                            Map<String, String> extrasParam = new HashMap<String, String>();
+                            extrasParam.put("action","com.laihui.pinche.push");
+                            extrasParam.put("alert",content);
+                            extrasParam.put("badge","Increment");
+                            extrasParam.put("id",String.valueOf(passenger.get_id()));
+                            extrasParam.put("notify_type",String.valueOf(push_type));
+                            extrasParam.put("sound","");
+                            extrasParam.put("title","来回拼车");
+                            passengerData.put("content",content);
+                            passengerData.put("push_time",confirm_time);
+                            extrasParam.put("push",gson.toJson(passengerData));
+                            //将抢单信息通知给乘客
+                            JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
+                                    ConfigUtils.JPUSH_MASTER_SECRET)
+                                    .sendToRegistrationId(String.valueOf(push_type), driverMobile,
+                                            content, content, content,
+                                            extrasParam);
+                        }
                         result.put("passengerData", passengerData);
                         json = AppJsonUtils.returnSuccessJsonString(result, "您已成功邀请车主抢单！");
                     } else {

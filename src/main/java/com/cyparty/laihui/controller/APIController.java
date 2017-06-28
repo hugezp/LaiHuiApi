@@ -169,7 +169,7 @@ public class APIController {
                     result.put("partner", AppJsonUtils.getPartner(appDB));
                     String where = "";
                     result.put("news", appDB.getNewsList1(where));
-                    where = " WHERE type = 12 AND is_enable = 1 AND isDel = 1";
+                    where = " WHERE type = 12 AND is_enable = 1 AND isDel = 1 order by n.create_time desc";
                     result.put("headlines", appDB.getNewsList(where));
                     json = AppJsonUtils.returnSuccessJsonString(result, "信息获取成功");
                     return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
