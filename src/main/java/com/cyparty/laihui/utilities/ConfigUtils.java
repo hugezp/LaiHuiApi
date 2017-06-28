@@ -4,10 +4,10 @@ package com.cyparty.laihui.utilities;
  * Created by zhu on 2016/10/27.
  */
 public class ConfigUtils {
-    public static final int DRIVER_DEPARTURE_COUNTS = 50;//每日预定车单次数
-    public static final int DRIVER_GRAD_ORDER_COUNTS = 50;//每日预定车单次数
-    public static final int PASSENGER_DEPARTURE_COUNTS = 50;//每日发布车单次数
-    public static final int BOOKING_COUNTS = 50;//每日预定车单次数
+    public static final int DRIVER_DEPARTURE_COUNTS = 5;//每日预定车单次数
+    public static final int DRIVER_GRAD_ORDER_COUNTS = 5;//每日预定车单次数
+    public static final int PASSENGER_DEPARTURE_COUNTS = 5;//每日发布车单次数
+    public static final int BOOKING_COUNTS = 5;//每日预定车单次数
     public static final double QUERY_DISTANCE = 20000.0;//附近搜索范围
     public static final double SERVICE_FEE = 5.0;//乘客必达车单服务费
     public static final double ORDER_TIMEOUT = 15;//订单支付超时(15分钟)
