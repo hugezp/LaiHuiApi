@@ -11,10 +11,8 @@ public class ErrorCode {
     public static final int SMS_SEND_FAILED = 305; //验证码发送失败
     public static final int SMS_TIMES_LIMIT = 306; //发送验证码过于频繁
     public static final int SMS_CHECKED_FAILED = 307;//验证码校验失败
-
     public static final int DEPARTURE_ORDER_EXPIRED = 309; //司机发车单失效
     public static final int DEPARTURE_ORDER_UNENABLED = 310; //司机发车单座位已满
-
     public static final int PARAMETER_WRONG = 401; //获取参数有误
     public static final int IS_CAR_OWNER = 403; //车主认证状态有误
     public static final int IS_VALIDATED = 402; //身份认证状态有误
