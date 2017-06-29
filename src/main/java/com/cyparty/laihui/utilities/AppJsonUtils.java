@@ -5,10 +5,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.*;
+import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by zhu on 2016/10/21.
@@ -796,13 +795,13 @@ public class AppJsonUtils {
      * @param role  角色 1：乘客 2：车主
      * @return
      */
-    public static JSONObject getPushObject(AppDB appDB, Order order, int role) {
-        JSONObject userObject = new JSONObject();
+    public static Map getPushObject(AppDB appDB, Order order, int role) {
+        Map userObject = new HashMap();
         //得到乘客基本信息
         if (role == 1) {
             String passenger_where = " where _id=" + order.getUser_id();
             User passenger = appDB.getUserList(passenger_where).get(0);
-            JSONObject passengerData = new JSONObject();
+            Map passengerData = new HashMap();
             passengerData.put("order_status", 100);
             passengerData.put("user_mobile", passenger.getUser_mobile());
             passengerData.put("user_avatar", passenger.getAvatar());
@@ -2037,7 +2036,10 @@ public class AppJsonUtils {
     public static JSONObject isNewMessage(AppDB appDB, int user_id) {
         List<PushNotification> pushList = appDB.getPushList("where receive_id=" + user_id + " and status=1 and is_enable=1");
         List<PushNotification> pushs = appDB.getPushList("where flag =1 and status=1 and is_enable=1");
+        //消息条数
+        int totalCount = pushList.size() + pushs.size();
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("totalCount",totalCount);
         if (pushList.size() > 0 || pushs.size() > 0) {
             jsonObject.put("is_message", 1);
         } else {
@@ -2159,6 +2161,8 @@ public class AppJsonUtils {
             pushJson.put("status", push.getStatus());
             String where = " a join pc_passenger_publish_info b on a.order_id = b._id where a.order_type = 0 and a.is_enable = 1 and a.order_id = " + push.getOrder_id();
             List<Order> orderReview = appDB.getOrderReview(where, 2);
+            if (orderReview.size() == 0)
+                continue;
             Order order = orderReview.get(0);
             infoJson.put("departure_time", order.getDeparture_time());
             infoJson.put("order_id", String.valueOf(order.getOrder_id()));

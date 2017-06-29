@@ -100,11 +100,11 @@ public class NearByOwnerOrPassengerController {
             }
             switch (action) {
                 case "nearby_owner":
+                    //跨城车主
                     List<CrossCity> crossCityList1 = new ArrayList<CrossCity>();
                     JSONArray jsonArray1 = new JSONArray();
                     String whereCity1 = " where is_enable =1 and user_id != " + user_id + " and departure_time >'" + current_time + "' and departure_code = " + adCode + " group by destination_address_code asc";
                     crossCityList1 = appDB.getCrossCityList(whereCity1);
-
                     if (crossCityList1.size() > 0) {
                         for (int i = 0; i < crossCityList1.size(); i++) {
                             String address_board4DB = crossCityList1.get(i).getBreakout_point();
@@ -157,6 +157,7 @@ public class NearByOwnerOrPassengerController {
                         result.put("user_name", user.getUser_nick_name());
                         result.put("user_mobile", user.getUser_mobile());
                         result.put("cityData", jsonArray1);
+                        result.put("m", jsonArray1);
                         json = AppJsonUtils.returnSuccessJsonString(result, "附近车主获取成功");
                     } else {
                         result = AppJsonUtils.getNearByOwnerList(owenrList, page, size, owenrList.size(), appDB);
@@ -477,7 +478,7 @@ public class NearByOwnerOrPassengerController {
                 break;
             case "nearby_passenger":
                 //符合要求的乘客列表
-                where = " where is_enable =1 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having s_distance <= " + query_distance + " and e_distance <= " + query_distance + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1";
+                where = " where is_enable =1 and order_status = 0 and a.user_id != " + user_id + " and departure_time >'" + current_time + "' having s_distance <= " + query_distance + " and e_distance <= " + query_distance + " order by convert (departure_time USING gbk)COLLATE gbk_chinese_ci asc limit 1";
                 List<PassengerOrder> passengerList = appDB.getPassengerList(where, departure_lon, departure_lat, destinat_lon, destinat_lat);
                 if (passengerList.size() > 0) {
                     //通过经纬度获取距离

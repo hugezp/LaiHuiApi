@@ -1,5 +1,7 @@
 package com.cyparty.laihui.utilities;
 
+import java.util.Map;
+
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
 import cn.jpush.api.JPushClient;
@@ -16,21 +18,19 @@ import cn.jpush.api.push.model.notification.Notification;
 
 public class JpushClientUtil {
 
-    private final static String appKey = "bdc7c59bbaba335fe3593f1f";
-
-    private final static String masterSecret = "bd73a921b52dad9447262d5f";
-
-    private static JPushClient jPushClient = new JPushClient(masterSecret,appKey);
+    private static JPushClient jPushClient = null;
 
     private JpushClientUtil() {}
     private static JpushClientUtil jpushClientUtil=null;
     //静态工厂方法
-    public static JpushClientUtil getInstance() {
+    public static JpushClientUtil getInstance(String appKey,String masterSecret) {
         if (jpushClientUtil == null) {
             jpushClientUtil = new JpushClientUtil();
         }
+        jPushClient = new JPushClient(masterSecret,appKey);
         return jpushClientUtil;
     }
+
     /**
      * 推送给设备标识参数的用户
      * @param alias 设备标识
@@ -40,7 +40,7 @@ public class JpushClientUtil {
      * @param extrasparam 扩展字段
      * @return 0推送失败，1推送成功
      */
-    public  static int sendToRegistrationId( String type,String alias,String notification_title, String msg_title, String msg_content, String extrasparam) {
+    public int sendToRegistrationId( String type,String alias,String notification_title, String msg_title, String msg_content, Map<String, String> extrasparam) {
         int result = 0;
         try {
             PushPayload pushPayload= JpushClientUtil.buildPushObject_all_alias_alertWithTitle(type,alias,notification_title,msg_title,msg_content,extrasparam);
@@ -182,17 +182,17 @@ public class JpushClientUtil {
 
                 .setOptions(Options.newBuilder()
                         //此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
-                        .setApnsProduction(false)
+                        .setApnsProduction(ConfigUtils.JPUSH_PROD)
                         //此字段是给开发者自己给推送编号，方便推送者分辨推送记录
                         .setSendno(1)
                         //此字段的值是用来指定本推送的离线保存时长，如果不传此字段则默认保存一天，最多指定保留十天，单位为秒
-                        .setTimeToLive(86400)
+                        .setTimeToLive(ConfigUtils.TIME_TO_LIVE)
                         .build()
                 )
                 .build();
     }
 
-    private static PushPayload buildPushObject_all_alias_alertWithTitle(String type,String alias,String notification_title, String msg_title, String msg_content, String extrasparam) {
+    private static PushPayload buildPushObject_all_alias_alertWithTitle(String type,String alias,String notification_title, String msg_title, String msg_content, Map<String, String> extrasparam) {
 
         //System.out.println("----------buildPushObject_all_all_alert");
         System.out.println("---------创建推送对象------------");
@@ -212,7 +212,7 @@ public class JpushClientUtil {
                                 .setAlert(notification_title)
                                 .setTitle(notification_title)
                                 //此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("androidNotification extras key",extrasparam)
+                                .addExtras(extrasparam)
                                 .build())
                         //指定当前推送的iOS通知
                         .addPlatformNotification(IosNotification.newBuilder()
@@ -225,7 +225,7 @@ public class JpushClientUtil {
                                 // 如果系统没有此音频则以系统默认声音提醒；此字段如果传空字符串，iOS9及以上的系统是无声音提醒，以下的系统是默认声音
                                 .setSound("sound."+type+"caf")
                                 //此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
-                                .addExtra("iosNotification extras key",extrasparam)
+                                .addExtras(extrasparam)
                                 //此项说明此推送是一个background推送，想了解background看：http://docs.jpush.io/client/ios_tutorials/#ios-7-background-remote-notification
                                 //取消此注释，消息推送时ios将无法在锁屏情况接收
                                 // .setContentAvailable(true)
@@ -243,17 +243,17 @@ public class JpushClientUtil {
 
                         .setTitle(msg_title)
 
-                        .addExtra("message extras key",extrasparam)
+                        .addExtras(extrasparam)
 
                         .build())
 
                 .setOptions(Options.newBuilder()
                         //此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
-                        .setApnsProduction(false)
+                        .setApnsProduction(ConfigUtils.JPUSH_PROD)
                         //此字段是给开发者自己给推送编号，方便推送者分辨推送记录
                         .setSendno(1)
                         //此字段的值是用来指定本推送的离线保存时长，如果不传此字段则默认保存一天，最多指定保留十天；
-                        .setTimeToLive(86400)
+                        .setTimeToLive(ConfigUtils.TIME_TO_LIVE)
 
                         .build())
 
@@ -290,11 +290,11 @@ public class JpushClientUtil {
 
                 .setOptions(Options.newBuilder()
                         //此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
-                        .setApnsProduction(false)
+                        .setApnsProduction(ConfigUtils.JPUSH_PROD)
                         //此字段是给开发者自己给推送编号，方便推送者分辨推送记录
                         .setSendno(1)
                         //此字段的值是用来指定本推送的离线保存时长，如果不传此字段则默认保存一天，最多指定保留十天，单位为秒
-                        .setTimeToLive(86400)
+                        .setTimeToLive(ConfigUtils.TIME_TO_LIVE)
                         .build())
                 .build();
     }
@@ -337,19 +337,18 @@ public class JpushClientUtil {
 
                 .setOptions(Options.newBuilder()
                         //此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
-                        .setApnsProduction(false)
+                        .setApnsProduction(ConfigUtils.JPUSH_PROD)
                         //此字段是给开发者自己给推送编号，方便推送者分辨推送记录
                         .setSendno(1)
                         //此字段的值是用来指定本推送的离线保存时长，如果不传此字段则默认保存一天，最多指定保留十天，单位为秒
-                        .setTimeToLive(86400)
+                        .setTimeToLive(ConfigUtils.TIME_TO_LIVE)
                         .build())
                 .build();
     }
     public static void main(String[] args){
+//        if(JpushClientUtil.getInstance().sendToRegistrationId("11","18538191908","测试数据","aaa","this is a ios Dev test","")==1){
+//            System.out.println("success");
+//        }
 
-        if(JpushClientUtil.sendToRegistrationId("11","18538191908","测试数据","aaa","this is a ios Dev test","")==1){
-            System.out.println("success");
-        }
-
-   }
+    }
 }

@@ -9,21 +9,21 @@ import com.cyparty.laihui.domain.PassengerOrder;
 import com.cyparty.laihui.domain.User;
 import com.cyparty.laihui.utilities.AppJsonUtils;
 import com.cyparty.laihui.utilities.ConfigUtils;
-import com.cyparty.laihui.utilities.NotifyPush;
+import com.cyparty.laihui.utilities.JpushClientUtil;
 import com.cyparty.laihui.utilities.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.google.gson.Gson;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by pangzhenpeng on 2017/6/19.
  */
 
 public class RefuseArriveService {
-    @Autowired
-    static NotifyPush notifyPush;
 
     @Transactional(readOnly = false)
     public static String getRefuseArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request) {
@@ -60,7 +60,8 @@ public class RefuseArriveService {
     }
 
 
-    public static String getSnatchArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request)throws Exception {
+    public static String getSnatchArrive(AppDB appDB, ApiDB apiDB, HttpServletRequest request) throws Exception {
+        Gson gson = new Gson();
         JSONObject result = new JSONObject();
         User user = new User();
         boolean isSuccess = false;
@@ -78,10 +79,10 @@ public class RefuseArriveService {
                     source = 1;
                 }
                 //判断是否实名
-                if (user.getIs_car_owner() == 0){
+                if (user.getIs_car_owner() == 0) {
                     //判断是否为推送用户
-                    if (!appDB.isArriveDriver(user.getUser_mobile())){
-                        json = AppJsonUtils.returnFailJsonString(result, "抱歉，您未实名认证，不能抢单！");
+                    if (!appDB.isArriveDriver(user.getUser_mobile())) {
+                        json = AppJsonUtils.returnFailJsonString(result, "抱歉，您未车主认证，不能抢单！");
                         return json;
                     }
                 }
@@ -133,7 +134,7 @@ public class RefuseArriveService {
                         apiDB.update("arrive_driver_relation", where);
                         PassengerOrder passengerPublishInfo = appDB.getPassengerDepartureInfo(" where a._id=" + passengerCarId + " and is_enable = 1").get(0);
                         //乘客信息，司机信息，乘客订单信息
-                        JSONObject data = AppJsonUtils.getPushObject(appDB, passengerOrder, 2);
+                        Map data = AppJsonUtils.getPushObject(appDB, passengerOrder, 2);
                         data.put("order_status", 100);
                         data.put("isArrive", 1);
                         data.put("boarding_point", passengerPublishInfo.getBoarding_point());
@@ -143,14 +144,28 @@ public class RefuseArriveService {
                         data.put("price", passengerPublishInfo.getPay_money());
                         data.put("record_id", passengerPublishInfo.get_id());
                         data.put("order_id", passengerOrder.get_id());
-
                         int push_id = userId;
                         int receive_id = passengerOrder.getUser_id();
                         int push_type = 11;
-                        boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, receive_id, push_type, content, 11, "11.caf", data.toJSONString(), 1, driverMobile, null,1);
+                        boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, receive_id, push_type, content, 11, "11.caf", gson.toJson(data), 1, driverMobile, null, 1);
                         if (is_true) {
+                            Map<String, String> extrasParam = new HashMap<String, String>();
+                            extrasParam.put("action","com.laihui.pinche.push");
+                            extrasParam.put("alert",content);
+                            extrasParam.put("badge","Increment");
+                            extrasParam.put("id",String.valueOf(passengerOrder.getOrder_id()));
+                            extrasParam.put("notify_type",String.valueOf(push_type));
+                            extrasParam.put("sound","");
+                            extrasParam.put("title","来回拼车");
+                            data.put("content",content);
+                            data.put("push_time",snatchTime);
+                            extrasParam.put("push",gson.toJson(data));
                             //将抢单信息通知给乘客
-                            notifyPush.pinCheNotify("11", p_mobile, content, passengerOrder.get_id(), data, snatchTime);
+                            JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
+                                    ConfigUtils.JPUSH_MASTER_SECRET)
+                                    .sendToRegistrationId(String.valueOf(push_type), p_mobile,
+                                            content, content, content,
+                                            extrasParam);
                         }
                         where = " WHERE order_id = " + passengerOrder.getOrder_id();
                         int now_id = appDB.getMaxID("_id", "pc_orders", where);
