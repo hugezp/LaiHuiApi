@@ -643,7 +643,6 @@ public class AppJsonUtils {
         int status = 0;
         //状态备注
         String remark = "";
-        int isArrive = 0;
         for (Order order : orderList) {
             JSONObject jsonObject = new JSONObject();
             JSONObject userObject = new JSONObject();
@@ -697,18 +696,15 @@ public class AppJsonUtils {
                     break;
                 case 100:
                     status = 1;
-                    isArrive = 1;
                     remark = "司机抢单";
                     break;
                 case 200:
                     status = 0;
-                    isArrive = 1;
                     remark = "已支付,等待抢单";
                     break;
 
                 case 300:
                     status = 2;
-                    isArrive = 1;
                     remark = "等待发车";
                     break;
             }
@@ -716,7 +712,7 @@ public class AppJsonUtils {
             jsonObject.put("status", status);
             //乘客订单状态备注
             jsonObject.put("remake", remark);
-            jsonObject.put("isArrive", isArrive);
+            jsonObject.put("isArrive", order.getIsArrive());
             //得到乘客基本信息
             String passenger_where = " where _id=" + order.getUser_id();
             User passenger = appDB.getUserList(passenger_where).get(0);
@@ -848,7 +844,7 @@ public class AppJsonUtils {
 
     public static JSONObject getMyBookingOrderInfo(AppDB appDB, int order_id) {
         JSONObject jsonObject = new JSONObject();
-        String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where a.is_enable=1 and a._id=" + order_id;
+        String where = " a right join pc_passenger_publish_info b on a.order_id=b._id where a.is_enable=1 and a.order_id=" + order_id;
         List<Order> orderList = appDB.getOrderReview(where, 2);
         for (Order order : orderList) {
             JSONObject userObject = new JSONObject();

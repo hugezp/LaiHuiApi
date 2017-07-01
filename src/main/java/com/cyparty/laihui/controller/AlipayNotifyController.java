@@ -146,11 +146,13 @@ public class AlipayNotifyController {
                                 //支付完成，更改各个状态
 
                                 departureInfo=passengerOrderList.get(0);
-                                String update_sql=" set order_status=3 ,update_time='"+Utils.getCurrentTime()+"' where order_id="+departureInfo.get_id()+" and order_type=0";//记录状态
-                                appDB.update("pc_orders",update_sql);
-                                update_sql=" set order_status=2 ,update_time='"+Utils.getCurrentTime()+"' where order_id="+departureInfo.get_id()+" and order_type=2 and order_status=1 ";//抢单状态
-                                appDB.update("pc_orders",update_sql);
-                                System.out.println("订单状态更新成功！");
+                                if (departureInfo.getIsArrive() == 0){
+                                    String update_sql=" set order_status=3 ,update_time='"+Utils.getCurrentTime()+"' where order_id="+departureInfo.get_id()+" and order_type=0";//记录状态
+                                    appDB.update("pc_orders",update_sql);
+                                    update_sql=" set order_status=2 ,update_time='"+Utils.getCurrentTime()+"' where order_id="+departureInfo.get_id()+" and order_type=2 and order_status=1 ";//抢单状态
+                                    appDB.update("pc_orders",update_sql);
+                                    System.out.println("订单状态更新成功！");
+                                }
                                 //todo：乘客支付记录
                                 int user_id=departureInfo.getUser_id();
                                 int order_id=departureInfo.get_id();
@@ -166,9 +168,11 @@ public class AlipayNotifyController {
                                     grab_id=orderList.get(0).get_id();
                                     d_mobile=orderList.get(0).getUser_mobile();
                                 }
-                                //支付成功，座位锁定，数据库中剩余座位减
-                                update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
-                                appDB.update("pc_driver_publish_info",update_sql);
+                                if (passengerOrderList.get(0).getIsArrive() == 0){
+                                    //支付成功，座位锁定，数据库中剩余座位减
+                                    String update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
+                                    appDB.update("pc_driver_publish_info",update_sql);
+                                }
                                 where = " a left join pc_user b on a.user_id=b._id where order_id=" + departureInfo.get_id() + " and order_type=0";
                                 List<Order> passengerList = appDB.getOrderReview(where, 1);
                                 String p_name="";
@@ -376,13 +380,14 @@ public class AlipayNotifyController {
                     if (passengerOrderList.size() > 0) {
                         //支付完成，更改各个状态
                         departureInfo = passengerOrderList.get(0);
+                        if (passengerOrderList.get(0).getIsArrive() == 0){
+                            String update_sql = " set order_status=3 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=0";//记录状态
+                            appDB.update("pc_orders", update_sql);
 
-                        String update_sql = " set order_status=3 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=0";//记录状态
-                        appDB.update("pc_orders", update_sql);
-
-                        update_sql = " set order_status=2 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=2 and order_status=1 ";//抢单状态
-                        appDB.update("pc_orders", update_sql);
-                        System.out.println("订单状态更新成功！");
+                            update_sql = " set order_status=2 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=2 and order_status=1 ";//抢单状态
+                            appDB.update("pc_orders", update_sql);
+                            System.out.println("订单状态更新成功！");
+                        }
                         //用户支付记录
                         int user_id = departureInfo.getUser_id();
                         int order_id = departureInfo.get_id();
@@ -398,10 +403,11 @@ public class AlipayNotifyController {
                             driver_id = orderList.get(0).getUser_id();
                             d_mobile=orderList.get(0).getUser_mobile();
                         }
-                        //支付成功，座位锁定，数据库中剩余座位减相应座位数
-                        update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
-                        appDB.update("pc_driver_publish_info",update_sql);
-
+                        if (passengerOrderList.get(0).getIsArrive() == 0){
+                            //支付成功，座位锁定，数据库中剩余座位减相应座位数
+                            String update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
+                            appDB.update("pc_driver_publish_info",update_sql);
+                        }
                         where = " a left join pc_user b on a.user_id=b._id where order_id=" + departureInfo.get_id() + " and order_type=0";
                         List<Order> passengerList = appDB.getOrderReview(where, 1);
                         String p_name="";
@@ -596,13 +602,14 @@ public class AlipayNotifyController {
                     if (passengerOrderList.size() > 0) {
                         //支付完成，更改各个状态
                         departureInfo = passengerOrderList.get(0);
+                        if(departureInfo.getIsArrive() == 0){
+                            String update_sql = " set order_status=3 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=0";//记录状态
+                            appDB.update("pc_orders", update_sql);
 
-                        String update_sql = " set order_status=3 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=0";//记录状态
-                        appDB.update("pc_orders", update_sql);
-
-                        update_sql = " set order_status=2 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=2 and order_status=1 ";//抢单状态
-                        appDB.update("pc_orders", update_sql);
-                        System.out.println("订单状态更新成功！");
+                            update_sql = " set order_status=2 ,update_time='" + Utils.getCurrentTime() + "' where order_id=" + departureInfo.get_id() + " and order_type=2 and order_status=1 ";//抢单状态
+                            appDB.update("pc_orders", update_sql);
+                            System.out.println("订单状态更新成功！");
+                        }
                         //用户支付记录
                         int user_id = departureInfo.getUser_id();
                         int order_id = departureInfo.get_id();
@@ -618,10 +625,11 @@ public class AlipayNotifyController {
                             driver_id = orderList.get(0).getUser_id();
                             d_mobile=orderList.get(0).getUser_mobile();
                         }
-                        //支付成功，座位锁定，数据库中剩余座位减相应座位数
-                        update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
-                        appDB.update("pc_driver_publish_info",update_sql);
-
+                        if (departureInfo.getIsArrive() == 0){
+                            //支付成功，座位锁定，数据库中剩余座位减相应座位数
+                            String update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
+                            appDB.update("pc_driver_publish_info",update_sql);
+                        }
                         where = " a left join pc_user b on a.user_id=b._id where order_id=" + departureInfo.get_id() + " and order_type=0";
                         List<Order> passengerList = appDB.getOrderReview(where, 1);
                         String p_name="";
