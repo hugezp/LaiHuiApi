@@ -3,10 +3,7 @@ package com.cyparty.laihui.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
-import com.cyparty.laihui.domain.DepartureInfo;
-import com.cyparty.laihui.domain.ErrorCode;
-import com.cyparty.laihui.domain.Order;
-import com.cyparty.laihui.domain.User;
+import com.cyparty.laihui.domain.*;
 import com.cyparty.laihui.utilities.*;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -643,18 +640,30 @@ public class DriverDepartureController {
                     if (user_id > 0) {
                         String confirm_time = Utils.getCurrentTime();
                         String update_sql;
-                        where = " where user_id=" + user_id + " and order_type=2 and is_enable=1 and order_status not in(3,4,5,6) order by CONVERT (create_time USING gbk)COLLATE gbk_chinese_ci desc";
-                        List<Order> orderList = appDB.getOrderReview(where, 0);
+                        where = "a left join pc_passenger_publish_info b on a.order_id = b._id where a.user_id=" + user_id + " and a.order_type=2 and a.is_enable=1 and a.order_status not in(3,4,5,6) order by CONVERT (a.create_time USING gbk)COLLATE gbk_chinese_ci desc";
+                        List<Order> orderList = appDB.getOrderReview(where, 2);
                         if (orderList.size() > 0) {
                             for (Order order : orderList) {
-
                                 update_sql = " set order_status=3 ,update_time='" + confirm_time + "' where _id=" + order.get_id();
                                 appDB.update("pc_orders", update_sql);
                                 update_sql = " set order_status=4, update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=0";
                                 appDB.update("pc_orders", update_sql);
-                                update_sql = " set is_complete=1 where action_type=0 and order_id=" + order.getOrder_id();
-                                appDB.update("pay_cash_log", update_sql);
-
+                                if (order.getIsArrive() == 0){
+                                    update_sql = " set is_complete=1 where action_type=0 and order_id=" + order.getOrder_id();
+                                    appDB.update("pay_cash_log", update_sql);
+                                }else {
+                                    PayLog pay=new PayLog();
+                                    pay.setUser_id(order.getUser_id());
+                                    pay.setOrder_id(order_id);
+                                    pay.setP_id(0);
+                                    pay.setCash(order.getPrice());
+                                    pay.setDriver_id(order.getDriver_id());
+                                    pay.setAction_type(0);
+                                    pay.setPay_type(0);
+                                    pay.setOrder_status(1);
+                                    pay.setDeparture_time(order.getDeparture_time());
+                                    appDB.createPayLog(pay);
+                                }
                             }
                             //设置乘客车单不可用（完成）
                             where = " set is_enable=0 where user_id =" + user_id + " order by CONVERT (create_time USING gbk)COLLATE gbk_chinese_ci desc limit 1";

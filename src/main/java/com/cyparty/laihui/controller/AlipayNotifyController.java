@@ -172,43 +172,42 @@ public class AlipayNotifyController {
                                     //支付成功，座位锁定，数据库中剩余座位减
                                     String update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
                                     appDB.update("pc_driver_publish_info",update_sql);
+                                    where = " a left join pc_user b on a.user_id=b._id where order_id=" + departureInfo.get_id() + " and order_type=0";
+                                    List<Order> passengerList = appDB.getOrderReview(where, 1);
+                                    String p_name="";
+                                    if (passengerList.size() > 0) {
+                                        p_name = passengerList.get(0).getUser_name();
+                                    }
+                                    PayLog pay=new PayLog();
+                                    pay.setUser_id(user_id);
+                                    pay.setOrder_id(order_id);
+                                    pay.setP_id(p_id);
+                                    pay.setCash(money);
+                                    pay.setDriver_id(driver_id);
+                                    pay.setAction_type(0);
+                                    pay.setPay_type(0);
+                                    pay.setOrder_status(1);
+                                    pay.setDeparture_time(departureInfo.getDeparture_time());
+
+                                    appDB.createPayLog(pay);
+
+                                    //推送通知车主
+                                    String title="车主";
+                                    String time=Utils.getCurrentTime();
+                                    String content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"完成了支付，";
+                                    Utils.sendAllNotifyMessage(d_mobile,title,content);
+                                    content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"通过支付宝完成了支付，祝您路途愉快！";
+                                    JSONObject jsonObject=new JSONObject();
+                                    jsonObject.put("order_status",100);
+                                    //保存到消息数据库中
+                                    int push_id = user_id;
+                                    int receive_id = driver_id;
+                                    int push_type = 26;
+                                    boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
+
+                                    notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
+                                    System.out.println("支付记录保存成功！");
                                 }
-                                where = " a left join pc_user b on a.user_id=b._id where order_id=" + departureInfo.get_id() + " and order_type=0";
-                                List<Order> passengerList = appDB.getOrderReview(where, 1);
-                                String p_name="";
-                                if (passengerList.size() > 0) {
-                                    p_name = passengerList.get(0).getUser_name();
-                                }
-                                PayLog pay=new PayLog();
-                                pay.setUser_id(user_id);
-                                pay.setOrder_id(order_id);
-                                pay.setP_id(p_id);
-                                pay.setCash(money);
-                                pay.setDriver_id(driver_id);
-                                pay.setAction_type(0);
-                                pay.setPay_type(0);
-                                pay.setOrder_status(1);
-                                pay.setDeparture_time(departureInfo.getDeparture_time());
-
-                                appDB.createPayLog(pay);
-
-                                //推送通知车主
-                                String title="车主";
-                                String time=Utils.getCurrentTime();
-                                String content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"完成了支付，";
-                                Utils.sendAllNotifyMessage(d_mobile,title,content);
-                               content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"通过支付宝完成了支付，祝您路途愉快！";
-                                JSONObject jsonObject=new JSONObject();
-                                jsonObject.put("order_status",100);
-                                //保存到消息数据库中
-                                int push_id = user_id;
-                                int receive_id = driver_id;
-                                int push_type = 26;
-                                boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
-
-                                notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
-                                System.out.println("支付记录保存成功！");
-
                             }else {
                                 System.out.println("未查询到该商户号对应的订单信息");
                             }
@@ -629,44 +628,44 @@ public class AlipayNotifyController {
                             //支付成功，座位锁定，数据库中剩余座位减相应座位数
                             String update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
                             appDB.update("pc_driver_publish_info",update_sql);
+                            where = " a left join pc_user b on a.user_id=b._id where order_id=" + departureInfo.get_id() + " and order_type=0";
+                            List<Order> passengerList = appDB.getOrderReview(where, 1);
+                            String p_name="";
+                            if (passengerList.size() > 0) {
+                                p_name = passengerList.get(0).getUser_name();
+                            }
+                            PayLog pay = new PayLog();
+                            pay.setUser_id(user_id);
+                            pay.setOrder_id(order_id);
+                            pay.setP_id(p_id);
+                            pay.setCash(money);
+                            pay.setDriver_id(driver_id);
+                            pay.setAction_type(0);
+                            pay.setPay_type(1);
+                            pay.setOrder_status(1);
+                            pay.setDeparture_time(departureInfo.getDeparture_time());
+
+                            appDB.createPayLog(pay);
+
+                            //推送通知车主
+                            String title="车主";
+                            String time=Utils.getCurrentTime();
+                            String content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"完成了支付，";
+                            Utils.sendAllNotifyMessage(d_mobile,title,content);
+
+
+                            content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"通过微信完成了支付，祝您路途愉快！";
+                            JSONObject jsonObject=new JSONObject();
+                            jsonObject.put("order_status",100);
+                            //保存到消息数据库中
+                            int push_id = user_id;
+                            int receive_id = driver_id;
+                            int push_type = 26;
+                            boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,11,"11.caf",jsonObject.toJSONString(),1,p_name,null);
+
+                            notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
+                            System.out.println("微信支付记录保存成功！");
                         }
-                        where = " a left join pc_user b on a.user_id=b._id where order_id=" + departureInfo.get_id() + " and order_type=0";
-                        List<Order> passengerList = appDB.getOrderReview(where, 1);
-                        String p_name="";
-                        if (passengerList.size() > 0) {
-                            p_name = passengerList.get(0).getUser_name();
-                        }
-                        PayLog pay = new PayLog();
-                        pay.setUser_id(user_id);
-                        pay.setOrder_id(order_id);
-                        pay.setP_id(p_id);
-                        pay.setCash(money);
-                        pay.setDriver_id(driver_id);
-                        pay.setAction_type(0);
-                        pay.setPay_type(1);
-                        pay.setOrder_status(1);
-                        pay.setDeparture_time(departureInfo.getDeparture_time());
-
-                        appDB.createPayLog(pay);
-
-                        //推送通知车主
-                        String title="车主";
-                        String time=Utils.getCurrentTime();
-                        String content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"完成了支付，";
-                        Utils.sendAllNotifyMessage(d_mobile,title,content);
-
-
-                        content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"通过微信完成了支付，祝您路途愉快！";
-                        JSONObject jsonObject=new JSONObject();
-                        jsonObject.put("order_status",100);
-                        //保存到消息数据库中
-                        int push_id = user_id;
-                        int receive_id = driver_id;
-                        int push_type = 26;
-                        boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,11,"11.caf",jsonObject.toJSONString(),1,p_name,null);
-
-                        notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
-                        System.out.println("微信支付记录保存成功！");
                     } else {
                         System.out.println("未查询到该商户号对应的订单信息");
                     }
