@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.*;
-import com.google.gson.Gson;
+
 
 import java.util.*;
 
@@ -1426,9 +1426,10 @@ public class AppJsonUtils {
                         driverObject.put("car_type", user.getCar_type());
                     } else {
                         List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order.getDriver_id());
-                        UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
-                        driverObject.put("car", travelCardInfo.getCar_license_number());
+
                         if (travelCardInfos.size() > 0) {
+                            UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                            driverObject.put("car", travelCardInfo.getCar_license_number());
                             driverObject.put("car_brand", "");
                             driverObject.put("car_color", travelCardInfo.getCar_color());
                             driverObject.put("car_type", travelCardInfo.getCar_type());
@@ -1437,9 +1438,9 @@ public class AppJsonUtils {
                     driverObject.put("car_owner", user.getCar_owner());
                 } else {
                     List<UserTravelCardInfo> travelCardInfos = appDB.getTravelCard(order.getDriver_id());
-                    UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
-                    driverObject.put("car", travelCardInfo.getCar_license_number());
                     if (travelCardInfos.size() > 0) {
+                        UserTravelCardInfo travelCardInfo = travelCardInfos.get(0);
+                        driverObject.put("car", travelCardInfo.getCar_license_number());
                         driverObject.put("car_brand", "");
                         driverObject.put("car_color", travelCardInfo.getCar_color());
                         driverObject.put("car_type", travelCardInfo.getCar_type());
