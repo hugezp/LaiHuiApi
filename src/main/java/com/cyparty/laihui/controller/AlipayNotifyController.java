@@ -8,6 +8,7 @@ import com.cyparty.laihui.domain.Order;
 import com.cyparty.laihui.domain.PassengerOrder;
 import com.cyparty.laihui.domain.PayLog;
 import com.cyparty.laihui.utilities.*;
+import com.google.gson.Gson;
 import org.apache.commons.io.IOUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -192,6 +193,7 @@ public class AlipayNotifyController {
                                     appDB.createPayLog(pay);
 
                                     //推送通知车主
+                                    Gson gson = new Gson();
                                     String title="车主";
                                     String time=Utils.getCurrentTime();
                                     String content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"完成了支付，";
@@ -203,9 +205,25 @@ public class AlipayNotifyController {
                                     int push_id = user_id;
                                     int receive_id = driver_id;
                                     int push_type = 26;
-                                    boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
-
-                                    notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
+                                    boolean is_true = appDB.createPush(passengerOrderList.get(0).get_id(),push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
+                                    Map<String, String> extrasParam = new HashMap<String, String>();
+                                    Map<String, String> data = new HashMap<String, String>();
+                                    extrasParam.put("action","com.laihui.pinche.push");
+                                    extrasParam.put("alert",content);
+                                    extrasParam.put("badge","Increment");
+                                    extrasParam.put("id",String.valueOf(passengerOrderList.get(0).get_id()));
+                                    extrasParam.put("notify_type",String.valueOf(push_type));
+                                    extrasParam.put("sound","");
+                                    extrasParam.put("title","来回拼车");
+                                    data.put("content",content);
+                                    data.put("push_time",Utils.getCurrentTime());
+                                    extrasParam.put("push",gson.toJson(data));
+                                    //将抢单信息通知给乘客
+                                    JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
+                                            ConfigUtils.JPUSH_MASTER_SECRET)
+                                            .sendToRegistrationId(String.valueOf(push_type), d_mobile,
+                                                    content, content, content,
+                                                    extrasParam);
                                     System.out.println("支付记录保存成功！");
                                 }
                             }else {
@@ -427,6 +445,7 @@ public class AlipayNotifyController {
                         appDB.createPayLog(pay);
 
                         //推送通知车主
+                        Gson gson = new Gson();
                         String title="车主";
                         String time=Utils.getCurrentTime();
                         String content="乘客"+p_name+"在"+time.substring(0,time.length()-3)+"完成了支付，";
@@ -440,9 +459,25 @@ public class AlipayNotifyController {
                         int push_id = user_id;
                         int receive_id = driver_id;
                         int push_type = 26;
-                        boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
-
-                        notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
+                        boolean is_true = appDB.createPush(passengerOrderList.get(0).get_id(),push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
+                        Map<String, String> extrasParam = new HashMap<String, String>();
+                        Map<String, String> data = new HashMap<String, String>();
+                        extrasParam.put("action","com.laihui.pinche.push");
+                        extrasParam.put("alert",content);
+                        extrasParam.put("badge","Increment");
+                        extrasParam.put("id",String.valueOf(passengerOrderList.get(0).get_id()));
+                        extrasParam.put("notify_type",String.valueOf(push_type));
+                        extrasParam.put("sound","");
+                        extrasParam.put("title","来回拼车");
+                        data.put("content",content);
+                        data.put("push_time",Utils.getCurrentTime());
+                        extrasParam.put("push",gson.toJson(data));
+                        //将抢单信息通知给乘客
+                        JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
+                                ConfigUtils.JPUSH_MASTER_SECRET)
+                                .sendToRegistrationId(String.valueOf(push_type), d_mobile,
+                                        content, content, content,
+                                        extrasParam);
                         System.out.println("微信支付记录保存成功！");
                     } else {
                         System.out.println("未查询到该商户号对应的订单信息");
@@ -658,12 +693,29 @@ public class AlipayNotifyController {
                             JSONObject jsonObject=new JSONObject();
                             jsonObject.put("order_status",100);
                             //保存到消息数据库中
+                            Gson gson = new Gson();
                             int push_id = user_id;
                             int receive_id = driver_id;
                             int push_type = 26;
-                            boolean is_true = appDB.createPush(grab_id,push_id,receive_id,push_type,content,11,"11.caf",jsonObject.toJSONString(),1,p_name,null);
-
-                            notifyPush.pinCheNotify("26",d_mobile,content,grab_id,jsonObject,Utils.getCurrentTime());
+                            boolean is_true = appDB.createPush(passengerOrderList.get(0).get_id(),push_id,receive_id,push_type,content,11,"11.caf",jsonObject.toJSONString(),1,p_name,null);
+                            Map<String, String> extrasParam = new HashMap<String, String>();
+                            Map<String, String> data = new HashMap<String, String>();
+                            extrasParam.put("action","com.laihui.pinche.push");
+                            extrasParam.put("alert",content);
+                            extrasParam.put("badge","Increment");
+                            extrasParam.put("id",String.valueOf(passengerOrderList.get(0).get_id()));
+                            extrasParam.put("notify_type",String.valueOf(push_type));
+                            extrasParam.put("sound","");
+                            extrasParam.put("title","来回拼车");
+                            data.put("content",content);
+                            data.put("push_time",Utils.getCurrentTime());
+                            extrasParam.put("push",gson.toJson(data));
+                            //将抢单信息通知给乘客
+                            JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
+                                    ConfigUtils.JPUSH_MASTER_SECRET)
+                                    .sendToRegistrationId(String.valueOf(push_type), d_mobile,
+                                            content, content, content,
+                                            extrasParam);
                             System.out.println("微信支付记录保存成功！");
                         }
                     } else {
