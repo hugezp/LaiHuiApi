@@ -2162,7 +2162,7 @@ public class AppJsonUtils {
                 continue;
             Order order = orderReview.get(0);
             infoJson.put("departure_time", order.getDeparture_time());
-            infoJson.put("order_id", String.valueOf(order.getOrder_id()));
+            infoJson.put("order_id", String.valueOf(order.get_id()));
             infoJson.put("price", String.valueOf(order.getPrice()));
             infoJson.put("seats", String.valueOf(order.getBooking_seats()));
             pushJson.put("order_status", String.valueOf(order.getOrder_status()));

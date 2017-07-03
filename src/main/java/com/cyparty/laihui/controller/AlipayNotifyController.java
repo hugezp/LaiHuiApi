@@ -168,6 +168,17 @@ public class AlipayNotifyController {
                                     grab_id=orderList.get(0).get_id();
                                     d_mobile=orderList.get(0).getUser_mobile();
                                 }
+                                PayLog pay=new PayLog();
+                                pay.setUser_id(user_id);
+                                pay.setOrder_id(order_id);
+                                pay.setP_id(p_id);
+                                pay.setCash(money);
+                                pay.setDriver_id(driver_id);
+                                pay.setAction_type(0);
+                                pay.setPay_type(0);
+                                pay.setOrder_status(1);
+                                pay.setDeparture_time(departureInfo.getDeparture_time());
+                                appDB.createPayLog(pay);
                                 if (passengerOrderList.get(0).getIsArrive() == 0){
                                     //支付成功，座位锁定，数据库中剩余座位减
                                     String update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
@@ -178,19 +189,6 @@ public class AlipayNotifyController {
                                     if (passengerList.size() > 0) {
                                         p_name = passengerList.get(0).getUser_name();
                                     }
-                                    PayLog pay=new PayLog();
-                                    pay.setUser_id(user_id);
-                                    pay.setOrder_id(order_id);
-                                    pay.setP_id(p_id);
-                                    pay.setCash(money);
-                                    pay.setDriver_id(driver_id);
-                                    pay.setAction_type(0);
-                                    pay.setPay_type(0);
-                                    pay.setOrder_status(1);
-                                    pay.setDeparture_time(departureInfo.getDeparture_time());
-
-                                    appDB.createPayLog(pay);
-
                                     //推送通知车主
                                     String title="车主";
                                     String time=Utils.getCurrentTime();
@@ -624,6 +622,18 @@ public class AlipayNotifyController {
                             driver_id = orderList.get(0).getUser_id();
                             d_mobile=orderList.get(0).getUser_mobile();
                         }
+                        PayLog pay = new PayLog();
+                        pay.setUser_id(user_id);
+                        pay.setOrder_id(order_id);
+                        pay.setP_id(p_id);
+                        pay.setCash(money);
+                        pay.setDriver_id(driver_id);
+                        pay.setAction_type(0);
+                        pay.setPay_type(1);
+                        pay.setOrder_status(1);
+                        pay.setDeparture_time(departureInfo.getDeparture_time());
+
+                        appDB.createPayLog(pay);
                         if (departureInfo.getIsArrive() == 0){
                             //支付成功，座位锁定，数据库中剩余座位减相应座位数
                             String update_sql=" set current_seats = current_seats-"+departureInfo.getSeats()+" where user_id= "+driver_id+" and departure_time='"+Utils.getCurrentTime()+"' and is_enable=1";
@@ -634,18 +644,7 @@ public class AlipayNotifyController {
                             if (passengerList.size() > 0) {
                                 p_name = passengerList.get(0).getUser_name();
                             }
-                            PayLog pay = new PayLog();
-                            pay.setUser_id(user_id);
-                            pay.setOrder_id(order_id);
-                            pay.setP_id(p_id);
-                            pay.setCash(money);
-                            pay.setDriver_id(driver_id);
-                            pay.setAction_type(0);
-                            pay.setPay_type(1);
-                            pay.setOrder_status(1);
-                            pay.setDeparture_time(departureInfo.getDeparture_time());
 
-                            appDB.createPayLog(pay);
 
                             //推送通知车主
                             String title="车主";
