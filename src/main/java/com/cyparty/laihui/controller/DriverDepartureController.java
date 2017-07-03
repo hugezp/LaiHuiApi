@@ -668,6 +668,7 @@ public class DriverDepartureController {
                             //设置乘客车单不可用（完成）
                             where = " set is_enable=0 where user_id =" + user_id + " order by CONVERT (create_time USING gbk)COLLATE gbk_chinese_ci desc limit 1";
                             appDB.update("pc_driver_publish_info", where);
+                            appDB.update("pc_passenger_publish_info",where);
                         }
                         json = AppJsonUtils.returnSuccessJsonString(result, "结束行程成功！");
                         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
