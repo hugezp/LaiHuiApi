@@ -660,9 +660,10 @@ public class DriverDepartureController {
                                     pay.setDriver_id(order.getDriver_id());
                                     pay.setAction_type(0);
                                     pay.setPay_type(0);
+                                    pay.setIs_complete(1);
                                     pay.setOrder_status(1);
                                     pay.setDeparture_time(order.getDeparture_time());
-                                    appDB.createPayLog(pay);
+                                    appDB.createPayLog1(pay);
                                 }
                             }
                             //设置乘客车单不可用（完成）

@@ -1295,18 +1295,15 @@ public class AppJsonUtils {
                     break;
                 case 100:
                     status = 11;
-                    isArrive = 1;
                     remake = "司机抢单";
                     break;
                 case 200:
                     status = 0;
-                    isArrive = 1;
                     remake = "已支付,等待抢单";
                     break;
 
                 case 300:
                     status = 2;
-                    isArrive = 1;
                     remake = "等待发车";
                     break;
             }
@@ -1314,7 +1311,7 @@ public class AppJsonUtils {
             jsonObject.put("status", status);
             //车单状态备注
             jsonObject.put("remake", remake);
-            jsonObject.put("isArrive", isArrive);
+            jsonObject.put("isArrive", order.getIsArrive());
             //得到乘客基本信息
             where = " where _id=" + order.getUser_id();
             List<User> passengers = appDB.getUserList(where);

@@ -530,6 +530,16 @@ public class AppDB {
         return is_success;
     }
 
+    public boolean createPayLog1(PayLog pay) {
+        boolean is_success = true;
+        String SQL = "insert into pay_cash_log(order_id,user_id,p_id,driver_id,cash,create_time,action_type,pay_type,order_status,departure_time,is_complete) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{pay.getOrder_id(), pay.getUser_id(), pay.getP_id(), pay.getDriver_id(), pay.getCash(), Utils.getCurrentTime(), pay.getAction_type(), pay.getPay_type(), pay.getOrder_status(), pay.getDeparture_time(), pay.getIs_complete()});
+        if (count < 1) {
+            is_success = false;
+        }
+        return is_success;
+    }
+
     //得到支付信息
     public List<PayLog> getPayLog(String where) {
         String SQL = "SELECT * FROM pay_cash_log " + where;
