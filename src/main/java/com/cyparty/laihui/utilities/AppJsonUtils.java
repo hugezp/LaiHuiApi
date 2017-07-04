@@ -1338,7 +1338,6 @@ public class AppJsonUtils {
         int offset = page * size;
         int status = 0;
         String remake = "";
-        int isArrive = 0;
         where = where + " order by a.create_time DESC limit 1 ";
         List<Order> orderList = appDB.getOrderReview(where, 2);
         for (Order order : orderList) {
@@ -1380,18 +1379,16 @@ public class AppJsonUtils {
                     remake = "已发车";
                     break;
                 case 100:
-                    isArrive = 1;
                     status = 5;
                     remake = "抢单成功,等待乘客确认";
                     break;
                 case 200:
-                    isArrive = 1;
                     status = 5;
                     remake = "乘客已支付";
             }
             //车单状态
             jsonObject.put("status", status);
-            jsonObject.put("isArrive", isArrive);
+            jsonObject.put("isArrive", order.getIsArrive());
             //车单状态备注
             jsonObject.put("remake", remake);
             //得到司机基本信息
