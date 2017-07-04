@@ -995,7 +995,6 @@ public class PassengerDepartureController {
                     extrasParam.put("title","来回拼车");
                     passengerData.put("content",content);
                     passengerData.put("push_time",confirm_time);
-                    extrasParam.put("push",gson.toJson(passengerData));
                     //将抢单信息通知给乘客
                     JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
                             ConfigUtils.JPUSH_MASTER_SECRET)

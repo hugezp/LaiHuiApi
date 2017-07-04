@@ -29,10 +29,10 @@ public class PayConfigUtils {
     private final static String wx_pay_notify_url = "https://api.laihuipinche.com/wx_pay/notify";//运行环境
     //来回微信支付回调地址
 //    private final static String wx_pay_laihui_notify_url = "https://api.laihuipinche.com/wx_pays/notify";
-    private final static String wx_pay_laihui_notify_url = "http://123.14.174.142:8000/wx_pays/notify";
+    private final static String wx_pay_laihui_notify_url = "http://apitest.callback.laihuipinche.com:8002/wx_pays/notify";
     //支付宝支付回调地址
 //    private final static String alipay_notify_url = "https://api.laihuipinche.com/alipay/notify";
-    private final static String alipay_notify_url = "http://123.14.174.142:8000/alipay/notify";
+    private final static String alipay_notify_url = "http://apitest.callback.laihuipinche.com:8002/alipay/notify";
 
     public static String getWx_app_id() {
         return wx_app_id;
