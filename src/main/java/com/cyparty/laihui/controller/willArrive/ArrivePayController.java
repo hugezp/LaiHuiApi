@@ -49,7 +49,7 @@ public class ArrivePayController {
             String now_ip = Utils.getIP(request);
             String nonce_str = Utils.getCharAndNum(32);
             double inputFee = 1;
-//            double inputFee = (price + serviceFee) * 100;
+//'            double inputFee = (price + serviceFee) * 100;
             int inputIntFee = (int) inputFee;
             String total_fee = inputIntFee + "";
 

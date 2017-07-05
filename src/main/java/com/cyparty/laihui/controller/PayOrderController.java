@@ -86,8 +86,8 @@ public class PayOrderController {
             if (flag != null && !flag.isEmpty()) {
                 String now_ip = Utils.getIP(request);
                 String nonce_str = Utils.getCharAndNum(32);
-                double inputFee = 1;
-//                double inputFee = passengerOrder.getPay_money() * 100;
+//                double inputFee = 1;
+                double inputFee = passengerOrder.getPay_money() * 100;
                 int inputIntFee = (int) inputFee;
                 String total_fee = inputIntFee + "";
 
@@ -224,8 +224,8 @@ public class PayOrderController {
 
         } else {
             //支付宝支付
-            double total_fee = 0.01;
-//            double total_fee = passengerOrder.getPay_money();
+            // double total_fee = 0.01;
+            double total_fee = passengerOrder.getPay_money();
             Map<String, String> keyValues = new HashMap<String, String>();
             String current_time = Utils.getCurrentTime();
             keyValues.put("app_id", PayConfigUtils.getApp_id());

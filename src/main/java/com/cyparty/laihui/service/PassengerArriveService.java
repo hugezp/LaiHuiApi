@@ -105,7 +105,7 @@ public class PassengerArriveService {
                         int push_id = userId;
                         int receive_id = driver_user_id;
                         int push_type = 28;
-                        boolean isSuccess = appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null,1);
+                        boolean isSuccess = appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
                         if (isSuccess){
                             //将邀请消息推送给车主
                             Map<String, String> extrasParam = new HashMap<String, String>();
@@ -209,7 +209,7 @@ public class PassengerArriveService {
             User user = appDB.getUserList(user_where).get(0);
             if (user.getIs_validated() == 1) {
                 String start_time = request.getParameter("departure_time");//出发时间
-                //验证出发时间 周一到周六 早九点到晚六点
+                //验证出发时间 周一到周六 早11点到晚4点
                 String release_time = Utils.getCurrentTime();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Calendar c = Calendar.getInstance();
@@ -218,9 +218,9 @@ public class PassengerArriveService {
                     Date releaseTime = format.parse(release_time);
                     long longTime = startTime.getTime() - releaseTime.getTime();
                     long hour = longTime / (60 * 60 * 1000);
-                    if(hour<2){
+                    if(hour<3){
 
-                        json = AppJsonUtils.returnFailJsonString(result, "必达单必须提前两小时发布！");
+                        json = AppJsonUtils.returnFailJsonString(result, "必达单必须提前三小时发布！");
                         return json;
                     }
                     c.setTime(format.parse(release_time));
@@ -239,8 +239,8 @@ public class PassengerArriveService {
                 int hour = c.get(Calendar.HOUR_OF_DAY);
                 int min = c.get(Calendar.MINUTE);          //获取当前分钟
                 int ss = c.get(Calendar.SECOND);          //获取当前秒
-                if((dayForWeek==7)||(hour<10 || hour>18 || (hour==18 && (min>0 || ss>0)))){
-                    json = AppJsonUtils.returnFailJsonString(result, "必达单发布时间必须为周一至周六早10点到晚6点！");
+                if((dayForWeek==7)||(hour<11 || hour>16 || (hour==16 && (min>0 || ss>0)))){
+                    json = AppJsonUtils.returnFailJsonString(result, "必达单发布时间必须为周一至周六早11点到晚4点！");
                     return json;
                 }
 

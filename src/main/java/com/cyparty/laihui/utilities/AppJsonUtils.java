@@ -446,14 +446,15 @@ public class AppJsonUtils {
             jsonObject.put("points", departure.getPoints());
             jsonObject.put("description", departure.getDescription());
             jsonObject.put("price", departure.getPrice());
-            String order_where = " where order_id=" + departure.getR_id() + "  and is_enable=1 and order_type=1 ";//只查询订单类型为订单的
-            int booking_count = appDB.getCount("pc_orders", order_where);
-            jsonObject.put("booking_count", booking_count);
+            String order_where = " where is_enable=1 and order_type=1 ";//只查询订单类型为订单的
+//            int booking_count = appDB.getCount("pc_orders", order_where);
+//            jsonObject.put("booking_count", booking_count);
             if (user_id != 0) {
-                order_where = order_where + " and  user_id=" + user_id;
+                order_where = " a left join pc_passenger_publish_info b on a.order_id = b._id where b.user_id=" + user_id + " and b.is_enable =1 and b.departure_time >'" + current_time + "'";
             }
+
             double total_price = 0;
-            List<Order> orderList = appDB.getOrderReview(order_where, 0);
+            List<Order> orderList = appDB.getOrderReview(order_where, 2);
             //获取乘客订单
             List<Order> orders = appDB.getOrderReview(" where user_id=" + user_id + " and order_type=0 and is_enable=1 order by create_time DESC limit 1", 0);
             if (orders.size() > 0) {
@@ -467,11 +468,12 @@ public class AppJsonUtils {
                 }
             }
             JSONArray orderArray = new JSONArray();
+
             if (orderList.size() > 0) {
                 for (Order order : orderList) {
                     JSONObject passengerData = new JSONObject();
                     JSONObject orderObject = new JSONObject();
-                    String passenger_order_where = " where _id=" + order.getOrder_id();
+                    String passenger_order_where = " where a._id=" + order.getOrder_id();
                     PassengerOrder passengerOrder = appDB.getPassengerDepartureInfo(passenger_order_where).get(0);
                     orderObject.put("order_id", order.get_id());
                     orderObject.put("order_status", order.getOrder_status());
@@ -480,6 +482,7 @@ public class AppJsonUtils {
                     orderObject.put("booking_seats", passengerOrder.getSeats());
                     orderObject.put("create_time", passengerOrder.getCreate_time());
                     orderObject.put("description", passengerOrder.getDescription());
+                    orderObject.put("isArrive", passengerOrder.getIsArrive());
                     passengerData.put("name", passengerOrder.getUser_name());
                     passengerData.put("mobile", passengerOrder.getMobile());
                     passengerData.put("avatar", passengerOrder.getUser_avatar());
@@ -495,7 +498,6 @@ public class AppJsonUtils {
             }
             jsonObject.put("total_price", total_price);
             jsonObject.put("user_data", driverObject);
-
             return_json.put("driver_data", jsonObject);
             return_json.put("passenger_data", orderArray);
         }
@@ -2030,7 +2032,7 @@ public class AppJsonUtils {
         //消息条数
         int totalCount = pushList.size() + pushs.size();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("totalCount",totalCount);
+        jsonObject.put("totalCount", totalCount);
         if (pushList.size() > 0 || pushs.size() > 0) {
             jsonObject.put("is_message", 1);
         } else {
