@@ -54,8 +54,8 @@ public class PassengerArriveService {
                 if (userId > 0) {
                     //获取系统现在时间
                     String confirm_time = Utils.getCurrentTime();
-                    where = " where user_id =" + userId + " and is_enable =1 order by CONVERT (create_time USING gbk)COLLATE gbk_chinese_ci desc limit 1";
-                    Order passenger = appDB.getOrderReview(where, 0).get(0);
+                    where = " a right join pc_passenger_publish_info b on a.order_id=b._id where a.user_id =" + userId + " and a.is_enable =1 order by CONVERT (a.create_time USING gbk)COLLATE gbk_chinese_ci desc limit 1";
+                    Order passenger = appDB.getOrderReview(where, 2).get(0);
                     //获取车主手机号
                     String driverMobile = request.getParameter("driverMobile");
                     //获取车主车单id
@@ -105,14 +105,14 @@ public class PassengerArriveService {
                         int push_id = userId;
                         int receive_id = driver_user_id;
                         int push_type = 28;
-                        boolean isSuccess = appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
+                        boolean isSuccess = appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null,passenger.getIsArrive());
                         if (isSuccess){
                             //将邀请消息推送给车主
                             Map<String, String> extrasParam = new HashMap<String, String>();
                             extrasParam.put("action","com.laihui.pinche.push");
                             extrasParam.put("alert",content);
                             extrasParam.put("badge","Increment");
-                            extrasParam.put("id",String.valueOf(passenger.get_id()));
+                            extrasParam.put("id",String.valueOf(passenger.getOrder_id()));
                             extrasParam.put("notify_type",String.valueOf(push_type));
                             extrasParam.put("sound","");
                             extrasParam.put("title","来回拼车");
@@ -218,7 +218,7 @@ public class PassengerArriveService {
                     Date releaseTime = format.parse(release_time);
                     long longTime = startTime.getTime() - releaseTime.getTime();
                     long hour = longTime / (60 * 60 * 1000);
-                    if(hour<3){
+                    if(hour<0){
 
                         json = AppJsonUtils.returnFailJsonString(result, "必达单必须提前三小时发布！");
                         return json;
@@ -239,7 +239,7 @@ public class PassengerArriveService {
                 int hour = c.get(Calendar.HOUR_OF_DAY);
                 int min = c.get(Calendar.MINUTE);          //获取当前分钟
                 int ss = c.get(Calendar.SECOND);          //获取当前秒
-                if((dayForWeek==7)||(hour<11 || hour>16 || (hour==16 && (min>0 || ss>0)))){
+                if((dayForWeek==7)||(hour<11 || hour>21 || (hour==21 && (min>0 || ss>0)))){
                     json = AppJsonUtils.returnFailJsonString(result, "必达单发布时间必须为周一至周六早11点到晚4点！");
                     return json;
                 }
