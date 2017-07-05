@@ -524,7 +524,7 @@ public class DriverDepartureController {
                                 int push_id = user_id;
                                 int receive_id = passengerOrder.getUser_id();
                                 int push_type = 11;
-                                boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, receive_id, push_type, content, 11, "11.caf", gson.toJson(driverData), 1, driver, null);
+                                boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, receive_id, push_type, content, 11, "11.caf", gson.toJson(driverData), 1, driver, null,passengerOrder.getIsArrive());
                                 if (is_true) {
                                     //将抢单信息通知给乘客
                                     Map<String, String> extrasParam = new HashMap<String, String>();
@@ -605,7 +605,7 @@ public class DriverDepartureController {
                                     if (passengers.size() > 0) {
                                         p_mobile = passengers.get(0).getUser_mobile();
                                     }
-                                    appDB.createPush(order_id, push_id, receive_id, push_type, content, push_type, "29.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null);
+                                    appDB.createPush(order_id, push_id, receive_id, push_type, content, push_type, "29.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null,passengerOrder.getIsArrive());
                                     Map<String, String> extrasParam = new HashMap<String, String>();
                                     extrasParam.put("action","com.laihui.pinche.push");
                                     extrasParam.put("alert",content);
@@ -721,7 +721,7 @@ public class DriverDepartureController {
                                     Map passengerData = AppJsonUtils.getPushObject(appDB, passengerOrder, 1);
                                     int push_type = 21;
                                     int push_id = user_id;
-                                    boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, id, push_type, content, push_type, push_type + ".caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), "");
+                                    boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, id, push_type, content, push_type, push_type + ".caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), "",passengerOrder.getIsArrive());
                                     if (is_true) {
                                         Map<String, String> extrasParam = new HashMap<String, String>();
                                         extrasParam.put("action","com.laihui.pinche.push");
@@ -758,7 +758,7 @@ public class DriverDepartureController {
                                     Map passengerData = AppJsonUtils.getPushObject(appDB, passengerOrder, 1);
                                     int push_type = 22;
                                     int push_id = user_id;
-                                    boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, id, push_type, content, push_type, push_type + ".caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null);
+                                    boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, id, push_type, content, push_type, push_type + ".caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null,passengerOrder.getIsArrive());
                                     if (is_true) {
                                         Map<String, String> extrasParam = new HashMap<String, String>();
                                         extrasParam.put("action","com.laihui.pinche.push");
@@ -843,7 +843,7 @@ public class DriverDepartureController {
                             int push_type = 12;
                             int push_id = user_id;
                             int receive_id = passengerOrder.getUser_id();
-                            boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, receive_id, push_type, content, push_type, push_type + ".caf", gson.toJson(driverData), 1, driver, null);
+                            boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, receive_id, push_type, content, push_type, push_type + ".caf", gson.toJson(driverData), 1, driver, null,passengerOrder.getIsArrive());
                             if (is_true) {
                                 Map<String, String> extrasParam = new HashMap<String, String>();
                                 extrasParam.put("action","com.laihui.pinche.push");

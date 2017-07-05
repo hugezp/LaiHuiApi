@@ -203,7 +203,7 @@ public class AlipayNotifyController {
                                     int push_id = user_id;
                                     int receive_id = driver_id;
                                     int push_type = 26;
-                                    boolean is_true = appDB.createPush(passengerOrderList.get(0).get_id(),push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
+                                    boolean is_true = appDB.createPush(passengerOrderList.get(0).get_id(),push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null,passengerOrderList.get(0).getIsArrive());
                                     Map<String, String> extrasParam = new HashMap<String, String>();
                                     Map<String, String> data = new HashMap<String, String>();
                                     extrasParam.put("action","com.laihui.pinche.push");
@@ -457,7 +457,7 @@ public class AlipayNotifyController {
                         int push_id = user_id;
                         int receive_id = driver_id;
                         int push_type = 26;
-                        boolean is_true = appDB.createPush(passengerOrderList.get(0).get_id(),push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null);
+                        boolean is_true = appDB.createPush(passengerOrderList.get(0).get_id(),push_id,receive_id,push_type,content,26,"26.caf",jsonObject.toJSONString(),1,p_name,null,passengerOrderList.get(0).getIsArrive());
                         Map<String, String> extrasParam = new HashMap<String, String>();
                         Map<String, String> data = new HashMap<String, String>();
                         extrasParam.put("action","com.laihui.pinche.push");
@@ -696,7 +696,7 @@ public class AlipayNotifyController {
                             int push_id = user_id;
                             int receive_id = driver_id;
                             int push_type = 26;
-                            boolean is_true = appDB.createPush(passengerOrderList.get(0).get_id(),push_id,receive_id,push_type,content,11,"11.caf",jsonObject.toJSONString(),1,p_name,null);
+                            boolean is_true = appDB.createPush(passengerOrderList.get(0).get_id(),push_id,receive_id,push_type,content,11,"11.caf",jsonObject.toJSONString(),1,p_name,null,passengerOrderList.get(0).getIsArrive());
                             Map<String, String> extrasParam = new HashMap<String, String>();
                             Map<String, String> data = new HashMap<String, String>();
                             extrasParam.put("action","com.laihui.pinche.push");

@@ -105,7 +105,7 @@ public class PassengerArriveService {
                         int push_id = userId;
                         int receive_id = driver_user_id;
                         int push_type = 28;
-                        boolean isSuccess = appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null);
+                        boolean isSuccess = appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", passengerData.toJSONString(), 1, user.getUser_nick_name(), null,1);
                         if (isSuccess){
                             //将邀请消息推送给车主
                             Map<String, String> extrasParam = new HashMap<String, String>();
