@@ -11,9 +11,17 @@ public class RefundsLog {
     private Integer refundsId;
     private String outTradeNo;
     private double refundsPrice;
-    private Date refundsTime;
+    private String refundsTime;
     private int refundsType;
     private int userId;
+
+    public String getRefundsTime() {
+        return refundsTime;
+    }
+
+    public void setRefundsTime(String refundsTime) {
+        this.refundsTime = refundsTime;
+    }
 
     public int getUserId() {
         return userId;
@@ -45,14 +53,6 @@ public class RefundsLog {
 
     public void setRefundsPrice(double refundsPrice) {
         this.refundsPrice = refundsPrice;
-    }
-
-    public Date getRefundsTime() {
-        return refundsTime;
-    }
-
-    public void setRefundsTime(Date refundsTime) {
-        this.refundsTime = refundsTime;
     }
 
     public int getRefundsType() {

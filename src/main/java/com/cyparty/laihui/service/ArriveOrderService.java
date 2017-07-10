@@ -136,7 +136,7 @@ public class ArriveOrderService {
                     appDB.update("pc_orders", updateSql2);
                     RefundsLog refundsLog = new RefundsLog();
                     refundsLog.setOutTradeNo(tradeNo);
-                    refundsLog.setRefundsTime(new Date());
+                    refundsLog.setRefundsTime(DateUtils.dateToString(new Date()));
                     refundsLog.setRefundsPrice(passengerOrderList.get(0).getPay_money());
                     refundsLog.setUserId(passengerOrderList.get(0).getUser_id());
                     appDB.createPassengerRefunds(refundsLog);
@@ -285,7 +285,7 @@ public class ArriveOrderService {
                 appDB.update("pc_orders", updateSql2);
                 RefundsLog refundsLog = new RefundsLog();
                 refundsLog.setOutTradeNo(tradeNo);
-                refundsLog.setRefundsTime(new Date());
+                refundsLog.setRefundsTime(DateUtils.dateToString(new Date()));
                 refundsLog.setRefundsPrice(passengerOrderList.get(0).getPay_money());
                 refundsLog.setUserId(passengerOrderList.get(0).getUser_id());
                 appDB.createPassengerRefunds(refundsLog);
@@ -322,15 +322,16 @@ public class ArriveOrderService {
                     result.put("count", 1);
                     result.put("type", "原路返回");
                     result.put("tradeNo", tradeNo);
+                    result.put("createTime", passengerOrderList.get(0).getCreate_time());
                     for (RefundsLog rl : refundsLogs) {
                         Map<String, Object> map = new HashedMap();
                         map.put("refundsName1", "退款申请提交");
                         map.put("refundsName2", "退款申请处理中");
-                        map.put("refundsTime1", passengerOrderList.get(0).getCreate_time());
-                        map.put("refundsTime2", passengerOrderList.get(0).getCreate_time());
+                        map.put("refundsTime1",  rl.getRefundsTime());
+                        map.put("refundsTime2",  rl.getRefundsTime());
                         if (rl.getRefundsType() == 1) {
                             map.put("refundsName3", "退款完成");
-                            map.put("refundsTime3", DateUtils.dateToString(rl.getRefundsTime()));
+                            map.put("refundsTime3", rl.getRefundsTime());
                         } else {
                             map.put("refundsName3", "预计两天内到账");
                             map.put("refundsTime3", "");

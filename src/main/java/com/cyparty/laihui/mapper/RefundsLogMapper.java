@@ -18,7 +18,7 @@ public class RefundsLogMapper implements RowMapper<RefundsLog> {
         refundsLog.setRefundsId(resultSet.getInt("refunds_id"));
         refundsLog.setOutTradeNo(resultSet.getString("out_trade_no"));
         refundsLog.setRefundsPrice(resultSet.getDouble("refunds_price"));
-        refundsLog.setRefundsTime(resultSet.getDate("refunds_time"));
+        refundsLog.setRefundsTime(resultSet.getString("refunds_time"));
         refundsLog.setRefundsType(resultSet.getInt("refunds_type"));
         refundsLog.setUserId(resultSet.getInt("user_id"));
         return refundsLog;

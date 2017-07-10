@@ -146,7 +146,7 @@ public class TaskUtils {
                     appDB.update("arrive_driver_relation", update_sql);
                     RefundsLog refundsLog = new RefundsLog();
                     refundsLog.setOutTradeNo(passengerPublishInfo.getTrade_no());
-                    refundsLog.setRefundsTime(new Date());
+                    refundsLog.setRefundsTime(DateUtils.dateToString(new Date()));
                     refundsLog.setRefundsPrice(passengerPublishInfo.getPay_money()*2+5);
                     refundsLog.setUserId(passengerPublishInfo.getUser_id());
                     appDB.createPassengerRefunds(refundsLog);
