@@ -9,29 +9,29 @@ import java.util.Date;
  * Created by Administrator on 2017/3/8.
  */
 public class DateUtils {
-    public static String getTimesToNow(String date){
+    public static String getTimesToNow(String date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String now = format.format(new Date());
         String returnText = null;
         try {
             long from = format.parse(date).getTime();
             long to = format.parse(now).getTime();
-            int days = (int) ((to - from)/(1000 * 60 * 60 * 24));
-            if(days == 0){//一天以内，以分钟或者小时显示
-                int hours = (int) ((to - from)/(1000 * 60 * 60));
-                if(hours == 0){
-                    int minutes = (int) ((to - from)/(1000 * 60));
-                    if(minutes == 0){
+            int days = (int) ((to - from) / (1000 * 60 * 60 * 24));
+            if (days == 0) {//一天以内，以分钟或者小时显示
+                int hours = (int) ((to - from) / (1000 * 60 * 60));
+                if (hours == 0) {
+                    int minutes = (int) ((to - from) / (1000 * 60));
+                    if (minutes == 0) {
                         returnText = "刚刚";
-                    }else{
+                    } else {
                         returnText = minutes + "分钟前";
                     }
-                }else{
+                } else {
                     returnText = hours + "小时前";
                 }
-            } else if(days == 1){
+            } else if (days == 1) {
                 returnText = "昨天";
-            }else{
+            } else {
                 returnText = days + "天前";
             }
         } catch (ParseException e) {
@@ -39,42 +39,51 @@ public class DateUtils {
         }
         return returnText;
     }
-    public static int getTimesToNow1(String date){
+
+    public static int getTimesToNow1(String date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String now = format.format(new Date());
         int minutes = 0;
         try {
             long from = format.parse(date).getTime();
             long to = format.parse(now).getTime();
-            minutes = (int) ((to - from)/(1000 * 60));
-         } catch (ParseException e) {
+            minutes = (int) ((to - from) / (1000 * 60));
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
         return minutes;
     }
 
-    public static String  getProcessdTime(String time){
+    public static String getProcessdTime(String time) {
         //String time = "2017-01-02 14:56:22";
-        String []s = time.replace("-"," ").replace(":"," ").split(" ");
-        String processdTime = s[1]+"月"+s[2]+"日 "+s[3]+":"+" "+s[4];
-       return processdTime;
+        String[] s = time.replace("-", " ").replace(":", " ").split(" ");
+        String processdTime = s[1] + "月" + s[2] + "日 " + s[3] + ":" + " " + s[4];
+        return processdTime;
     }
-    public static void main(String[]args){
-       // System.out.print(getTimesToNow("2017-03-07 15:02:22"));
+
+    public static String dateToString(Date date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(date);
+    }
+
+    public static void main(String[] args) {
+        // System.out.print(getTimesToNow("2017-03-07 15:02:22"));
         getProcessdTime("");
     }
-//获取时间格式 例如 20170406 140732
-    public static  String  getCurrentTime(Date date){
+
+    //获取时间格式 例如 20170406 140732
+    public static String getCurrentTime(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd HHmmss");
         String time = format.format(date);
-        return  time;
+        return time;
     }
+
     //获取生日格式 0406
-    public static  String  getBrithDay(Date date){
+    public static String getBrithDay(Date date) {
         SimpleDateFormat format = new SimpleDateFormat("MMdd");
         String time = format.format(date);
-        return  time;
+        return time;
     }
 
 }

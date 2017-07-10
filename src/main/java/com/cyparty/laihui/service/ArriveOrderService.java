@@ -5,13 +5,12 @@ import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.domain.*;
 import com.cyparty.laihui.utilities.*;
 import com.google.gson.Gson;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 必达单订单相关的service
@@ -66,16 +65,16 @@ public class ArriveOrderService {
                 boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, id, push_type, content, push_type, push_type + ".caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), "", 1);
                 if (is_true) {
                     Map<String, String> extrasParam = new HashMap<String, String>();
-                    extrasParam.put("action","com.laihui.pinche.push");
-                    extrasParam.put("alert",content);
-                    extrasParam.put("badge","Increment");
-                    extrasParam.put("id",String.valueOf(passengerOrder.getOrder_id()));
-                    extrasParam.put("notify_type",String.valueOf(push_type));
-                    extrasParam.put("sound","");
-                    extrasParam.put("title","来回拼车");
-                    passengerData.put("content",content);
-                    passengerData.put("push_time",confirm_time);
-                    extrasParam.put("push",gson.toJson(passengerData));
+                    extrasParam.put("action", "com.laihui.pinche.push");
+                    extrasParam.put("alert", content);
+                    extrasParam.put("badge", "Increment");
+                    extrasParam.put("id", String.valueOf(passengerOrder.getOrder_id()));
+                    extrasParam.put("notify_type", String.valueOf(push_type));
+                    extrasParam.put("sound", "");
+                    extrasParam.put("title", "来回拼车");
+                    passengerData.put("content", content);
+                    passengerData.put("push_time", confirm_time);
+                    extrasParam.put("push", gson.toJson(passengerData));
                     //将抢单信息通知给乘客
                     JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
                             ConfigUtils.JPUSH_MASTER_SECRET)
@@ -135,6 +134,12 @@ public class ArriveOrderService {
                     appDB.update("arrive_driver_relation", updateSql1);
                     String updateSql2 = " set order_status = -1 where order_type = 0 and order_id=" + car_id;
                     appDB.update("pc_orders", updateSql2);
+                    RefundsLog refundsLog = new RefundsLog();
+                    refundsLog.setOutTradeNo(tradeNo);
+                    refundsLog.setRefundsTime(new Date());
+                    refundsLog.setRefundsPrice(passengerOrderList.get(0).getPay_money());
+                    refundsLog.setUserId(passengerOrderList.get(0).getUser_id());
+                    appDB.createPassengerRefunds(refundsLog);
                 }
                 //推送给车主
                 String uwhere = " where _id =" + appDB.getIDByToken(token);
@@ -158,16 +163,16 @@ public class ArriveOrderService {
                 boolean is_true = appDB.createPush(passengerOrder.getOrder_id(), push_id, id, push_type, content, push_type, push_type + ".caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), "", 1);
                 if (is_true) {
                     Map<String, String> extrasParam = new HashMap<String, String>();
-                    extrasParam.put("action","com.laihui.pinche.push");
-                    extrasParam.put("alert",content);
-                    extrasParam.put("badge","Increment");
-                    extrasParam.put("id",String.valueOf(passengerOrder.get_id()));
-                    extrasParam.put("notify_type",String.valueOf(push_type));
-                    extrasParam.put("sound","");
-                    extrasParam.put("title","来回拼车");
-                    passengerData.put("content",content);
-                    passengerData.put("push_time",confirm_time);
-                    extrasParam.put("push",gson.toJson(passengerData));
+                    extrasParam.put("action", "com.laihui.pinche.push");
+                    extrasParam.put("alert", content);
+                    extrasParam.put("badge", "Increment");
+                    extrasParam.put("id", String.valueOf(passengerOrder.get_id()));
+                    extrasParam.put("notify_type", String.valueOf(push_type));
+                    extrasParam.put("sound", "");
+                    extrasParam.put("title", "来回拼车");
+                    passengerData.put("content", content);
+                    passengerData.put("push_time", confirm_time);
+                    extrasParam.put("push", gson.toJson(passengerData));
                     //将抢单信息通知给乘客
                     JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
                             ConfigUtils.JPUSH_MASTER_SECRET)
@@ -257,5 +262,92 @@ public class ArriveOrderService {
             json = AppJsonUtils.returnFailJsonString(result, "非法token！");
             return json;
         }
+    }
+
+    /**
+     * 申请退款
+     */
+    public static String passengerRefunds(AppDB appDB, HttpServletRequest request) throws RuntimeException {
+        JSONObject result = new JSONObject();
+        String json = "";
+        String token = request.getParameter("token");
+        if (token != null && token.length() == 32) {
+            int car_id = Integer.parseInt(request.getParameter("car_id"));
+            String where = " where a.is_enable = 1 and a.order_status = 0 and a._id = " + car_id;
+            List<PassengerOrder> passengerOrderList = appDB.getPassengerDepartureInfo(where);
+            if (passengerOrderList.size() > 0) {
+                String tradeNo = passengerOrderList.get(0).getTrade_no();
+                String updateSql = " set is_enable = 0 where _id = " + car_id;
+                appDB.update("pc_passenger_publish_info", updateSql);
+                String updateSql1 = " set is_del = 0 where order_no = " + tradeNo;
+                appDB.update("arrive_driver_relation", updateSql1);
+                String updateSql2 = " set order_status = -1 where order_type = 0 and order_id=" + car_id;
+                appDB.update("pc_orders", updateSql2);
+                RefundsLog refundsLog = new RefundsLog();
+                refundsLog.setOutTradeNo(tradeNo);
+                refundsLog.setRefundsTime(new Date());
+                refundsLog.setRefundsPrice(passengerOrderList.get(0).getPay_money());
+                refundsLog.setUserId(passengerOrderList.get(0).getUser_id());
+                appDB.createPassengerRefunds(refundsLog);
+                json = AppJsonUtils.returnSuccessJsonString(result, "申请退款成功！");
+            } else {
+                result.put("error_code", ErrorCode.ERROR_SYSTEM);
+                json = AppJsonUtils.returnFailJsonString(result, "您有抢单暂未处理,不能退款！");
+            }
+        } else {
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
+            json = AppJsonUtils.returnFailJsonString(result, "非法token！");
+        }
+        return json;
+    }
+
+    /**
+     * 查看退款状态
+     */
+    public static String refundsInfo(AppDB appDB, HttpServletRequest request) throws RuntimeException {
+        JSONObject result = new JSONObject();
+        String json = "";
+        String token = request.getParameter("token");
+        if (token != null && token.length() == 32) {
+            int car_id = Integer.parseInt(request.getParameter("car_id"));
+            String where = " where a.is_enable = 0 and a._id = " + car_id;
+            List<PassengerOrder> passengerOrderList = appDB.getPassengerDepartureInfo(where);
+            if (passengerOrderList.size() > 0) {
+                String tradeNo = passengerOrderList.get(0).getTrade_no();
+                where = " where user_id = " + passengerOrderList.get(0).getUser_id();
+                List<RefundsLog> refundsLogs = appDB.selectPassengerRefunds(where);
+                if (refundsLogs.size() > 0) {
+                    List<Map<String, Object>> list = new ArrayList();
+                    result.put("price", refundsLogs.get(0).getRefundsPrice());
+                    result.put("count", 1);
+                    result.put("type", "原路返回");
+                    result.put("tradeNo", tradeNo);
+                    for (RefundsLog rl : refundsLogs) {
+                        Map<String, Object> map = new HashedMap();
+                        map.put("refundsName1", "退款申请提交");
+                        map.put("refundsName2", "退款申请处理中");
+                        map.put("refundsTime1", passengerOrderList.get(0).getCreate_time());
+                        map.put("refundsTime2", passengerOrderList.get(0).getCreate_time());
+                        if (rl.getRefundsType() == 1) {
+                            map.put("refundsName3", "退款完成");
+                            map.put("refundsTime3", DateUtils.dateToString(rl.getRefundsTime()));
+                        } else {
+                            map.put("refundsName3", "预计两天内到账");
+                            map.put("refundsTime3", "");
+                        }
+                        list.add(map);
+                    }
+                    result.put("process", list);
+                }
+                json = AppJsonUtils.returnSuccessJsonString(result, "请求成功！");
+            } else {
+                result.put("error_code", ErrorCode.ERROR_SYSTEM);
+                json = AppJsonUtils.returnFailJsonString(result, "暂无数据！");
+            }
+        } else {
+            result.put("error_code", ErrorCode.TOKEN_EXPIRED);
+            json = AppJsonUtils.returnFailJsonString(result, "非法token！");
+        }
+        return json;
     }
 }

@@ -2,6 +2,7 @@ package com.cyparty.laihui.controller.willArrive;
 
 import com.cyparty.laihui.db.AppDB;
 import com.cyparty.laihui.service.ArriveOrderService;
+import com.cyparty.laihui.service.PassengerArriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,31 @@ public class ArriveOrderController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
         String json = ArriveOrderService.passengerRefuse(appDB, request);
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+    }
+
+    /**
+     * 必达单申请退款
+     */
+    @Transactional(readOnly = false)
+    @ResponseBody
+    @RequestMapping(value = "/passenger/refunds",method = RequestMethod.POST)
+    public ResponseEntity<String> passengerRefunds(HttpServletRequest request) throws RuntimeException {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        String json = ArriveOrderService.passengerRefunds(appDB,request);
+        return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
+    }
+
+    /**
+     * 查看退款状态
+     */
+    @ResponseBody
+    @RequestMapping(value = "/refunds/info",method = RequestMethod.POST)
+    public ResponseEntity<String> refundsInfo(HttpServletRequest request) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        String json = ArriveOrderService.refundsInfo(appDB,request);
         return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
     }
 }

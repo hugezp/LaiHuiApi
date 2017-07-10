@@ -8,10 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.beans.Transient;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by zhu on 2016/12/6.
@@ -139,8 +136,6 @@ public class TaskUtils {
             orderList = appDB.getOrderReview(uncomplete_where, 2);
             for (Order order : orderList) {
                 //乘客车单失效，该订单取消
-
-
                 String update_sql = " set order_status=-1 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=0";
                 appDB.update("pc_orders", update_sql);
 
@@ -149,6 +144,12 @@ public class TaskUtils {
                     PassengerOrder passengerPublishInfo = passengerDepartureInfo.get(0);
                     update_sql = " set is_del= 0 where order_no='" + passengerPublishInfo.getPay_num() + "'";
                     appDB.update("arrive_driver_relation", update_sql);
+                    RefundsLog refundsLog = new RefundsLog();
+                    refundsLog.setOutTradeNo(passengerPublishInfo.getTrade_no());
+                    refundsLog.setRefundsTime(new Date());
+                    refundsLog.setRefundsPrice(passengerPublishInfo.getPay_money()*2+5);
+                    refundsLog.setUserId(passengerPublishInfo.getUser_id());
+                    appDB.createPassengerRefunds(refundsLog);
                 }
 
                 update_sql = " set order_status=5 , update_time='" + Utils.getCurrentTime() + "' where order_id=" + order.getOrder_id() + " and order_type=2 and order_status>=0 ";

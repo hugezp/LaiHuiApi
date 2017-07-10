@@ -187,6 +187,7 @@ public class AppDB {
         List<Tag> tags = jdbcTemplateObject.query(SQL, new TagMapper());
         return tags;
     }
+
     public List<PassengerOrder> getPassengerDepartureInfo(String where) {
         String SQL = "SELECT * FROM pc_passenger_publish_info a left join pc_user b on a.user_id=b._id " + where;
         List<PassengerOrder> passengerPublishInfoList = jdbcTemplateObject.query(SQL, new PassengerPublishInfoMapper());
@@ -316,7 +317,8 @@ public class AppDB {
         Integer id = jdbcTemplateObject.queryForObject(sql, Integer.class);
         return id.intValue();
     }
-    public int getMaxID(String parameter, String table,String where) {
+
+    public int getMaxID(String parameter, String table, String where) {
         String sql = "SELECT Max(" + parameter + ")id FROM  " + table + where;
         Integer id = jdbcTemplateObject.queryForObject(sql, Integer.class);
         return id.intValue();
@@ -607,10 +609,10 @@ public class AppDB {
         return is_success;
     }
 
-    public boolean createPush(int order_id, int push_id, int receive_id, int push_type, String alert, int type, String sound, String data, int status, String user_name, String link_url,int isArrive) {
+    public boolean createPush(int order_id, int push_id, int receive_id, int push_type, String alert, int type, String sound, String data, int status, String user_name, String link_url, int isArrive) {
         boolean is_success = true;
         String SQL = "insert into pc_push_notification (order_id,push_id,receive_id,push_type,alert,type,sound,data,time,status,is_enable,user_name,link_url,is_arrive) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        int count = jdbcTemplateObject.update(SQL, new Object[]{order_id, push_id, receive_id, push_type, alert, type, sound, data, Utils.getCurrentTime(), status, 1, user_name, link_url,isArrive});
+        int count = jdbcTemplateObject.update(SQL, new Object[]{order_id, push_id, receive_id, push_type, alert, type, sound, data, Utils.getCurrentTime(), status, 1, user_name, link_url, isArrive});
         if (count < 1) {
             is_success = false;
         }
@@ -863,6 +865,28 @@ public class AppDB {
             is_success = false;
         }
         return is_success;
+    }
+
+    /**
+     * 申请退款记录
+     */
+    public boolean createPassengerRefunds(RefundsLog refundsLog) {
+        boolean is_success = true;
+        String SQL = "insert into pc_refunds_log(user_id,out_trade_no,refunds_price,refunds_time) VALUES (?,?,?,?)";
+        int count = jdbcTemplateObject.update(SQL, new Object[]{refundsLog.getUserId(), refundsLog.getOutTradeNo(), refundsLog.getRefundsPrice(), refundsLog.getRefundsTime()});
+        if (count < 1) {
+            is_success = false;
+        }
+        return is_success;
+    }
+
+    /**
+     * 查询退款记录
+     */
+    public List<RefundsLog> selectPassengerRefunds(String where) {
+        String SQL = " SELECT * FROM pc_refunds_log" + where;
+        List<RefundsLog> refundsLogList = jdbcTemplateObject.query(SQL, new RefundsLogMapper());
+        return refundsLogList;
     }
 }
 
