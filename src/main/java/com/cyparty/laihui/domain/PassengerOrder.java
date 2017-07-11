@@ -51,6 +51,24 @@ public class PassengerOrder {
     private double e_distance;
     private int isArrive;//是否为必达车单 0正常 1必达
     private int refuse;//拒绝次数
+    private int surchargeType;//附加费类型 -1:无附加 1:感谢费
+    private double surchargeMoney;//附加费用
+
+    public int getSurchargeType() {
+        return surchargeType;
+    }
+
+    public void setSurchargeType(int surchargeType) {
+        this.surchargeType = surchargeType;
+    }
+
+    public double getSurchargeMoney() {
+        return surchargeMoney;
+    }
+
+    public void setSurchargeMoney(double surchargeMoney) {
+        this.surchargeMoney = surchargeMoney;
+    }
 
     public String getTrade_no() {
         return trade_no;

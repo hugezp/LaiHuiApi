@@ -24,6 +24,8 @@ public class CrossCity1Mapper implements RowMapper<CrossCity> {
         departure.setDestination_address_code(resultSet.getInt("destination_address_code"));
         departure.setDeparture_city_code(resultSet.getInt("departure_city_code"));
         departure.setDestination_city_code(resultSet.getInt("destination_city_code"));
+        departure.setSurchargeType(resultSet.getInt("surcharge_type"));
+        departure.setSurchargeMoney(resultSet.getDouble("surcharge_money"));
         return departure;
     }
 }

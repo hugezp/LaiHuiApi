@@ -578,6 +578,8 @@ public class AppJsonUtils {
             dataObject.put("seats", departure.getSeats());
             dataObject.put("description", departure.getDescription());
             dataObject.put("price", departure.getPay_money());
+            dataObject.put("surchargeType",departure.getSurchargeType());
+            dataObject.put("surchargeMoney",departure.getSurchargeMoney());
             dataObject.put("create_time", DateUtils.getTimesToNow(departure.getCreate_time()));
             dataObject.put("boarding_point", JSONObject.parseObject(departure.getBoarding_point()));
             dataObject.put("breakout_point", JSONObject.parseObject(departure.getBreakout_point()));
@@ -1813,6 +1815,8 @@ public class AppJsonUtils {
                 jsonObject.put("departure_time", DateUtils.getProcessdTime(passenger.getDeparture_time()));
                 jsonObject.put("create_time", DateUtils.getTimesToNow(passenger.getCreate_time()));
                 jsonObject.put("price", passenger.getPay_money());
+                jsonObject.put("surchargeType", passenger.getSurchargeType());
+                jsonObject.put("surchargeMoney", passenger.getSurchargeMoney());
                 jsonObject.put("suitability", passenger.getSuitability());
                 jsonObject.put("start_point_distance", passenger.getStart_point_distance());
                 jsonObject.put("end_point_distance", passenger.getEnd_point_distance());
@@ -1887,6 +1891,10 @@ public class AppJsonUtils {
                     jsonObject.put("seats", order.getBooking_seats());
                     //价格
                     jsonObject.put("price", order.getPrice());
+                    //附加费类型
+                    jsonObject.put("surchargeType",order.getSurchargeType());
+                    //附加费用
+                    jsonObject.put("surchargeMoney",order.getSurchargeMoney());
                     //备注
                     jsonObject.put("remark", order.getRemark());
                     //出发时间

@@ -37,6 +37,8 @@ public class PassengerCommonMapper implements RowMapper<PassengerOrder> {
         passenger.setBoarding_latitude(resultSet.getString("boarding_latitude"));
         passenger.setBreakout_longitude(resultSet.getString("breakout_longitude"));
         passenger.setBreakout_latitude(resultSet.getString("breakout_latitude"));
+        passenger.setSurchargeMoney(resultSet.getDouble("surchargeMoney"));
+        passenger.setSurchargeType(resultSet.getInt("surchargeType"));
         passenger.setDeparture_code(resultSet.getInt("departure_code"));
         passenger.setDestination_code(resultSet.getInt("destination_code"));
         passenger.setS_distance(resultSet.getDouble("s_distance"));

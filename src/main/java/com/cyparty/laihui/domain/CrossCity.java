@@ -53,6 +53,25 @@ public class CrossCity {
     private String remark;
     private int flag;
 
+    private int surchargeType;
+    private double surchargeMoney;
+
+    public int getSurchargeType() {
+        return surchargeType;
+    }
+
+    public void setSurchargeType(int surchargeType) {
+        this.surchargeType = surchargeType;
+    }
+
+    public double getSurchargeMoney() {
+        return surchargeMoney;
+    }
+
+    public void setSurchargeMoney(double surchargeMoney) {
+        this.surchargeMoney = surchargeMoney;
+    }
+
     public int getDeparture_city_code() {
         return departure_city_code;
     }

@@ -70,8 +70,6 @@ public class PayOrderController {
             List<PassengerOrder> passengerOrderList = appDB.getPassengerDepartureInfo(where);
             if (passengerOrderList.size() > 0) {
                 passengerOrder = passengerOrderList.get(0);
-                if (passengerOrder.getIsArrive()==1){
-                }
             } else {
                 json = AppJsonUtils.returnFailJsonString(result, "订单已失效！");
                 return new ResponseEntity<>(json, responseHeaders, HttpStatus.OK);
@@ -87,7 +85,7 @@ public class PayOrderController {
                 String now_ip = Utils.getIP(request);
                 String nonce_str = Utils.getCharAndNum(32);
 //                double inputFee = 1;
-                double inputFee = passengerOrder.getPay_money() * 100;
+                double inputFee = (passengerOrder.getPay_money() + passengerOrder.getSurchargeMoney()) * 100;
                 int inputIntFee = (int) inputFee;
                 String total_fee = inputIntFee + "";
 
@@ -156,7 +154,7 @@ public class PayOrderController {
             } else {
                 String now_ip = Utils.getIP(request);
                 String nonce_str = Utils.getCharAndNum(32);
-                double inputFee = passengerOrder.getPay_money() * 100;
+                double inputFee = (passengerOrder.getPay_money() + passengerOrder.getSurchargeMoney()) * 100;
                 int inputIntFee = (int) inputFee;
                 String total_fee = inputIntFee + "";
                 String prepay_id = null;
@@ -225,7 +223,7 @@ public class PayOrderController {
         } else {
             //支付宝支付
             // double total_fee = 0.01;
-            double total_fee = passengerOrder.getPay_money();
+            double total_fee = passengerOrder.getPay_money() + passengerOrder.getSurchargeMoney();
             Map<String, String> keyValues = new HashMap<String, String>();
             String current_time = Utils.getCurrentTime();
             keyValues.put("app_id", PayConfigUtils.getApp_id());
@@ -294,7 +292,7 @@ public class PayOrderController {
             String now_ip = Utils.getIP(request);
             String nonce_str = Utils.getCharAndNum(32);
             double inputFee = 0.1;
-            inputFee = passengerOrder.getPay_money() * 100;
+            inputFee = (passengerOrder.getPay_money() + passengerOrder.getSurchargeMoney()) * 100;
             int inputIntFee = (int) inputFee;
             String total_fee = inputIntFee + "";
             String prepay_id = null;

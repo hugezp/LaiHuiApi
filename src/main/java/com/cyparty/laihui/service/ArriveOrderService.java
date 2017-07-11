@@ -314,31 +314,27 @@ public class ArriveOrderService {
             List<PassengerOrder> passengerOrderList = appDB.getPassengerDepartureInfo(where);
             if (passengerOrderList.size() > 0) {
                 String tradeNo = passengerOrderList.get(0).getTrade_no();
-                where = " where user_id = " + passengerOrderList.get(0).getUser_id();
+                where = " where user_id = " + passengerOrderList.get(0).getUser_id() + " and out_trade_no = '" + passengerOrderList.get(0).getTrade_no() + "'";
                 List<RefundsLog> refundsLogs = appDB.selectPassengerRefunds(where);
                 if (refundsLogs.size() > 0) {
-                    List<Map<String, Object>> list = new ArrayList();
                     result.put("price", refundsLogs.get(0).getRefundsPrice());
                     result.put("count", 1);
                     result.put("type", "原路返回");
                     result.put("tradeNo", tradeNo);
                     result.put("createTime", passengerOrderList.get(0).getCreate_time());
-                    for (RefundsLog rl : refundsLogs) {
-                        Map<String, Object> map = new HashedMap();
-                        map.put("refundsName1", "退款申请提交");
-                        map.put("refundsName2", "退款申请处理中");
-                        map.put("refundsTime1",  rl.getRefundsTime());
-                        map.put("refundsTime2",  rl.getRefundsTime());
-                        if (rl.getRefundsType() == 1) {
-                            map.put("refundsName3", "退款完成");
-                            map.put("refundsTime3", rl.getRefundsTime());
-                        } else {
-                            map.put("refundsName3", "预计两天内到账");
-                            map.put("refundsTime3", "");
-                        }
-                        list.add(map);
+                    result.put("refundsName1", "退款申请提交");
+                    result.put("refundsName2", "退款申请处理中");
+                    result.put("refundsTime1", refundsLogs.get(0).getRefundsTime());
+                    result.put("refundsTime2", refundsLogs.get(0).getRefundsTime());
+                    if (refundsLogs.size() > 1) {
+                        result.put("refundsName3", "退款完成");
+                        result.put("refundsTime3", refundsLogs.get(1).getRefundsTime());
+                        result.put("isComplete", 1);
+                    } else {
+                        result.put("isComplete", 0);
+                        result.put("refundsName3", "预计两天内到账");
+                        result.put("refundsTime3", "");
                     }
-                    result.put("process", list);
                 }
                 json = AppJsonUtils.returnSuccessJsonString(result, "请求成功！");
             } else {

@@ -285,6 +285,14 @@ public class PassengerDepartureController {
                             if (isArrive.equals("1")) {
                                 order.setIsArrive(Integer.parseInt(isArrive));
                             }
+                            String surchargeType = request.getParameter("surchargeType");
+                            String surchargeMoney = request.getParameter("surchargeMoney");
+                            if (surchargeType != null && !surchargeType.equals("")) {
+                                order.setSurchargeType(Integer.parseInt(surchargeType));
+                            }
+                            if (surchargeMoney != null && !surchargeMoney.equals("")) {
+                                order.setSurchargeMoney(Double.parseDouble(surchargeMoney));
+                            }
                             order.setPay_money(price);
                             order.setSource(source);
                             order.setUser_id(user_id);
@@ -407,16 +415,16 @@ public class PassengerDepartureController {
                                 Map passengerData = AppJsonUtils.getPushObject(appDB, order1, 1);
                                 try {
                                     Map<String, String> extrasParam = new HashMap<String, String>();
-                                    extrasParam.put("action","com.laihui.pinche.push");
-                                    extrasParam.put("alert",content);
-                                    extrasParam.put("badge","Increment");
-                                    extrasParam.put("id",String.valueOf(order.get_id()));
-                                    extrasParam.put("notify_type",String.valueOf(25));
-                                    extrasParam.put("sound","");
-                                    extrasParam.put("title","来回拼车");
-                                    passengerData.put("content",content);
-                                    passengerData.put("push_time",Utils.getCurrentTime());
-                                    extrasParam.put("push",gson.toJson(passengerData));
+                                    extrasParam.put("action", "com.laihui.pinche.push");
+                                    extrasParam.put("alert", content);
+                                    extrasParam.put("badge", "Increment");
+                                    extrasParam.put("id", String.valueOf(order.get_id()));
+                                    extrasParam.put("notify_type", String.valueOf(25));
+                                    extrasParam.put("sound", "");
+                                    extrasParam.put("title", "来回拼车");
+                                    passengerData.put("content", content);
+                                    passengerData.put("push_time", Utils.getCurrentTime());
+                                    extrasParam.put("push", gson.toJson(passengerData));
                                     //将抢单信息通知给乘客
                                     JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
                                             ConfigUtils.JPUSH_MASTER_SECRET)
@@ -437,16 +445,16 @@ public class PassengerDepartureController {
                                     Map passengerData = AppJsonUtils.getPushObject(appDB, order1, 1);
                                     try {
                                         Map<String, String> extrasParam = new HashMap<String, String>();
-                                        extrasParam.put("action","com.laihui.pinche.push");
-                                        extrasParam.put("alert",content);
-                                        extrasParam.put("badge","Increment");
-                                        extrasParam.put("id",String.valueOf(order.get_id()));
-                                        extrasParam.put("notify_type",String.valueOf(25));
-                                        extrasParam.put("sound","");
-                                        extrasParam.put("title","来回拼车");
-                                        passengerData.put("content",content);
-                                        passengerData.put("push_time",Utils.getCurrentTime());
-                                        extrasParam.put("push",gson.toJson(passengerData));
+                                        extrasParam.put("action", "com.laihui.pinche.push");
+                                        extrasParam.put("alert", content);
+                                        extrasParam.put("badge", "Increment");
+                                        extrasParam.put("id", String.valueOf(order.get_id()));
+                                        extrasParam.put("notify_type", String.valueOf(25));
+                                        extrasParam.put("sound", "");
+                                        extrasParam.put("title", "来回拼车");
+                                        passengerData.put("content", content);
+                                        passengerData.put("push_time", Utils.getCurrentTime());
+                                        extrasParam.put("push", gson.toJson(passengerData));
                                         //将抢单信息通知给乘客
                                         JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
                                                 ConfigUtils.JPUSH_MASTER_SECRET)
@@ -624,18 +632,18 @@ public class PassengerDepartureController {
                                         int push_id = user_id;
                                         int receive_id = driverList.get(0).getUser_id();
                                         int push_type = 23;
-                                        appDB.createPush(order_id, push_id, receive_id, push_type, content, 23, "23.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null,order.getIsArrive());
+                                        appDB.createPush(order_id, push_id, receive_id, push_type, content, 23, "23.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null, order.getIsArrive());
                                         Map<String, String> extrasParam = new HashMap<String, String>();
-                                        extrasParam.put("action","com.laihui.pinche.push");
-                                        extrasParam.put("alert",content);
-                                        extrasParam.put("badge","Increment");
-                                        extrasParam.put("id",String.valueOf(order.get_id()));
-                                        extrasParam.put("notify_type",String.valueOf(push_type));
-                                        extrasParam.put("sound","");
-                                        extrasParam.put("title","来回拼车");
-                                        passengerData.put("content",content);
-                                        passengerData.put("push_time",confirm_time);
-                                        extrasParam.put("push",gson.toJson(passengerData));
+                                        extrasParam.put("action", "com.laihui.pinche.push");
+                                        extrasParam.put("alert", content);
+                                        extrasParam.put("badge", "Increment");
+                                        extrasParam.put("id", String.valueOf(order.get_id()));
+                                        extrasParam.put("notify_type", String.valueOf(push_type));
+                                        extrasParam.put("sound", "");
+                                        extrasParam.put("title", "来回拼车");
+                                        passengerData.put("content", content);
+                                        passengerData.put("push_time", confirm_time);
+                                        extrasParam.put("push", gson.toJson(passengerData));
                                         //将抢单信息通知给乘客
                                         JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
                                                 ConfigUtils.JPUSH_MASTER_SECRET)
@@ -713,18 +721,18 @@ public class PassengerDepartureController {
                         int push_id = user_id;
                         int receive_id = driverList.get(0).getUser_id();
                         int push_type = 24;
-                        appDB.createPush(driverList.get(0).getOrder_id(), push_id, receive_id, push_type, content, push_type, "24.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null,driverList.get(0).getIsArrive());
+                        appDB.createPush(driverList.get(0).getOrder_id(), push_id, receive_id, push_type, content, push_type, "24.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null, driverList.get(0).getIsArrive());
                         Map<String, String> extrasParam = new HashMap<String, String>();
-                        extrasParam.put("action","com.laihui.pinche.push");
-                        extrasParam.put("alert",content);
-                        extrasParam.put("badge","Increment");
-                        extrasParam.put("id",String.valueOf(driverList.get(0).getOrder_id()));
-                        extrasParam.put("notify_type",String.valueOf(push_type));
-                        extrasParam.put("sound","");
-                        extrasParam.put("title","来回拼车");
-                        passengerData.put("content",content);
-                        passengerData.put("push_time",confirm_time);
-                        extrasParam.put("push",gson.toJson(passengerData));
+                        extrasParam.put("action", "com.laihui.pinche.push");
+                        extrasParam.put("alert", content);
+                        extrasParam.put("badge", "Increment");
+                        extrasParam.put("id", String.valueOf(driverList.get(0).getOrder_id()));
+                        extrasParam.put("notify_type", String.valueOf(push_type));
+                        extrasParam.put("sound", "");
+                        extrasParam.put("title", "来回拼车");
+                        passengerData.put("content", content);
+                        passengerData.put("push_time", confirm_time);
+                        extrasParam.put("push", gson.toJson(passengerData));
                         //将抢单信息通知给乘客
                         JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
                                 ConfigUtils.JPUSH_MASTER_SECRET)
@@ -805,19 +813,19 @@ public class PassengerDepartureController {
                             int push_id = user_id;
                             int receive_id = driver_user_id;
                             int push_type = 28;
-                            appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null,passenger.getIsArrive());
+                            appDB.createPush(grab_id, push_id, receive_id, push_type, content, 28, "28.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null, passenger.getIsArrive());
                             //将邀请消息推送给车主
                             Map<String, String> extrasParam = new HashMap<String, String>();
-                            extrasParam.put("action","com.laihui.pinche.push");
-                            extrasParam.put("alert",content);
-                            extrasParam.put("badge","Increment");
-                            extrasParam.put("id",String.valueOf(passenger.getOrder_id()));
-                            extrasParam.put("notify_type",String.valueOf(push_type));
-                            extrasParam.put("sound","");
-                            extrasParam.put("title","来回拼车");
-                            passengerData.put("content",content);
-                            passengerData.put("push_time",confirm_time);
-                            extrasParam.put("push",gson.toJson(passengerData));
+                            extrasParam.put("action", "com.laihui.pinche.push");
+                            extrasParam.put("alert", content);
+                            extrasParam.put("badge", "Increment");
+                            extrasParam.put("id", String.valueOf(passenger.getOrder_id()));
+                            extrasParam.put("notify_type", String.valueOf(push_type));
+                            extrasParam.put("sound", "");
+                            extrasParam.put("title", "来回拼车");
+                            passengerData.put("content", content);
+                            passengerData.put("push_time", confirm_time);
+                            extrasParam.put("push", gson.toJson(passengerData));
                             //将抢单信息通知给乘客
                             JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
                                     ConfigUtils.JPUSH_MASTER_SECRET)
@@ -984,17 +992,17 @@ public class PassengerDepartureController {
                 int push_type = 27;
                 List<User> drivers = appDB.getUserList(" where user_mobile ='" + driver_mobile + "'");
                 if (drivers.size() > 0) {
-                    appDB.createPush(orderReview.get(0).getOrder_id(), user_id, drivers.get(0).getUser_id(), push_type, content, push_type, "27.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null,orderReview.get(0).getIsArrive());
+                    appDB.createPush(orderReview.get(0).getOrder_id(), user_id, drivers.get(0).getUser_id(), push_type, content, push_type, "27.caf", gson.toJson(passengerData), 1, user.getUser_nick_name(), null, orderReview.get(0).getIsArrive());
                     Map<String, String> extrasParam = new HashMap<String, String>();
-                    extrasParam.put("action","com.laihui.pinche.push");
-                    extrasParam.put("alert",content);
-                    extrasParam.put("badge","Increment");
-                    extrasParam.put("id",String.valueOf(orderReview.get(0).getOrder_id()));
-                    extrasParam.put("notify_type",String.valueOf(push_type));
-                    extrasParam.put("sound","");
-                    extrasParam.put("title","来回拼车");
-                    passengerData.put("content",content);
-                    passengerData.put("push_time",confirm_time);
+                    extrasParam.put("action", "com.laihui.pinche.push");
+                    extrasParam.put("alert", content);
+                    extrasParam.put("badge", "Increment");
+                    extrasParam.put("id", String.valueOf(orderReview.get(0).getOrder_id()));
+                    extrasParam.put("notify_type", String.valueOf(push_type));
+                    extrasParam.put("sound", "");
+                    extrasParam.put("title", "来回拼车");
+                    passengerData.put("content", content);
+                    passengerData.put("push_time", confirm_time);
                     //将抢单信息通知给乘客
                     JpushClientUtil.getInstance(ConfigUtils.JPUSH_APP_KEY,
                             ConfigUtils.JPUSH_MASTER_SECRET)

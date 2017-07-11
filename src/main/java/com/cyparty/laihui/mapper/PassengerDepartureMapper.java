@@ -31,6 +31,8 @@ public class PassengerDepartureMapper implements RowMapper<Order> {
         order.setDeparture_time(Utils.checkTime(resultSet.getString("departure_time")));
         order.setDescription(resultSet.getString("description"));
         order.setIsArrive(resultSet.getInt("is_arrive"));
+        order.setSurchargeType(resultSet.getInt("surcharge_type"));
+        order.setSurchargeMoney(resultSet.getDouble("surcharge_money"));
 
         return order;
     }
