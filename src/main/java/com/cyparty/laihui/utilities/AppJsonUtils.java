@@ -2118,6 +2118,7 @@ public class AppJsonUtils {
         for (PushNotification push : pushList) {
             JSONObject pushJson = new JSONObject();
             pushJson.put("title", push.getTitle());
+            pushJson.put("orderId", push.getOrder_id());
             pushJson.put("alert", push.getAlert());
             pushJson.put("type", push.getType());
             pushJson.put("time", push.getTime());
